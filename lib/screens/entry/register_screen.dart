@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/model/RegisterResponse.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/service/ApiService';
 import 'package:mycareteam/widgets/user_type_tile.dart';
+import 'dart:developer';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -13,6 +16,14 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool isSelectOpen = false;
+  bool isParticipent = false;
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Select",
+                          isParticipent ? "Participant" : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -131,39 +142,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     padding: const EdgeInsets.only(top: 6, bottom: 6),
-                    child: const Column(
+                    child: Column(
                       children: [
-                        UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_participant.svg",
-                          userType: "Participant",
-                          userDescription: "Who want to achieve Goal",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipent = true;
+                              isSelectOpen = false;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_participant.svg",
+                            userType: "Participant",
+                            userDescription: "Who want to achieve Goal",
+                          ),
                         ),
-                        Divider(
+                        const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
+                        const UserTypeTile(
                           userIcon: "lib/resources/icons/ic_family.svg",
                           userType: "Family member/Friends",
                           userDescription: "To set goal for your well-wisher",
                         ),
-                        Divider(
+                        const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
+                        const UserTypeTile(
                           userIcon: "lib/resources/icons/ic_provider.svg",
                           userType: "Provider",
                           userDescription: "To help Achievers to complete goal",
                         ),
-                        Divider(
+                        const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
+                        const UserTypeTile(
                           userIcon: "lib/resources/icons/ic_reviewer.svg",
                           userType: "Reviewer",
                           userDescription:
@@ -172,22 +191,243 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                if (isParticipent)
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _firstNameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'First name',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _lastNameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Last name',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _phoneNumController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Phone number',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: SvgPicture.asset(
+                                "lib/resources/images/Verify.svg",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 11),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: const Divider(),
+                              ),
+                            ),
+                            Text(
+                              "or",
+                              style: GoogleFonts.poppins(
+                                color: iconBlue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: const Divider(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 11),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Email address',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: SvgPicture.asset(
+                                "lib/resources/images/Verify.svg",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Password',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: const Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: iconGrey,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        margin: const EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: _repasswordController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Re-Enter password',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: const Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: iconGrey,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  margin: const EdgeInsets.only(top: 32, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Register",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                InkWell(
+                  onTap: () async {
+                    RegisterResponse response = await ApiService().register(
+                        _firstNameController.text,
+                        _lastNameController.text,
+                        _phoneNumController.text,
+                        _emailController.text,
+                        _passwordController.text,
+                        _repasswordController.text,
+                        1);
+                    if (response.responseStatus == 200) {
+                      //Proceed to next
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    margin: const EdgeInsets.only(top: 32, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Register",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),

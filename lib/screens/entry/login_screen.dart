@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +7,9 @@ import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
+
+import '../../service/ApiService';
+import '../../model/LoginResponse.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,6 +21,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
   bool isSelectOpen = false;
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextField(
+                      controller: _userNameController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter your name',
@@ -216,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter your password',
@@ -294,22 +303,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  margin: const EdgeInsets.only(top: 32, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Login",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                InkWell(
+                  onTap: () async {
+                    LoginResponse response = await ApiService().login(
+                        _userNameController.text, _passwordController.text, 3);
+                    if (response.statusCode == 200) {
+                      //Proceed to next
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    margin: const EdgeInsets.only(top: 32, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
