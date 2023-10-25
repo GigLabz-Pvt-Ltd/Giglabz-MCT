@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
 
 import '../../service/api_service.dart';
@@ -317,6 +318,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     LoginResponse response = await ApiService().login(
                         _userNameController.text, _passwordController.text, 3);
                     if (response.statusCode != null) {
+                      if(response.statusCode == 200){
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => const HomeScreen()));
+                      }
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(response.message.toString())));
                     }
