@@ -8,8 +8,8 @@ import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
 
-import '../../service/ApiService';
-import '../../model/LoginResponse.dart';
+import '../../service/api_service.dart';
+import '../../models/login_response.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
   bool isSelectOpen = false;
+  bool isParticipant = false;
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -100,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Select",
+                          isParticipant ? "Participant" : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -141,12 +142,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     padding: const EdgeInsets.only(top: 6, bottom: 6),
-                    child: const Column(
+                    child: Column(
                       children: [
-                        UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_participant.svg",
-                          userType: "Participant",
-                          userDescription: "Who want to achieve Goal",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = true;
+                              isSelectOpen = false;
+                            });
+                          },
+                          child: UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_participant.svg",
+                            userType: "Participant",
+                            userDescription: "Who want to achieve Goal",
+                          ),
                         ),
                         Divider(
                           color: dividerGrey,
@@ -307,8 +316,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () async {
                     LoginResponse response = await ApiService().login(
                         _userNameController.text, _passwordController.text, 3);
-                    if (response.statusCode == 200) {
-                      //Proceed to next
+                    if (response.statusCode != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(response.message.toString())));
                     }
                   },
                   child: Container(

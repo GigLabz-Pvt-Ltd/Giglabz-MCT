@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mycareteam/model/RegisterResponse.dart';
+import 'package:mycareteam/models/register_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
-import 'package:mycareteam/service/ApiService';
+import 'package:mycareteam/screens/home/home_screen.dart';
+import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
 import 'dart:developer';
 
@@ -16,11 +17,10 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool isSelectOpen = false;
-  bool isParticipent = false;
+  bool isParticipant = false;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repasswordController = TextEditingController();
@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          isParticipent ? "Participant" : "Select",
+                          isParticipant ? "Participant" : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -147,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         InkWell(
                           onTap: () {
                             setState(() {
-                              isParticipent = true;
+                              isParticipant = true;
                               isSelectOpen = false;
                             });
                           },
@@ -191,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
-                if (isParticipent)
+                if (isParticipant)
                   Column(
                     children: [
                       Container(
@@ -269,7 +269,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontWeight: FontWeight.w400,
                               ),
                               suffixIcon: SvgPicture.asset(
-                                "lib/resources/images/Verify.svg",
+                                "lib/resources/icons/ic_verified.svg",
                               ),
                             ),
                           ),
@@ -327,7 +327,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontWeight: FontWeight.w400,
                               ),
                               suffixIcon: SvgPicture.asset(
-                                "lib/resources/images/Verify.svg",
+                                "lib/resources/icons/ic_verified.svg",
                               ),
                             ),
                           ),
@@ -407,8 +407,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _passwordController.text,
                         _repasswordController.text,
                         1);
-                    if (response.responseStatus == 200) {
-                      //Proceed to next
+                    // if (response.responseStatus == 200) {
+                    //   () => Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(
+                    //           builder: (BuildContext context) =>
+                    //               const HomeScreen()));
+                    // } else {
+                    //   print("Error in response: ${response.responseMessage}");
+                    // }
+                    if (response.responseStatus != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(response.responseMessage.toString())));
                     }
                   },
                   child: Container(

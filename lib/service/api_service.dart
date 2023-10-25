@@ -2,15 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
-import '../model/RegisterResponse.dart';
-import '../model/LoginResponse.dart';
-
+import '../models/register_response.dart';
+import '../models/login_response.dart';
 
 var BASE_URL = "http://dev.trackability.net.au:8081";
 
-
 class ApiService {
-  Future<RegisterResponse> register(String firstName, String lastName, String phoneNo, String email, String password, String confirmPassword, int roleId) async {
+  Future<RegisterResponse> register(
+      String firstName,
+      String lastName,
+      String phoneNo,
+      String email,
+      String password,
+      String confirmPassword,
+      int roleId) async {
     final response = await post(Uri.parse(BASE_URL + "/api/signup"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -28,7 +33,8 @@ class ApiService {
     return activity;
   }
 
-    Future<LoginResponse> login(String userName, String password, int roleId) async {
+  Future<LoginResponse> login(
+      String userName, String password, int roleId) async {
     final response = await post(Uri.parse(BASE_URL + "/api/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -38,9 +44,8 @@ class ApiService {
           "password": password,
           "roleId": roleId,
         }));
-        var a = response.body;
+    var a = response.body;
     final activity = getLoginResponseApiFromJson(response.body);
     return activity;
   }
-
 }
