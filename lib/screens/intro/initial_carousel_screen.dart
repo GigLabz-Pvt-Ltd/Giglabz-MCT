@@ -109,12 +109,20 @@ class _InitialCarouselScreenState extends State<InitialCarouselScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        "Skip",
-                        style: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const LoginScreen()));
+                        },
+                        child: Text(
+                          "Skip",
+                          style: GoogleFonts.poppins(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       InkWell(

@@ -18,6 +18,12 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool isSelectOpen = false;
   bool isParticipant = false;
+  bool isFamily = false;
+  bool isProvider = false;
+  bool isReviewer = false;
+  bool passwordVisible = true;
+  bool rePasswordVisible = true;
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
@@ -101,7 +107,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          isParticipant ? "Participant" : "Select",
+                          isParticipant
+                              ? "Participant"
+                              : isFamily
+                                  ? "Family member/Friends"
+                                  : isProvider
+                                      ? "Provider"
+                                      : isReviewer
+                                          ? "Reviewer"
+                                          : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -149,6 +163,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             setState(() {
                               isParticipant = true;
                               isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = false;
                             });
                           },
                           child: const UserTypeTile(
@@ -162,36 +179,70 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_family.svg",
-                          userType: "Family member/Friends",
-                          userDescription: "To set goal for your well-wisher",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = true;
+                              isProvider = false;
+                              isReviewer = false;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_family.svg",
+                            userType: "Family member/Friends",
+                            userDescription: "To set goal for your well-wisher",
+                          ),
                         ),
                         const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_provider.svg",
-                          userType: "Provider",
-                          userDescription: "To help Achievers to complete goal",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = true;
+                              isReviewer = false;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_provider.svg",
+                            userType: "Provider",
+                            userDescription:
+                                "To help Achievers to complete goal",
+                          ),
                         ),
                         const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_reviewer.svg",
-                          userType: "Reviewer",
-                          userDescription:
-                              "Provide feed back on Achievers performance",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = true;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_reviewer.svg",
+                            userType: "Reviewer",
+                            userDescription:
+                                "Provide feed back on Achievers performance",
+                          ),
                         ),
                       ],
                     ),
                   ),
-                if (isParticipant)
+                if (isParticipant || isFamily || isProvider || isReviewer)
                   Column(
                     children: [
                       Container(
@@ -347,20 +398,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           child: TextField(
                             controller: _passwordController,
+                            obscureText: passwordVisible,
                             decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Password',
-                              hintStyle: GoogleFonts.poppins(
-                                color: iconGrey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              suffixIcon: const Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: iconGrey,
-                                size: 24,
-                              ),
-                            ),
+                                border: InputBorder.none,
+                                hintText: 'Enter your password',
+                                hintStyle: GoogleFonts.poppins(
+                                  color: iconGrey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        passwordVisible = !passwordVisible;
+                                      },
+                                    );
+                                  },
+                                  icon: passwordVisible
+                                      ? const Icon(
+                                          Icons.visibility_off_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        )
+                                      : const Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        ),
+                                )),
                           ),
                         ),
                       ),
@@ -378,20 +444,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           child: TextField(
                             controller: _repasswordController,
+                            obscureText: rePasswordVisible,
                             decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Re-Enter password',
-                              hintStyle: GoogleFonts.poppins(
-                                color: iconGrey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              suffixIcon: const Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: iconGrey,
-                                size: 24,
-                              ),
-                            ),
+                                border: InputBorder.none,
+                                hintText: 'Re-Enter password',
+                                hintStyle: GoogleFonts.poppins(
+                                  color: iconGrey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        rePasswordVisible = !rePasswordVisible;
+                                      },
+                                    );
+                                  },
+                                  icon: rePasswordVisible
+                                      ? const Icon(
+                                          Icons.visibility_off_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        )
+                                      : const Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        ),
+                                )),
                           ),
                         ),
                       ),
@@ -406,18 +487,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _emailController.text,
                         _passwordController.text,
                         _repasswordController.text,
-                        1);
-                    // if (response.responseStatus == 200) {
-                    //   () => Navigator.of(context).pushReplacement(
-                    //       MaterialPageRoute(
-                    //           builder: (BuildContext context) =>
-                    //               const HomeScreen()));
-                    // } else {
-                    //   print("Error in response: ${response.responseMessage}");
-                    // }
+                        isParticipant
+                            ? 1
+                            : isFamily
+                                ? 2
+                                : isProvider
+                                    ? 3
+                                    : isReviewer
+                                        ? 4
+                                        : -1);
                     if (response.responseStatus != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(response.responseMessage.toString())));
+                      if (response.responseStatus == 200) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const HomeScreen()),
+                            (Route<dynamic> route) => false);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text(response.responseMessage.toString())));
+                      }
                     }
                   },
                   child: Container(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/entry/login_screen.dart';
 import 'package:mycareteam/screens/intro/initial_carousel_screen.dart';
 
 class InitialScreen extends StatefulWidget {
@@ -48,12 +49,20 @@ class _InitialScreen extends State<StatefulWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Skip",
-                        style: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const LoginScreen()));
+                        },
+                        child: Text(
+                          "Skip",
+                          style: GoogleFonts.poppins(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       InkWell(
