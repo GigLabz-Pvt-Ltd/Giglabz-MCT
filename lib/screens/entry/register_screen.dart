@@ -6,7 +6,6 @@ import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
-import 'dart:developer';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -60,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 32),
                         child: Text(
-                          "Hey, hello 👋",
+                          "Hey 👋",
                           style: GoogleFonts.poppins(
                             color: darkGrey,
                             fontSize: 24,
@@ -82,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () {
                     setState(() {
                       isSelectOpen = !isSelectOpen;
@@ -112,9 +111,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               : isFamily
                                   ? "Family member/Friends"
                                   : isProvider
-                                      ? "Provider"
+                                      ? "Care team member"
                                       : isReviewer
-                                          ? "Reviewer"
+                                          ? "Implementor"
                                           : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
@@ -158,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: const EdgeInsets.only(top: 6, bottom: 6),
                     child: Column(
                       children: [
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             setState(() {
                               isParticipant = true;
@@ -171,7 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: const UserTypeTile(
                             userIcon: "lib/resources/icons/ic_participant.svg",
                             userType: "Participant",
-                            userDescription: "Who want to achieve Goal",
+                            userDescription: "Who want to achieve goal",
                           ),
                         ),
                         const Divider(
@@ -179,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             setState(() {
                               isParticipant = false;
@@ -200,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             setState(() {
                               isParticipant = false;
@@ -212,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           child: const UserTypeTile(
                             userIcon: "lib/resources/icons/ic_provider.svg",
-                            userType: "Provider",
+                            userType: "Care team member",
                             userDescription:
                                 "To help Achievers to complete goal",
                           ),
@@ -222,7 +221,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             setState(() {
                               isParticipant = false;
@@ -234,7 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           child: const UserTypeTile(
                             userIcon: "lib/resources/icons/ic_reviewer.svg",
-                            userType: "Reviewer",
+                            userType: "Implementor",
                             userDescription:
                                 "Provide feed back on Achievers performance",
                           ),
@@ -261,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _firstNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'First name',
+                              hintText: 'First name *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -287,7 +286,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _lastNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Last name',
+                              hintText: 'Last name *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -313,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _phoneNumController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Phone number',
+                              hintText: 'Phone number *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -371,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Email address',
+                              hintText: 'Email address *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -400,33 +399,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _passwordController,
                             obscureText: passwordVisible,
                             decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Enter your password',
-                                hintStyle: GoogleFonts.poppins(
-                                  color: iconGrey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        passwordVisible = !passwordVisible;
-                                      },
-                                    );
-                                  },
-                                  icon: passwordVisible
-                                      ? const Icon(
-                                          Icons.visibility_off_outlined,
-                                          color: iconGrey,
-                                          size: 24,
-                                        )
-                                      : const Icon(
-                                          Icons.remove_red_eye_outlined,
-                                          color: iconGrey,
-                                          size: 24,
-                                        ),
-                                )),
+                              border: InputBorder.none,
+                              hintText: 'Enter your password *',
+                              hintStyle: GoogleFonts.poppins(
+                                color: iconGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      passwordVisible = !passwordVisible;
+                                    },
+                                  );
+                                },
+                                icon: passwordVisible
+                                    ? const Icon(
+                                        Icons.visibility_off_outlined,
+                                        color: iconGrey,
+                                        size: 24,
+                                      )
+                                    : const Icon(
+                                        Icons.remove_red_eye_outlined,
+                                        color: iconGrey,
+                                        size: 24,
+                                      ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -447,7 +447,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             obscureText: rePasswordVisible,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Re-Enter password',
+                                hintText: 'Re-Enter password *',
                                 hintStyle: GoogleFonts.poppins(
                                   color: iconGrey,
                                   fontSize: 14,
@@ -478,8 +478,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                InkWell(
+                GestureDetector(
                   onTap: () async {
+                    if (_firstNameController.text.trim() == "" ||
+                        _lastNameController.text.trim() == "" ||
+                        _phoneNumController.text.trim() == "" ||
+                        _emailController.text.trim() == "" ||
+                        _passwordController.text.trim() == "" ||
+                        _repasswordController.text.trim() == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Please enter all fields")));
+                      return;
+                    }
                     if (_passwordController.text !=
                         _repasswordController.text) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -490,7 +500,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(
                               "Password should be atlest 8 characters with one Upper, one lower case, one number and one special character")));
-                              return;
+                      return;
                     }
                     RegisterResponse response = await ApiService().register(
                         _firstNameController.text,

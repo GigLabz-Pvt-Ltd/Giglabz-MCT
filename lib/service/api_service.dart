@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import '../models/register_response.dart';
 import '../models/login_response.dart';
 
@@ -16,7 +14,7 @@ class ApiService {
       String password,
       String confirmPassword,
       int roleId) async {
-    final response = await post(Uri.parse(BASE_URL + "/api/signup"),
+    final response = await post(Uri.parse("$BASE_URL/api/signup"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -35,7 +33,7 @@ class ApiService {
 
   Future<LoginResponse> login(
       String userName, String password, int roleId) async {
-    final response = await post(Uri.parse(BASE_URL + "/api/login"),
+    final response = await post(Uri.parse("$BASE_URL/api/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -44,7 +42,6 @@ class ApiService {
           "password": password,
           "roleId": roleId,
         }));
-    var a = response.body;
     final activity = getLoginResponseApiFromJson(response.body);
     return activity;
   }

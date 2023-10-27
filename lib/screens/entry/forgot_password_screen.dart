@@ -32,30 +32,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     height: 108,
                   ),
                 ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(
-                        Icons.west,
-                        color: appBlack,
-                        size: 20,
-                      ),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(
+                      Icons.west,
+                      color: appBlack,
+                      size: 20,
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                        left: 12,
-                      ),
-                      child: Text(
-                        "Forgot",
-                        style: GoogleFonts.poppins(
-                          color: appBlack,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 Container(
                   alignment: Alignment.center,

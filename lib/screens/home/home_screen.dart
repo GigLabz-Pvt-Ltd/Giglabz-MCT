@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,9 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: const BoxDecoration(
           color: Color(0xff1182EA),
           borderRadius: BorderRadius.all(Radius.circular(15))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(
           children: [
             circularProgressBar(),

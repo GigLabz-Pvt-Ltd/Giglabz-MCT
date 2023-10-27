@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isProvider = false;
   bool isReviewer = false;
   bool passwordVisible = true;
-  
+
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -60,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 32),
                         child: Text(
-                          "Hey, hello 👋",
+                          "Hey 👋",
                           style: GoogleFonts.poppins(
                             color: darkGrey,
                             fontSize: 24,
@@ -112,9 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               : isFamily
                                   ? "Family member/Friends"
                                   : isProvider
-                                      ? "Provider"
+                                      ? "Care team member"
                                       : isReviewer
-                                          ? "Reviewer"
+                                          ? "Implementor"
                                           : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
@@ -171,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: UserTypeTile(
                             userIcon: "lib/resources/icons/ic_participant.svg",
                             userType: "Participant",
-                            userDescription: "Who want to achieve Goal",
+                            userDescription: "Who want to achieve goal",
                           ),
                         ),
                         Divider(
@@ -212,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: UserTypeTile(
                             userIcon: "lib/resources/icons/ic_provider.svg",
-                            userType: "Provider",
+                            userType: "Care team member",
                             userDescription:
                                 "To help Achievers to complete goal",
                           ),
@@ -234,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: UserTypeTile(
                             userIcon: "lib/resources/icons/ic_reviewer.svg",
-                            userType: "Reviewer",
+                            userType: "Implementor",
                             userDescription:
                                 "Provide feed back on Achievers performance",
                           ),
@@ -295,22 +293,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                           suffixIcon: IconButton(
-                            onPressed: (){
-                              setState( 
-                          () { 
-                            passwordVisible = !passwordVisible; 
-                          }, 
-                        ); 
+                            onPressed: () {
+                              setState(
+                                () {
+                                  passwordVisible = !passwordVisible;
+                                },
+                              );
                             },
-                            icon: passwordVisible ?const Icon(
-                              Icons.visibility_off_outlined,
-                              color: iconGrey,
-                              size: 24,
-                            ) : const Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: iconGrey,
-                              size: 24,
-                            ),
+                            icon: passwordVisible
+                                ? const Icon(
+                                    Icons.visibility_off_outlined,
+                                    color: iconGrey,
+                                    size: 24,
+                                  )
+                                : const Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: iconGrey,
+                                    size: 24,
+                                  ),
                           )),
                     ),
                   ),
