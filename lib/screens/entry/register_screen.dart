@@ -480,6 +480,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 InkWell(
                   onTap: () async {
+                    if (_passwordController.text !=
+                        _repasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Passwords don't match")));
+                      return;
+                    }
+                    if (!isPasswordValid(_passwordController.text)) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              "Password should be atlest 8 characters with one Upper, one lower case, one number and one special character")));
+                              return;
+                    }
                     RegisterResponse response = await ApiService().register(
                         _firstNameController.text,
                         _lastNameController.text,
@@ -617,5 +629,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  bool isPasswordValid(String text) {
+    RegExp regex =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    if (text.isEmpty) {
+      return false;
+    } else {
+      if (!regex.hasMatch(text)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
 }
