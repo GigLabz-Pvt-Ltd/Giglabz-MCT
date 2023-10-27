@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
   bool isSelectOpen = false;
   bool isParticipant = false;
+  bool isFamily = false;
+  bool isProvider = false;
+  bool isReviewer = false;
+  bool passwordVisible = true;
+
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -55,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 32),
                         child: Text(
-                          "Hey, hello 👋",
+                          "Hey 👋",
                           style: GoogleFonts.poppins(
                             color: darkGrey,
                             fontSize: 24,
@@ -102,7 +105,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          isParticipant ? "Participant" : "Select",
+                          isParticipant
+                              ? "Participant"
+                              : isFamily
+                                  ? "Family member/Friends"
+                                  : isProvider
+                                      ? "Care team member"
+                                      : isReviewer
+                                          ? "Implementor"
+                                          : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -150,12 +161,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               isParticipant = true;
                               isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = false;
                             });
                           },
                           child: UserTypeTile(
                             userIcon: "lib/resources/icons/ic_participant.svg",
                             userType: "Participant",
-                            userDescription: "Who want to achieve Goal",
+                            userDescription: "Who want to achieve goal",
                           ),
                         ),
                         Divider(
@@ -163,31 +177,65 @@ class _LoginScreenState extends State<LoginScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_family.svg",
-                          userType: "Family member/Friends",
-                          userDescription: "To set goal for your well-wisher",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = true;
+                              isProvider = false;
+                              isReviewer = false;
+                            });
+                          },
+                          child: UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_family.svg",
+                            userType: "Family member/Friends",
+                            userDescription: "To set goal for your well-wisher",
+                          ),
                         ),
                         Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_provider.svg",
-                          userType: "Provider",
-                          userDescription: "To help Achievers to complete goal",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = true;
+                              isReviewer = false;
+                            });
+                          },
+                          child: UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_provider.svg",
+                            userType: "Care team member",
+                            userDescription:
+                                "To help Achievers to complete goal",
+                          ),
                         ),
                         Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_reviewer.svg",
-                          userType: "Reviewer",
-                          userDescription:
-                              "Provide feed back on Achievers performance",
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = true;
+                            });
+                          },
+                          child: UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_reviewer.svg",
+                            userType: "Implementor",
+                            userDescription:
+                                "Provide feed back on Achievers performance",
+                          ),
                         ),
                       ],
                     ),
@@ -235,20 +283,35 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     child: TextField(
                       controller: _passwordController,
+                      obscureText: passwordVisible,
                       decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter your password',
-                        hintStyle: GoogleFonts.poppins(
-                          color: iconGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        suffixIcon: const Icon(
-                          Icons.remove_red_eye_outlined,
-                          color: iconGrey,
-                          size: 24,
-                        ),
-                      ),
+                          border: InputBorder.none,
+                          hintText: 'Enter your password',
+                          hintStyle: GoogleFonts.poppins(
+                            color: iconGrey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(
+                                () {
+                                  passwordVisible = !passwordVisible;
+                                },
+                              );
+                            },
+                            icon: passwordVisible
+                                ? const Icon(
+                                    Icons.visibility_off_outlined,
+                                    color: iconGrey,
+                                    size: 24,
+                                  )
+                                : const Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: iconGrey,
+                                    size: 24,
+                                  ),
+                          )),
                     ),
                   ),
                 ),
@@ -316,15 +379,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 InkWell(
                   onTap: () async {
                     LoginResponse response = await ApiService().login(
-                        _userNameController.text, _passwordController.text, 3);
+                        _userNameController.text,
+                        _passwordController.text,
+                        isParticipant
+                            ? 1
+                            : isFamily
+                                ? 2
+                                : isProvider
+                                    ? 3
+                                    : isReviewer
+                                        ? 4
+                                        : -1);
                     if (response.statusCode != null) {
-                      if(response.statusCode == 200){
+                      if (response.statusCode == 200) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => const HomeScreen()));
+                            builder: (BuildContext context) =>
+                                const HomeScreen()));
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(response.message.toString())));
                     }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(response.message.toString())));
                   },
                   child: Container(
                     width: double.infinity,

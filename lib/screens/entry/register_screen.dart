@@ -6,7 +6,6 @@ import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
-import 'dart:developer';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -18,6 +17,12 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool isSelectOpen = false;
   bool isParticipant = false;
+  bool isFamily = false;
+  bool isProvider = false;
+  bool isReviewer = false;
+  bool passwordVisible = true;
+  bool rePasswordVisible = true;
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
@@ -54,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 32),
                         child: Text(
-                          "Hey, hello 👋",
+                          "Hey 👋",
                           style: GoogleFonts.poppins(
                             color: darkGrey,
                             fontSize: 24,
@@ -76,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () {
                     setState(() {
                       isSelectOpen = !isSelectOpen;
@@ -101,7 +106,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          isParticipant ? "Participant" : "Select",
+                          isParticipant
+                              ? "Participant"
+                              : isFamily
+                                  ? "Family member/Friends"
+                                  : isProvider
+                                      ? "Care team member"
+                                      : isReviewer
+                                          ? "Implementor"
+                                          : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
@@ -144,17 +157,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: const EdgeInsets.only(top: 6, bottom: 6),
                     child: Column(
                       children: [
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             setState(() {
                               isParticipant = true;
                               isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = false;
                             });
                           },
                           child: const UserTypeTile(
                             userIcon: "lib/resources/icons/ic_participant.svg",
                             userType: "Participant",
-                            userDescription: "Who want to achieve Goal",
+                            userDescription: "Who want to achieve goal",
                           ),
                         ),
                         const Divider(
@@ -162,36 +178,70 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_family.svg",
-                          userType: "Family member/Friends",
-                          userDescription: "To set goal for your well-wisher",
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = true;
+                              isProvider = false;
+                              isReviewer = false;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_family.svg",
+                            userType: "Family member/Friends",
+                            userDescription: "To set goal for your well-wisher",
+                          ),
                         ),
                         const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_provider.svg",
-                          userType: "Provider",
-                          userDescription: "To help Achievers to complete goal",
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = true;
+                              isReviewer = false;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_provider.svg",
+                            userType: "Care team member",
+                            userDescription:
+                                "To help Achievers to complete goal",
+                          ),
                         ),
                         const Divider(
                           color: dividerGrey,
                           indent: 40,
                           endIndent: 12,
                         ),
-                        const UserTypeTile(
-                          userIcon: "lib/resources/icons/ic_reviewer.svg",
-                          userType: "Reviewer",
-                          userDescription:
-                              "Provide feed back on Achievers performance",
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isParticipant = false;
+                              isSelectOpen = false;
+                              isFamily = false;
+                              isProvider = false;
+                              isReviewer = true;
+                            });
+                          },
+                          child: const UserTypeTile(
+                            userIcon: "lib/resources/icons/ic_reviewer.svg",
+                            userType: "Implementor",
+                            userDescription:
+                                "Provide feed back on Achievers performance",
+                          ),
                         ),
                       ],
                     ),
                   ),
-                if (isParticipant)
+                if (isParticipant || isFamily || isProvider || isReviewer)
                   Column(
                     children: [
                       Container(
@@ -210,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _firstNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'First name',
+                              hintText: 'First name *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -236,7 +286,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _lastNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Last name',
+                              hintText: 'Last name *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -262,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _phoneNumController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Phone number',
+                              hintText: 'Phone number *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -320,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: _emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Email address',
+                              hintText: 'Email address *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
@@ -347,18 +397,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           child: TextField(
                             controller: _passwordController,
+                            obscureText: passwordVisible,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Password',
+                              hintText: 'Enter your password *',
                               hintStyle: GoogleFonts.poppins(
                                 color: iconGrey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
-                              suffixIcon: const Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: iconGrey,
-                                size: 24,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      passwordVisible = !passwordVisible;
+                                    },
+                                  );
+                                },
+                                icon: passwordVisible
+                                    ? const Icon(
+                                        Icons.visibility_off_outlined,
+                                        color: iconGrey,
+                                        size: 24,
+                                      )
+                                    : const Icon(
+                                        Icons.remove_red_eye_outlined,
+                                        color: iconGrey,
+                                        size: 24,
+                                      ),
                               ),
                             ),
                           ),
@@ -378,27 +444,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           child: TextField(
                             controller: _repasswordController,
+                            obscureText: rePasswordVisible,
                             decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Re-Enter password',
-                              hintStyle: GoogleFonts.poppins(
-                                color: iconGrey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              suffixIcon: const Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: iconGrey,
-                                size: 24,
-                              ),
-                            ),
+                                border: InputBorder.none,
+                                hintText: 'Re-Enter password *',
+                                hintStyle: GoogleFonts.poppins(
+                                  color: iconGrey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        rePasswordVisible = !rePasswordVisible;
+                                      },
+                                    );
+                                  },
+                                  icon: rePasswordVisible
+                                      ? const Icon(
+                                          Icons.visibility_off_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        )
+                                      : const Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: iconGrey,
+                                          size: 24,
+                                        ),
+                                )),
                           ),
                         ),
                       ),
                     ],
                   ),
-                InkWell(
+                GestureDetector(
                   onTap: () async {
+                    if (_firstNameController.text.trim() == "" ||
+                        _lastNameController.text.trim() == "" ||
+                        _phoneNumController.text.trim() == "" ||
+                        _emailController.text.trim() == "" ||
+                        _passwordController.text.trim() == "" ||
+                        _repasswordController.text.trim() == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Please enter all fields")));
+                      return;
+                    }
+                    if (_passwordController.text !=
+                        _repasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Passwords don't match")));
+                      return;
+                    }
+                    if (!isPasswordValid(_passwordController.text)) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              "Password should be atlest 8 characters with one Upper, one lower case, one number and one special character")));
+                      return;
+                    }
                     RegisterResponse response = await ApiService().register(
                         _firstNameController.text,
                         _lastNameController.text,
@@ -406,18 +509,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _emailController.text,
                         _passwordController.text,
                         _repasswordController.text,
-                        1);
-                    // if (response.responseStatus == 200) {
-                    //   () => Navigator.of(context).pushReplacement(
-                    //       MaterialPageRoute(
-                    //           builder: (BuildContext context) =>
-                    //               const HomeScreen()));
-                    // } else {
-                    //   print("Error in response: ${response.responseMessage}");
-                    // }
+                        isParticipant
+                            ? 1
+                            : isFamily
+                                ? 2
+                                : isProvider
+                                    ? 3
+                                    : isReviewer
+                                        ? 4
+                                        : -1);
                     if (response.responseStatus != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(response.responseMessage.toString())));
+                      if (response.responseStatus == 200) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const HomeScreen()),
+                            (Route<dynamic> route) => false);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text(response.responseMessage.toString())));
+                      }
                     }
                   },
                   child: Container(
@@ -527,5 +639,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  bool isPasswordValid(String text) {
+    RegExp regex =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    if (text.isEmpty) {
+      return false;
+    } else {
+      if (!regex.hasMatch(text)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
 }
