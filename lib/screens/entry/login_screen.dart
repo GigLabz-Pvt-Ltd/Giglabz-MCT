@@ -427,18 +427,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   InkWell(
                     onTap: () async {
+                      if(selectedRole == -1){
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Select a Role")));
+                          return;
+                      }
+                      if(_userNameController.text.isEmpty){
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Enter User Name")));
+                          return;
+                      }
+                       if(_passwordController.text.isEmpty){
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Enter Password")));
+                          return;
+                      }
                       LoginResponse response = await ApiService().login(
                           _userNameController.text,
                           _passwordController.text,
-                          isParticipant
-                              ? 1
-                              : isFamily
-                                  ? 2
-                                  : isProvider
-                                      ? 3
-                                      : isReviewer
-                                          ? 4
-                                          : -1);
+                          selectedRole+1);
                       if (response.statusCode != null) {
                         if (response.statusCode == 200) {
                           Navigator.of(context).pushReplacement(

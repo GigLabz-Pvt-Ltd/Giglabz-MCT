@@ -573,6 +573,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   GestureDetector(
                     onTap: () async {
+                      if(selectedRole == -1){
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Select a Role")));
+                          return;
+                      }
                       if (_firstNameController.text.trim() == "" ||
                           _lastNameController.text.trim() == "" ||
                           _phoneNumController.text.trim() == "" ||
@@ -600,19 +605,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       RegisterResponse response = await ApiService().register(
                           _firstNameController.text,
                           _lastNameController.text,
-                          _phoneNumController.text,
+                          selectedCountry.code! + _phoneNumController.text,
                           _emailController.text,
                           _passwordController.text,
                           _repasswordController.text,
-                          isParticipant
-                              ? 1
-                              : isFamily
-                                  ? 2
-                                  : isProvider
-                                      ? 3
-                                      : isReviewer
-                                          ? 4
-                                          : -1);
+                          selectedRole+1);
                       if (response.responseStatus != null) {
                         if (response.responseStatus == 200) {
                           Navigator.of(context).pushAndRemoveUntil(
