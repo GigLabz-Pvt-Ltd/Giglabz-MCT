@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/register_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
@@ -22,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isReviewer = false;
   bool passwordVisible = true;
   bool rePasswordVisible = true;
+  var selectedCountry = countries[0];
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -32,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -113,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   : isProvider
                                       ? "Care team member"
                                       : isReviewer
-                                          ? "Implementor"
+                                          ? "Implementer"
                                           : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
@@ -233,7 +238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           child: const UserTypeTile(
                             userIcon: "lib/resources/icons/ic_reviewer.svg",
-                            userType: "Implementor",
+                            userType: "Implementer",
                             userDescription:
                                 "Provide feed back on Achievers performance",
                           ),
@@ -310,6 +315,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           child: TextField(
                             controller: _phoneNumController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Phone number *',
@@ -317,6 +326,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: iconGrey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
+                              ),
+                              prefixIcon: DropdownButtonHideUnderline(
+                                child: DropdownButton<FlagsAndCode>(
+                                  alignment: Alignment.center,
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  onChanged: (FlagsAndCode? newValue) {
+                                    setState(() {
+                                      selectedCountry = newValue!;
+                                    });
+                                  },
+                                  value: selectedCountry,
+                                  items: countries
+                                      .map((FlagsAndCode dropDownString) {
+                                    return DropdownMenuItem<FlagsAndCode>(
+                                      value: dropDownString,
+                                      child: Row(children: [
+                                        SvgPicture.asset(
+                                          "lib/resources/images/"+dropDownString.svg!+".svg",
+                                          width: 20,
+                                          height: 20,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: Text(
+                                            "("+dropDownString.code!+")",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(color: iconGrey),
+                                          ),
+                                        ),
+                                      ]),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                               suffixIcon: SvgPicture.asset(
                                 "lib/resources/icons/ic_verified.svg",

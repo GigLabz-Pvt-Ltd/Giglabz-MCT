@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : isProvider
                                       ? "Care team member"
                                       : isReviewer
-                                          ? "Implementor"
+                                          ? "Implementer"
                                           : "Select",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: UserTypeTile(
                             userIcon: "lib/resources/icons/ic_reviewer.svg",
-                            userType: "Implementor",
+                            userType: "Implementer",
                             userDescription:
                                 "Provide feed back on Achievers performance",
                           ),
