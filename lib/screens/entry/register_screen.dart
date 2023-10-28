@@ -417,40 +417,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 11),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: const Divider(),
-                                ),
-                              ),
-                              Text(
-                                "or",
-                                style: GoogleFonts.poppins(
-                                  color: iconBlue,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: const Divider(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
                           ),
-                          margin: const EdgeInsets.only(top: 11),
+                          margin: const EdgeInsets.only(top: 24),
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(3)),
