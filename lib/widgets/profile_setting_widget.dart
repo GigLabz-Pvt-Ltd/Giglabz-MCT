@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
@@ -9,9 +11,7 @@ import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
 
 class ProfileSettingWidget extends StatefulWidget {
-
-  const ProfileSettingWidget({Key? key})
-      : super(key: key);
+  const ProfileSettingWidget({Key? key}) : super(key: key);
 
   @override
   State<ProfileSettingWidget> createState() => _ProfileSettingWidgetState();
@@ -26,36 +26,47 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedGender = genders[0];
   DateTime selectedDate = DateTime.now();
   bool isFirstScreen = true;
+  bool ndisFilled = false;
+
+  List<bool> toggleValues = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: scaffoldGrey,
+      backgroundColor: Colors.white,
       floatingActionButton: Container(
-              height: 44,
-              width: 44,
-              margin: const EdgeInsets.fromLTRB(0, 0, 8, 16),
-              child: FloatingActionButton(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
-                onPressed: () {
-                  setState(() {
-                    isFirstScreen = !isFirstScreen;
-                  });
-                },
-                child: const Icon(
-                  Icons.keyboard_arrow_right_outlined,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+        height: 44,
+        width: 44,
+        margin: const EdgeInsets.fromLTRB(0, 0, 8, 16),
+        child: FloatingActionButton(
+          backgroundColor: primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          onPressed: () {
+            setState(() {
+              isFirstScreen = !isFirstScreen;
+            });
+          },
+          child: const Icon(
+            Icons.keyboard_arrow_right_outlined,
+            color: Colors.white,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: isFirstScreen
-              ? Column(
-                children: [
+              ? Column(children: [
                   Container(
                     margin: const EdgeInsets.fromLTRB(4, 14, 0, 0),
                     child: Row(
@@ -241,7 +252,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                     fit: BoxFit.cover,
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 4),
+                                    padding: const EdgeInsets.only(left: 4),
                                     child: Text(
                                       "(${dropDownString.code!})",
                                       textAlign: TextAlign.center,
@@ -291,7 +302,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           Container(
                             height: 70,
                             width: double.infinity,
-                            padding: EdgeInsets.only(top: 30, left: 10),
+                            padding: const EdgeInsets.only(top: 30, left: 10),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 alignment: Alignment.center,
@@ -306,11 +317,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                   return DropdownMenuItem<String>(
                                     value: dropDownString,
                                     child: Padding(
-                                      padding: EdgeInsets.only(left: 4),
+                                      padding: const EdgeInsets.only(left: 4),
                                       child: Text(
                                         dropDownString,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(color: secondaryColor),
+                                        style: const TextStyle(
+                                            color: secondaryColor),
                                       ),
                                     ),
                                   );
@@ -321,28 +333,49 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         ]),
                       ),
                     ]),
-                    const CalendarOrDropDown(
-                        label: "NDIS Number",
-                        hint: "Enter NDIS Number",
-                        suffixIcon: "ndis_right_arrow"),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: CalendarOrDropDown(
-                              label: "NDIS Plan Start Date",
-                              hint: "00-00-0000",
-                              suffixIcon: "calendar"),
-                        ),
-                        Container(
-                          width: 10,
-                        ),
-                        const Expanded(
-                          child: CalendarOrDropDown(
-                              label: "NDIS Plan End Date",
-                              hint: "00-00-0000",
-                              suffixIcon: "calendar"),
-                        ),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: CalendarOrDropDown(
+                          label: "NDIS Number",
+                          hint: "Enter NDIS Number",
+                          suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CalendarOrDropDown(
+                                label: "NDIS Plan Start Date",
+                                hint: "00-00-0000",
+                                suffixIcon: "calendar",
+                                bgColor: ndisFilled ? ndisSelectedBg : null),
+                          ),
+                          Container(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: CalendarOrDropDown(
+                                label: "NDIS Plan End Date",
+                                hint: "00-00-0000",
+                                suffixIcon: "calendar",
+                                bgColor: ndisFilled ? ndisSelectedBg : null),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       height: 70,
@@ -354,7 +387,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         Container(
                           height: 70,
                           width: double.infinity,
-                          padding: EdgeInsets.only(top: 30, left: 10),
+                          padding: const EdgeInsets.only(top: 30, left: 10),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               alignment: Alignment.center,
@@ -369,11 +402,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                 return DropdownMenuItem<String>(
                                   value: dropDownString,
                                   child: Padding(
-                                    padding: EdgeInsets.only(left: 4),
+                                    padding: const EdgeInsets.only(left: 4),
                                     child: Text(
                                       dropDownString,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(color: secondaryColor),
+                                      style: const TextStyle(
+                                          color: secondaryColor),
                                     ),
                                   ),
                                 );
@@ -385,7 +419,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     ),
                     Container(
                       height: 44,
-                      margin: EdgeInsets.only(top: 24),
+                      margin: const EdgeInsets.only(top: 24),
                       child: TextField(
                         style: GoogleFonts.poppins(
                             fontSize: 14,
@@ -435,7 +469,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         Container(
                           height: 70,
                           width: double.infinity,
-                          padding: EdgeInsets.only(top: 30, left: 10),
+                          padding: const EdgeInsets.only(top: 30, left: 10),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               alignment: Alignment.center,
@@ -450,11 +484,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                 return DropdownMenuItem<String>(
                                   value: dropDownString,
                                   child: Padding(
-                                    padding: EdgeInsets.only(left: 4),
+                                    padding: const EdgeInsets.only(left: 4),
                                     child: Text(
                                       dropDownString,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(color: secondaryColor),
+                                      style: const TextStyle(
+                                          color: secondaryColor),
                                     ),
                                   ),
                                 );
@@ -481,23 +516,32 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           ),
                         )),
                     aboutMeWidget(),
-                    Container(
-                        height: 40,
-                        width: double.infinity,
-                        margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
-                        decoration: const BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Update Profile",
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return okDialog("update_profile");
+                            });
+                      },
+                      child: Container(
+                          height: 40,
+                          width: double.infinity,
+                          margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
+                          decoration: const BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
                           ),
-                        )),
+                          child: Center(
+                            child: Text(
+                              "Update Profile",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            ),
+                          )),
+                    ),
                   ],
                 ),
         ),
@@ -522,7 +566,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     return Stack(children: [
       Container(
         height: 90,
-        padding: EdgeInsets.fromLTRB(0, 0, 6, 6),
+        padding: const EdgeInsets.fromLTRB(0, 0, 6, 6),
         child: Align(
           alignment: Alignment.bottomRight,
           child: SvgPicture.asset(
@@ -557,5 +601,543 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         ),
       ),
     ]);
+  }
+
+  Widget ndisPlanInfoDialog() {
+    return Dialog(
+      child: Container(
+        height: 364,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(3.0))),
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+              decoration: const BoxDecoration(
+                  color: alertDialogTitleBg,
+                  borderRadius: BorderRadius.all(Radius.circular(3.0))),
+              padding: const EdgeInsets.only(left: 24),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "NDIS Plan Information",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
+                          child: SvgPicture.asset(
+                              "lib/resources/images/dialog_close.svg")),
+                    ),
+                  ]),
+            ),
+            Container(
+              height: 44,
+              margin: const EdgeInsets.only(top: 24, left: 20, right: 20),
+              child: TextField(
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: secondaryColor),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                decoration: InputDecoration(
+                  hintStyle: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  labelStyle: GoogleFonts.poppins(
+                    color: iconBlack,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: outlineGrey,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: outlineGrey,
+                    ),
+                  ),
+                  labelText: "NDIS Number",
+                  border: InputBorder.none,
+                  hintText: 'Enter NDIS Number',
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                selectDate(context);
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: CalendarOrDropDown(
+                    label: "NDIS Plan Start Date",
+                    hint: "00-00-0000",
+                    suffixIcon: "calendar"),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                selectDate(context);
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: CalendarOrDropDown(
+                    label: "NDIS Plan End Date",
+                    hint: "00-00-0000",
+                    suffixIcon: "calendar"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, left: 20, right: 20),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Text(
+                  "Your NDIS Plan Expiry",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: secondaryColor),
+                ),
+                Container(
+                  height: 2,
+                  width: 60,
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  color: dividerGrey,
+                ),
+                Text(
+                  "Days",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: secondaryColor),
+                ),
+              ]),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  ndisFilled = true;
+                });
+              },
+              child: Container(
+                  height: 40,
+                  margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Submit",
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white),
+                    ),
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget okDialog(String fromDialog) {
+    return Dialog(
+      child: Container(
+        height: 250,
+        decoration: const BoxDecoration(
+            color: scaffoldGrey,
+            borderRadius: BorderRadius.all(Radius.circular(3.0))),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(35, 35, 35, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("lib/resources/images/ndis_tick.svg"),
+              if (fromDialog == "update_profile")
+                Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Please Complete the ',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: 'NDIS',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: ' Declaration Form',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    )),
+              if (fromDialog == "ndis_agreement")
+                Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Please Complete the ',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: 'Terms and Conditions',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: secondaryColor),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    )),
+              if (fromDialog == "terms_and_conditions")
+                Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Your Profile has been ',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: 'Updated ',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: 'Successfully',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    )),
+              GestureDetector(
+                onTap: () {
+                  if (fromDialog == "update_profile") {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ndisAgreementDialog();
+                        });
+                  }
+                  if (fromDialog == "ndis_agreement") {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return termsAndConditionsDialog();
+                        });
+                  }
+                  if (fromDialog == "terms_and_conditions") {
+                    Navigator.pop(context);
+                  }
+                },
+                child: Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 24),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "OK",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget ndisAgreementDialog() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Dialog(
+          child: Stack(children: [
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(top: 50),
+              child: SingleChildScrollView(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(3.0))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: alertDialogTitleBgLite,
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: Text(
+                          "Confirm that the following topics have been discussed and understood by the participant.",
+                          style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: iconBlack),
+                        ),
+                      ),
+                      toggle(0,
+                          "Plan Funding Included in the participant’s NDIS Plan"),
+                      toggle(1,
+                          "The different support categories and their flexibility"),
+                      toggle(2, "Fund management and claiming"),
+                      toggle(3,
+                          "Organising and planning supports over the life of the NDIS Plan"),
+                      toggle(
+                          4, "The role of community and mainstream supports"),
+                      toggle(5,
+                          "How to access and use the My NDIS portal and App"),
+                      toggle(
+                          6, "The value and importance of service agreements"),
+                      toggle(7,
+                          "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return okDialog("ndis_agreement");
+                              });
+                        },
+                        child: Container(
+                            height: 40,
+                            width: double.infinity,
+                            margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                            decoration: const BoxDecoration(
+                              color: primaryColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              decoration: const BoxDecoration(
+                  color: alertDialogTitleBg,
+                  borderRadius: BorderRadius.all(Radius.circular(3.0))),
+              padding: const EdgeInsets.only(left: 24),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "NDIS Agreement",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
+                          child: SvgPicture.asset(
+                              "lib/resources/images/dialog_close.svg")),
+                    ),
+                  ]),
+            ),
+          ]),
+        );
+      },
+    );
+  }
+
+  toggle(int toggleValueIndex, String message) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Container(
+        height: 50,
+        padding: const EdgeInsets.only(left: 16, right: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(child: Text(message)),
+            Container(
+              width: 8,
+            ),
+            FlutterSwitch(
+              height: 22,
+              width: 40,
+              value: toggleValues[toggleValueIndex],
+              toggleSize: 20,
+              padding: 2,
+              valueFontSize: 10,
+              borderRadius: 10,
+              activeToggleColor: activeToggle,
+              inactiveColor: toggleTrack,
+              activeColor: toggleTrack,
+              inactiveIcon:
+                  SvgPicture.asset("lib/resources/images/toggle_inactive.svg"),
+              onToggle: (val) {
+                setState(() {
+                  toggleValues[toggleValueIndex] = val;
+                });
+              },
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget termsAndConditionsDialog() {
+    return Dialog(
+      child: Stack(children: [
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.only(top: 50),
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(3.0))),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Text(
+                      termsAndCondition,
+                      style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: iconBlack),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return okDialog("terms_and_conditions");
+                          });
+                    },
+                    child: Container(
+                        height: 40,
+                        width: double.infinity,
+                        margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Accept",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          height: 50,
+          decoration: const BoxDecoration(
+              color: alertDialogTitleBg,
+              borderRadius: BorderRadius.all(Radius.circular(3.0))),
+          padding: const EdgeInsets.only(left: 24),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              "Terms and Conditions",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
+                  child: SvgPicture.asset(
+                      "lib/resources/images/dialog_close.svg")),
+            ),
+          ]),
+        ),
+      ]),
+    );
   }
 }

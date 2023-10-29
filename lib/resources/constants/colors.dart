@@ -15,4 +15,9 @@ const appBlack = Color(0xFF2A2F32);
 const iconBlack = Color(0xFF222222);
 const tabSelected = Color(0xFFFFBF13);
 const cameraBg = Color(0xFF00B278);
+const alertDialogTitleBg = Color(0xFF10AFB9);
+const alertDialogTitleBgLite = Color(0xFFDCF1EF);
+const toggleTrack = Color(0xFFEFF8F2);
+const activeToggle = Color(0xFF44D788);
+const ndisSelectedBg = Color(0xFFF8F8F8);
 

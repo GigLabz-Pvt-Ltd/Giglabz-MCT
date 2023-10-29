@@ -47,6 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               backgroundColor: primaryColor,
               pinned: true,
               floating: false,
+              forceElevated: true,
+              elevation: 1,
               titleSpacing: 0,
               leading: GestureDetector(
                 onTap: () {
