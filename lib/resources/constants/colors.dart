@@ -13,3 +13,6 @@ const borderGrey = Color(0xFFECECEC);
 const dividerGrey = Color(0xFFE1E1E1);
 const appBlack = Color(0xFF2A2F32);
 const iconBlack = Color(0xFF222222);
+const tabSelected = Color(0xFFFFBF13);
+const cameraBg = Color(0xFF00B278);
+

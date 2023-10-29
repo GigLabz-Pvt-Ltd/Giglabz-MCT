@@ -170,13 +170,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           const Spacer(),
-                            Icon(
-                              isSelectOpen
-                                  ? Icons.expand_less_rounded
-                                  : Icons.expand_more_rounded,
-                              color: Colors.white,
-                              size: 24,
-                            ),
+                          Icon(
+                            isSelectOpen
+                                ? Icons.expand_less_rounded
+                                : Icons.expand_more_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ],
                       ),
                     ),
@@ -190,6 +190,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: borderGrey,
                           ),
                           right: BorderSide(
+                            width: 2,
+                            color: borderGrey,
+                          ),
+                          top: BorderSide(
                             width: 2,
                             color: borderGrey,
                           ),
@@ -310,6 +314,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _firstNameController,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'First name *',
@@ -336,6 +344,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _lastNameController,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Last name *',
@@ -362,6 +374,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _phoneNumController,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
@@ -431,6 +447,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _emailController,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email address *',
@@ -461,6 +481,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: TextField(
                               controller: _passwordController,
                               obscureText: passwordVisible,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Enter your password *',
@@ -508,6 +532,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: TextField(
                               controller: _repasswordController,
                               obscureText: rePasswordVisible,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Re-Enter password *',
@@ -544,10 +572,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   GestureDetector(
                     onTap: () async {
-                      if(selectedRole == -1){
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Select a Role")));
-                          return;
+                      if (selectedRole == -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Select a Role")));
+                        return;
                       }
                       if (_firstNameController.text.trim() == "" ||
                           _lastNameController.text.trim() == "" ||
@@ -580,7 +608,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _emailController.text,
                           _passwordController.text,
                           _repasswordController.text,
-                          selectedRole+1);
+                          selectedRole + 1);
                       if (response.responseStatus != null) {
                         if (response.responseStatus == 200) {
                           Navigator.of(context).pushAndRemoveUntil(

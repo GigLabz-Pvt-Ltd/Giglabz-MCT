@@ -91,6 +91,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextField(
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter your email id',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/home/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -293,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
       type: BottomNavigationBarType.fixed,
-      currentIndex: _currentIndex,
+      // currentIndex: _currentIndex,
       backgroundColor: Colors.white,
       selectedItemColor: const Color(0xff019FFE),
       iconSize: 40,
@@ -304,9 +305,21 @@ class _HomeScreenState extends State<HomeScreen> {
       unselectedItemColor: const Color(0xFF019FFE),
       unselectedFontSize: 12.0,
       onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
+        // setState(() {
+        //   _currentIndex = index;
+        // });
+        switch (index) {
+          case 0:
+            break;
+          case 1:
+            break;
+          case 2:
+            break;
+          case 3:
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => const ProfileScreen()));
+            break;
+        }
       },
     );
   }

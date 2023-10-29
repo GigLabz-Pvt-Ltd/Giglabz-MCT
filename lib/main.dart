@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycareteam/screens/home/profile_screen.dart';
 import 'package:mycareteam/screens/splash_screen.dart';
 
 void main() {

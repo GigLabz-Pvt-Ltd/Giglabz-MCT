@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mycareteam/screens/entry/login_screen.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
+import 'package:mycareteam/screens/home/profile_screen.dart';
+import 'package:mycareteam/screens/home/temp.dart';
 import 'package:mycareteam/screens/intro/initial_screen.dart';
 
 class SplashScreen extends StatefulWidget {

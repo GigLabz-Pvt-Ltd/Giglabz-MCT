@@ -164,13 +164,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const Spacer(),
-                            Icon(
-                              isSelectOpen
-                                  ? Icons.expand_less_rounded
-                                  : Icons.expand_more_rounded,
-                              color: Colors.white,
-                              size: 24,
-                            ),
+                          Icon(
+                            isSelectOpen
+                                ? Icons.expand_less_rounded
+                                : Icons.expand_more_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ],
                       ),
                     ),
@@ -184,6 +184,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: borderGrey,
                           ),
                           right: BorderSide(
+                            width: 2,
+                            color: borderGrey,
+                          ),
+                          top: BorderSide(
                             width: 2,
                             color: borderGrey,
                           ),
@@ -300,6 +304,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       child: TextField(
                         controller: _userNameController,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter your name *',
@@ -331,6 +339,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextField(
                         controller: _passwordController,
                         obscureText: passwordVisible,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Enter your password *',
@@ -427,25 +439,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   InkWell(
                     onTap: () async {
-                      if(selectedRole == -1){
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Select a Role")));
-                          return;
+                      if (selectedRole == -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Select a Role")));
+                        return;
                       }
-                      if(_userNameController.text.isEmpty){
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Enter User Name")));
-                          return;
+                      if (_userNameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter User Name")));
+                        return;
                       }
-                       if(_passwordController.text.isEmpty){
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Enter Password")));
-                          return;
+                      if (_passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter Password")));
+                        return;
                       }
                       LoginResponse response = await ApiService().login(
                           _userNameController.text,
                           _passwordController.text,
-                          selectedRole+1);
+                          selectedRole + 1);
                       if (response.statusCode != null) {
                         if (response.statusCode == 200) {
                           Navigator.of(context).pushReplacement(
@@ -569,9 +581,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
     return const Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: CircularProgressIndicator(color: primaryColor,))
-      );
+        backgroundColor: Colors.white,
+        body: Center(
+            child: CircularProgressIndicator(
+          color: primaryColor,
+        )));
   }
 
   void getRoles() async {
