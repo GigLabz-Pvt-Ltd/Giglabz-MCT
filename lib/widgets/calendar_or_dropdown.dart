@@ -19,7 +19,6 @@ class CalendarOrDropDown extends StatelessWidget {
     return Container(
       height: 50,
       margin: const EdgeInsets.only(top: 24),
-      child: Expanded(
         child: Stack(children: [
           Container(
             height: 50,
@@ -59,7 +58,6 @@ class CalendarOrDropDown extends StatelessWidget {
             ),
           )
         ]),
-      ),
     );
   }
 }
