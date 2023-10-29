@@ -14,8 +14,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
-  bool isFirstScreen = true;
-
   final _tabs = [
     "Profile Setting",
     "Avatar",
@@ -52,11 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               titleSpacing: 0,
               leading: GestureDetector(
                 onTap: () {
-                  isFirstScreen
-                      ? Navigator.pop(context)
-                      : setState(() {
-                          isFirstScreen = true;
-                        });
+                  Navigator.pop(context);
                 },
                 child: const Icon(
                   Icons.arrow_back_ios_new,
@@ -85,8 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         },
         body: TabBarView(
           controller: _tabCont,
-          children: [
-            ProfileSettingWidget(isFirstScreen: isFirstScreen, update: _update),
+          children: const [
+            ProfileSettingWidget(),
             Center(child: Text("2")),
             Center(child: Text("3")),
             Center(child: Text("4")),
@@ -94,10 +88,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ),
     );
-  }
-
-  void _update(bool screen) {
-    setState(() => isFirstScreen = screen);
   }
 
   TabBar get _tabBar => TabBar(

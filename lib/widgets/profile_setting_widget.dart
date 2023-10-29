@@ -9,10 +9,8 @@ import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
 
 class ProfileSettingWidget extends StatefulWidget {
-  final ValueChanged<bool> update;
-  final isFirstScreen;
-  const ProfileSettingWidget(
-      {required this.isFirstScreen, required this.update, Key? key})
+
+  const ProfileSettingWidget({Key? key})
       : super(key: key);
 
   @override
@@ -27,13 +25,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime selectedDate = DateTime.now();
+  bool isFirstScreen = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldGrey,
-      floatingActionButton: widget.isFirstScreen
-          ? Container(
+      floatingActionButton: Container(
               height: 44,
               width: 44,
               margin: const EdgeInsets.fromLTRB(0, 0, 8, 16),
@@ -42,20 +40,22 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
                 onPressed: () {
-                  widget.update(false);
+                  setState(() {
+                    isFirstScreen = !isFirstScreen;
+                  });
                 },
                 child: const Icon(
                   Icons.keyboard_arrow_right_outlined,
                   color: Colors.white,
                 ),
               ),
-            )
-          : null,
+            ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
-          child: widget.isFirstScreen
-              ? Column(children: [
+          child: isFirstScreen
+              ? Column(
+                children: [
                   Container(
                     margin: const EdgeInsets.fromLTRB(4, 14, 0, 0),
                     child: Row(
@@ -134,7 +134,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             border: InputBorder.none,
                             hintText: 'Enter any other interests',
                             hintStyle: GoogleFonts.poppins(
-                              color: iconGrey,
+                              color: secondaryColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
@@ -196,7 +196,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ],
                       decoration: InputDecoration(
                         hintStyle: GoogleFonts.poppins(
-                          color: iconGrey,
+                          color: secondaryColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -271,7 +271,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           },
                           child: CalendarOrDropDown(
                               label: "Date of birth",
-                              hint: selectedDate.day.toString()+"-"+selectedDate.month.toString()+"-"+selectedDate.year.toString(),
+                              hint: selectedDate.day.toString() +
+                                  "-" +
+                                  selectedDate.month.toString() +
+                                  "-" +
+                                  selectedDate.year.toString(),
                               suffixIcon: "calendar"),
                         ),
                       ),
@@ -284,7 +288,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               label: "Gender",
                               hint: "",
                               suffixIcon: "dropdownArrow"),
-                          Padding(
+                          Container(
+                            height: 70,
+                            width: double.infinity,
                             padding: EdgeInsets.only(top: 30, left: 10),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
@@ -314,7 +320,184 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           ),
                         ]),
                       ),
-                    ])
+                    ]),
+                    const CalendarOrDropDown(
+                        label: "NDIS Number",
+                        hint: "Enter NDIS Number",
+                        suffixIcon: "ndis_right_arrow"),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: CalendarOrDropDown(
+                              label: "NDIS Plan Start Date",
+                              hint: "00-00-0000",
+                              suffixIcon: "calendar"),
+                        ),
+                        Container(
+                          width: 10,
+                        ),
+                        const Expanded(
+                          child: CalendarOrDropDown(
+                              label: "NDIS Plan End Date",
+                              hint: "00-00-0000",
+                              suffixIcon: "calendar"),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 70,
+                      child: Stack(children: [
+                        const CalendarOrDropDown(
+                            label: "Country",
+                            hint: "",
+                            suffixIcon: "dropdownArrow"),
+                        Container(
+                          height: 70,
+                          width: double.infinity,
+                          padding: EdgeInsets.only(top: 30, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              alignment: Alignment.center,
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedGender = newValue!;
+                                });
+                              },
+                              value: selectedGender,
+                              items: genders.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: secondaryColor),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Container(
+                      height: 44,
+                      margin: EdgeInsets.only(top: 24),
+                      child: TextField(
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                          hintStyle: GoogleFonts.poppins(
+                            color: secondaryColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          labelStyle: GoogleFonts.poppins(
+                            color: iconBlack,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
+                          ),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
+                          ),
+                          labelText: "Postal Code",
+                          border: InputBorder.none,
+                          hintText: 'Postal Code *',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 70,
+                      child: Stack(children: [
+                        const CalendarOrDropDown(
+                            label: "State",
+                            hint: "",
+                            suffixIcon: "dropdownArrow"),
+                        Container(
+                          height: 70,
+                          width: double.infinity,
+                          padding: EdgeInsets.only(top: 30, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              alignment: Alignment.center,
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedGender = newValue!;
+                                });
+                              },
+                              value: selectedGender,
+                              items: genders.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: secondaryColor),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    BorderedEditText(
+                        label: "Area / Sub urban",
+                        hint: "Sub Area Name *",
+                        controller: _emailController),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            "About Me",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: blueGrey),
+                          ),
+                        )),
+                    aboutMeWidget(),
+                    Container(
+                        height: 40,
+                        width: double.infinity,
+                        margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Update Profile",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                          ),
+                        )),
                   ],
                 ),
         ),
@@ -333,5 +516,46 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       setState(() {
         selectedDate = picked;
       });
+  }
+
+  aboutMeWidget() {
+    return Stack(children: [
+      Container(
+        height: 90,
+        padding: EdgeInsets.fromLTRB(0, 0, 6, 6),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: SvgPicture.asset(
+            "lib/resources/images/about_me.svg",
+          ),
+        ),
+      ),
+      Container(
+        height: 90,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(3)),
+          border: Border.all(color: outlineGrey),
+        ),
+        child: TextField(
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: 2,
+          style: GoogleFonts.poppins(
+              fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Write your Bio, e.g your hobbies, interests, etc...',
+            hintStyle: GoogleFonts.poppins(
+              color: secondaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    ]);
   }
 }

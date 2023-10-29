@@ -18,7 +18,7 @@ class CalendarOrDropDown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      margin: const EdgeInsets.only(top: 24),
+      margin: const EdgeInsets.only(top: 20),
         child: Stack(children: [
           Container(
             height: 50,
