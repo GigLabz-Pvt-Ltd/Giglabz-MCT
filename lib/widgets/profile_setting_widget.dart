@@ -27,6 +27,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   DateTime selectedDate = DateTime.now();
   bool isFirstScreen = true;
   bool ndisFilled = false;
+  var selectedInterest = null;
 
   List<bool> toggleValues = [
     false,
@@ -104,6 +105,158 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       )
                     ]),
               ),
+              Container(
+                height: 88,
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 20),
+                padding: EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: outlineGrey),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                ),
+                child: Wrap(
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          selectedInterest = 0;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10, bottom: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: selectedInterest == 0 ? interestSelected : interestNotSelected,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text(
+                            "Health",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: selectedInterest == 0 ? Colors.white : secondaryColor),
+                          ),
+                          Container(
+                            height: 24,
+                            width: 12,
+                          ),
+                          selectedInterest == 0 ? SvgPicture.asset(
+                              "lib/resources/images/interest_remove_selected.svg") :
+                          SvgPicture.asset(
+                              "lib/resources/images/interest_remove.svg")
+                        ]),
+                      ),
+                    ),
+                     GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          selectedInterest = 1;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10, bottom: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: selectedInterest == 1 ? interestSelected : interestNotSelected,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text(
+                            "Sports",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: selectedInterest == 1 ? Colors.white : secondaryColor),
+                          ),
+                          Container(
+                            height: 24,
+                            width: 12,
+                          ),
+                          selectedInterest == 1 ? SvgPicture.asset(
+                              "lib/resources/images/interest_remove_selected.svg") :
+                          SvgPicture.asset(
+                              "lib/resources/images/interest_remove.svg")
+                        ]),
+                      ),
+                    ),
+                     GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          selectedInterest = 2;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10, bottom: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: selectedInterest == 2 ? interestSelected : interestNotSelected,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text(
+                            "Education",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: selectedInterest == 2 ? Colors.white : secondaryColor),
+                          ),
+                          Container(
+                            height: 24,
+                            width: 12,
+                          ),
+                          selectedInterest == 2 ? SvgPicture.asset(
+                              "lib/resources/images/interest_remove_selected.svg") :
+                          SvgPicture.asset(
+                              "lib/resources/images/interest_remove.svg")
+                        ]),
+                      ),
+                    ),
+                     GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          selectedInterest = 3;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10, bottom: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: selectedInterest == 3 ? interestSelected : interestNotSelected,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text(
+                            "Engineering",
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: selectedInterest == 3 ? Colors.white : secondaryColor),
+                          ),
+                          Container(
+                            height: 24,
+                            width: 12,
+                          ),
+                          selectedInterest == 3 ? SvgPicture.asset(
+                              "lib/resources/images/interest_remove_selected.svg") :
+                          SvgPicture.asset(
+                              "lib/resources/images/interest_remove.svg")
+                        ]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Row(mainAxisSize: MainAxisSize.max, children: [
                 Expanded(
                   child: Container(
@@ -173,80 +326,102 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   label: "Last Name",
                   hint: "Enter Last Name *",
                   controller: _lastNameController),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _phoneNumController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: secondaryColor),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  decoration: InputDecoration(
-                    hintStyle: GoogleFonts.poppins(
-                      color: secondaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+              Stack(children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.1, color: outlineGrey),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10),
                     ),
-                    labelStyle: GoogleFonts.poppins(
-                      color: iconBlack,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: outlineGrey,
+                  ),
+                  child: TextField(
+                    controller: _phoneNumController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                    contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: outlineGrey,
+                      labelStyle: GoogleFonts.poppins(
+                        color: iconBlack,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                    labelText: "Phone number",
-                    border: InputBorder.none,
-                    hintText: 'Enter Phone number *',
-                    prefixIcon: DropdownButtonHideUnderline(
-                      child: DropdownButton<FlagsAndCode>(
-                        alignment: Alignment.center,
-                        icon: const Icon(Icons.arrow_drop_down),
-                        onChanged: (FlagsAndCode? newValue) {
-                          setState(() {
-                            selectedCountry = newValue!;
-                          });
-                        },
-                        value: selectedCountry,
-                        items: countries.map((FlagsAndCode dropDownString) {
-                          return DropdownMenuItem<FlagsAndCode>(
-                            value: dropDownString,
-                            child: Row(children: [
-                              SvgPicture.asset(
-                                "lib/resources/images/${dropDownString.svg!}.svg",
-                                width: 20,
-                                height: 20,
-                                fit: BoxFit.cover,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: Text(
-                                  "(${dropDownString.code!})",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(color: iconGrey),
+                      // focusedBorder: const OutlineInputBorder(
+                      //   borderSide: BorderSide(
+                      //     color: outlineGrey,
+                      //   ),
+                      // ),
+                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: outlineGrey,
+                        ),
+                      ),
+                      labelText: "",
+                      border: InputBorder.none,
+                      hintText: 'Enter Phone number *',
+                      prefixIcon: DropdownButtonHideUnderline(
+                        child: DropdownButton<FlagsAndCode>(
+                          alignment: Alignment.center,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          onChanged: (FlagsAndCode? newValue) {
+                            setState(() {
+                              selectedCountry = newValue!;
+                            });
+                          },
+                          value: selectedCountry,
+                          items: countries.map((FlagsAndCode dropDownString) {
+                            return DropdownMenuItem<FlagsAndCode>(
+                              value: dropDownString,
+                              child: Row(children: [
+                                SvgPicture.asset(
+                                  "lib/resources/images/${dropDownString.svg!}.svg",
+                                  width: 20,
+                                  height: 20,
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                            ]),
-                          );
-                        }).toList(),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    "(${dropDownString.code!})",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: iconGrey),
+                                  ),
+                                ),
+                              ]),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                      margin: const EdgeInsets.only(top: 12, left: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 3),
+                      color: Colors.white,
+                      child: Text(
+                        "Phone Number",
+                        style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                      )),
+                )
+              ]),
               BorderedEditText(
                   label: "email",
                   hint: "Enter email *",

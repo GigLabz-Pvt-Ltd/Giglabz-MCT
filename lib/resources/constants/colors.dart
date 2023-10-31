@@ -20,4 +20,5 @@ const alertDialogTitleBgLite = Color(0xFFDCF1EF);
 const toggleTrack = Color(0xFFEFF8F2);
 const activeToggle = Color(0xFF44D788);
 const ndisSelectedBg = Color(0xFFF8F8F8);
-
+const interestNotSelected = Color(0xFFE4E9EB);
+const interestSelected = Color(0xFF019FFE);
