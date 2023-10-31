@@ -18,6 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: scaffoldGrey,
+        elevation: 0,
         leading: const Icon(
           Icons.menu_rounded,
           color: iconBlack,
