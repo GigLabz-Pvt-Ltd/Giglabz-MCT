@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
@@ -27,8 +28,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedCountry = countries[0];
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
-  DateTime selectedDate = DateTime.now();
-  bool isFirstScreen = true;
+  DateTime selectedDob = DateTime.now();
+  var ndis = "";
+  var ndisStart = "";
+  var ndisEnd = "";
+  final _postalController = TextEditingController();
+  final _areaController = TextEditingController();
+  final _aboutController = TextEditingController();
+  
   bool ndisFilled = false;
   var selectedInterest = null;
 
@@ -42,6 +49,29 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     false,
     false
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController.text = widget.user.participant.firstName!;
+    _lastNameController.text = widget.user.participant.lastName!;
+    _phoneNumController.text = widget.user.participant.phone!;
+    _emailController.text = widget.user.participant.email!;
+    selectedDob =
+        DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
+    selectedGender = widget.user.participant.gender!;
+    ndis = widget.user.participant.ndis!;
+    ndisStart = widget.user.participant.ndisEndDate!;
+    ndisEnd = widget.user.participant.ndisStartDate!;
+    _postalController.text = widget.user.participant.postalCode!;
+    _areaController.text = widget.user.participant.areaSuburban!;
+    _aboutController.text = widget.user.participant.aboutUser!;
+    countries.asMap().forEach((index, element) {
+      if (element.code == widget.user.participant.countryCode) {
+        selectedCountry = countries[index];
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +119,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Gabriel Jackson",
+                              widget.user.participant.firstName! +
+                                  " " +
+                                  widget.user.participant.lastName!,
                               textAlign: TextAlign.left,
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
@@ -97,7 +129,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                   color: secondaryColor),
                             ),
                             Text(
-                              "Participant",
+                              widget.user.role,
                               textAlign: TextAlign.left,
                               style: GoogleFonts.poppins(
                                   fontSize: 14,
@@ -458,11 +490,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     },
                     child: CalendarOrDropDown(
                         label: "Date of birth",
-                        hint: selectedDate.day.toString() +
-                            "-" +
-                            selectedDate.month.toString() +
-                            "-" +
-                            selectedDate.year.toString(),
+                        hint: selectedDob.day.toString() +
+                            "/" +
+                            selectedDob.month.toString() +
+                            "/" +
+                            selectedDob.year.toString(),
                         suffixIcon: "calendar"),
                   ),
                 ),
@@ -516,7 +548,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 },
                 child: CalendarOrDropDown(
                     label: "NDIS Number",
-                    hint: "Enter NDIS Number",
+                    hint: ndis,
                     suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
                     bgColor: ndisFilled ? ndisSelectedBg : null),
               ),
@@ -533,7 +565,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: CalendarOrDropDown(
                           label: "NDIS Plan Start Date",
-                          hint: "00-00-0000",
+                          hint: ndisStart,
                           suffixIcon: "calendar",
                           bgColor: ndisFilled ? ndisSelectedBg : null),
                     ),
@@ -543,7 +575,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: CalendarOrDropDown(
                           label: "NDIS Plan End Date",
-                          hint: "00-00-0000",
+                          hint: ndisEnd,
                           suffixIcon: "calendar",
                           bgColor: ndisFilled ? ndisSelectedBg : null),
                     ),
@@ -591,6 +623,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 height: 44,
                 margin: const EdgeInsets.only(top: 24),
                 child: TextField(
+                  controller: _postalController,
                   style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -668,7 +701,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               BorderedEditText(
                   label: "Area / Sub urban",
                   hint: "Sub Area Name *",
-                  controller: _emailController),
+                  controller: _areaController),
               Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -718,13 +751,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate, // Refer step 1
+      initialDate: selectedDob, // Refer step 1
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDob)
       setState(() {
-        selectedDate = picked;
+        selectedDob = picked;
       });
   }
 
@@ -750,6 +783,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
           border: Border.all(color: outlineGrey),
         ),
         child: TextField(
+          controller: _aboutController,
           keyboardType: TextInputType.multiline,
           minLines: 1,
           maxLines: 2,

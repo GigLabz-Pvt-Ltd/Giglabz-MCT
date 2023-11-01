@@ -8,7 +8,7 @@ List<FlagsAndCode> countries = [
   FlagsAndCode(svg: "gb", code: "+33"),
 ];
 
-List<String> genders = ["Male", "Female"];
+List<String> genders = ["Male", "Female", "Other"];
 
 String termsAndCondition = "Please read these terms and conditions carefully before using Our Service. \nInterpretation and Definitions \n" +
     "Interpretation  \n" +
