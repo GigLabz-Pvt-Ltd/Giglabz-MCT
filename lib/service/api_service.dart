@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
 import '../models/register_response.dart';
 import '../models/login_response.dart';
 
 var BASE_URL = "http://dev.trackability.net.au:8081";
+var BASE_URL_8080 = "http://dev.trackability.net.au:8080";
 
 class ApiService {
   Future<GetRolesResponse> getRoles() async {
@@ -55,6 +57,17 @@ class ApiService {
           "roleId": roleId,
         }));
     final activity = getLoginResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetProfileResponse> getProfile(String userName, int roleId) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8080/api/userprofile/get/$userName/$roleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getProfileResponseApiFromJson(response.body);
     return activity;
   }
 }

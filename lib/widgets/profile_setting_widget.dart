@@ -5,14 +5,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
+import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
 
 class ProfileSettingWidget extends StatefulWidget {
-  const ProfileSettingWidget({Key? key}) : super(key: key);
+  ProfileSettingWidget({Key? key, required GetProfileResponse this.user})
+      : super(key: key);
 
+  GetProfileResponse user;
   @override
   State<ProfileSettingWidget> createState() => _ProfileSettingWidgetState();
 }
@@ -58,10 +61,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         Container(
                           height: 100,
                           width: 100,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.amberAccent,
-                          ),
+                          child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50.0)),
+                              child: Image.network(
+                                  widget.user.participant.profilePic!)),
                         ),
                         Positioned(
                           top: 63,
@@ -119,7 +123,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 child: Wrap(
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
                           selectedInterest = 0;
                         });
@@ -128,7 +132,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         margin: EdgeInsets.only(right: 10, bottom: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
-                          color: selectedInterest == 0 ? interestSelected : interestNotSelected,
+                          color: selectedInterest == 0
+                              ? interestSelected
+                              : interestNotSelected,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
@@ -139,21 +145,24 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: selectedInterest == 0 ? Colors.white : secondaryColor),
+                                color: selectedInterest == 0
+                                    ? Colors.white
+                                    : secondaryColor),
                           ),
                           Container(
                             height: 24,
                             width: 12,
                           ),
-                          selectedInterest == 0 ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg") :
-                          SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
+                          selectedInterest == 0
+                              ? SvgPicture.asset(
+                                  "lib/resources/images/interest_remove_selected.svg")
+                              : SvgPicture.asset(
+                                  "lib/resources/images/interest_remove.svg")
                         ]),
                       ),
                     ),
-                     GestureDetector(
-                      onTap: (){
+                    GestureDetector(
+                      onTap: () {
                         setState(() {
                           selectedInterest = 1;
                         });
@@ -162,7 +171,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         margin: EdgeInsets.only(right: 10, bottom: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
-                          color: selectedInterest == 1 ? interestSelected : interestNotSelected,
+                          color: selectedInterest == 1
+                              ? interestSelected
+                              : interestNotSelected,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
@@ -173,21 +184,24 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: selectedInterest == 1 ? Colors.white : secondaryColor),
+                                color: selectedInterest == 1
+                                    ? Colors.white
+                                    : secondaryColor),
                           ),
                           Container(
                             height: 24,
                             width: 12,
                           ),
-                          selectedInterest == 1 ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg") :
-                          SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
+                          selectedInterest == 1
+                              ? SvgPicture.asset(
+                                  "lib/resources/images/interest_remove_selected.svg")
+                              : SvgPicture.asset(
+                                  "lib/resources/images/interest_remove.svg")
                         ]),
                       ),
                     ),
-                     GestureDetector(
-                      onTap: (){
+                    GestureDetector(
+                      onTap: () {
                         setState(() {
                           selectedInterest = 2;
                         });
@@ -196,7 +210,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         margin: EdgeInsets.only(right: 10, bottom: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
-                          color: selectedInterest == 2 ? interestSelected : interestNotSelected,
+                          color: selectedInterest == 2
+                              ? interestSelected
+                              : interestNotSelected,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
@@ -207,21 +223,24 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: selectedInterest == 2 ? Colors.white : secondaryColor),
+                                color: selectedInterest == 2
+                                    ? Colors.white
+                                    : secondaryColor),
                           ),
                           Container(
                             height: 24,
                             width: 12,
                           ),
-                          selectedInterest == 2 ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg") :
-                          SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
+                          selectedInterest == 2
+                              ? SvgPicture.asset(
+                                  "lib/resources/images/interest_remove_selected.svg")
+                              : SvgPicture.asset(
+                                  "lib/resources/images/interest_remove.svg")
                         ]),
                       ),
                     ),
-                     GestureDetector(
-                      onTap: (){
+                    GestureDetector(
+                      onTap: () {
                         setState(() {
                           selectedInterest = 3;
                         });
@@ -230,7 +249,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         margin: EdgeInsets.only(right: 10, bottom: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
-                          color: selectedInterest == 3 ? interestSelected : interestNotSelected,
+                          color: selectedInterest == 3
+                              ? interestSelected
+                              : interestNotSelected,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
@@ -241,16 +262,19 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: selectedInterest == 3 ? Colors.white : secondaryColor),
+                                color: selectedInterest == 3
+                                    ? Colors.white
+                                    : secondaryColor),
                           ),
                           Container(
                             height: 24,
                             width: 12,
                           ),
-                          selectedInterest == 3 ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg") :
-                          SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
+                          selectedInterest == 3
+                              ? SvgPicture.asset(
+                                  "lib/resources/images/interest_remove_selected.svg")
+                              : SvgPicture.asset(
+                                  "lib/resources/images/interest_remove.svg")
                         ]),
                       ),
                     ),

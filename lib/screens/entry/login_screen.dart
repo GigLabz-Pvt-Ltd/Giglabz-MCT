@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,7 @@ import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/api_service.dart';
 import '../../models/login_response.dart';
@@ -460,6 +463,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           selectedRole + 1);
                       if (response.statusCode != null) {
                         if (response.statusCode == 200) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+
+                          Map<String, dynamic> user = {
+                            'user_name': _userNameController.text,
+                            'role_id': selectedRole + 1
+                          };
+                          bool result =
+                              await prefs.setString('user', jsonEncode(user));
+
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>

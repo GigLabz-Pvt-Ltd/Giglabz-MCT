@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/profile_setting_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -23,6 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   late final TabController _tabCont;
   var currentTab = 0;
+  Map<String, dynamic>? userMap;
+  GetProfileResponse? profile;
 
   @override
   void initState() {
@@ -38,58 +45,67 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldGrey,
-      body: NestedScrollView(
-        headerSliverBuilder: (_, __) {
-          return [
-            SliverAppBar(
-              backgroundColor: primaryColor,
-              pinned: true,
-              floating: false,
-              forceElevated: true,
-              elevation: 1,
-              titleSpacing: 0,
-              leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Profile",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
-                ),
-              ),
-              centerTitle: false,
-              bottom: PreferredSize(
-                preferredSize: _tabBar.preferredSize,
-                child: ColoredBox(color: Colors.white, child: _tabBar),
+    getProfile();
+
+    return profile != null
+        ? Scaffold(
+            backgroundColor: scaffoldGrey,
+            body: NestedScrollView(
+              headerSliverBuilder: (_, __) {
+                return [
+                  SliverAppBar(
+                    backgroundColor: primaryColor,
+                    pinned: true,
+                    floating: false,
+                    forceElevated: true,
+                    elevation: 1,
+                    titleSpacing: 0,
+                    leading: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    title: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Profile",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                    centerTitle: false,
+                    bottom: PreferredSize(
+                      preferredSize: _tabBar.preferredSize,
+                      child: ColoredBox(color: Colors.white, child: _tabBar),
+                    ),
+                  ),
+                ];
+              },
+              body: TabBarView(
+                controller: _tabCont,
+                children: [
+                  ProfileSettingWidget(user: profile!),
+                  Center(child: Text("Coming Soon...")),
+                  Center(child: Text("Coming Soon...")),
+                  Center(child: Text("Coming Soon...")),
+                ],
               ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: _tabCont,
-          children: const [
-            ProfileSettingWidget(),
-            Center(child: Text("2")),
-            Center(child: Text("3")),
-            Center(child: Text("4")),
-          ],
-        ),
-      ),
-    );
+          )
+        : const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            )));
   }
 
   TabBar get _tabBar => TabBar(
@@ -114,4 +130,17 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ],
       );
+
+  void getProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    if (userMap != null && profile == null) {
+      var mProfile = await ApiService().getProfile(userMap?["user_name"], userMap?["role_id"]);
+      setState(() {
+        profile = mProfile;
+      });
+    }
+  }
 }
