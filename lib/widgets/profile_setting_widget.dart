@@ -7,16 +7,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
+import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
 
 class ProfileSettingWidget extends StatefulWidget {
-  ProfileSettingWidget({Key? key, required GetProfileResponse this.user})
+  ProfileSettingWidget(
+      {Key? key,
+      required GetProfileResponse this.user,
+      required GetNdisQuesResponse this.ndisQues})
       : super(key: key);
 
   GetProfileResponse user;
+  GetNdisQuesResponse ndisQues;
   @override
   State<ProfileSettingWidget> createState() => _ProfileSettingWidgetState();
 }
@@ -29,26 +34,17 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime selectedDob = DateTime.now();
-  var ndis = "";
-  var ndisStart = "";
-  var ndisEnd = "";
+  var ndis;
+  var ndisStart;
+  var ndisEnd;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
-  
+
   bool ndisFilled = false;
   var selectedInterest = null;
 
-  List<bool> toggleValues = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  List<int>? toggleValues = [];
 
   @override
   void initState() {
@@ -60,9 +56,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedDob =
         DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
     selectedGender = widget.user.participant.gender!;
-    ndis = widget.user.participant.ndis!;
-    ndisStart = widget.user.participant.ndisEndDate!;
-    ndisEnd = widget.user.participant.ndisStartDate!;
+    ndis = widget.user.participant.ndis;
+    ndisStart = widget.user.participant.ndisEndDate;
+    ndisEnd = widget.user.participant.ndisStartDate;
     _postalController.text = widget.user.participant.postalCode!;
     _areaController.text = widget.user.participant.areaSuburban!;
     _aboutController.text = widget.user.participant.aboutUser!;
@@ -70,6 +66,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       if (element.code == widget.user.participant.countryCode) {
         selectedCountry = countries[index];
       }
+    });
+    widget.ndisQues.questions.asMap().forEach((index, element) {
+      toggleValues?.add(element.answer);
     });
   }
 
@@ -548,7 +547,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 },
                 child: CalendarOrDropDown(
                     label: "NDIS Number",
-                    hint: ndis,
+                    hint: ndis ?? "Enter NDIS Number",
                     suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
                     bgColor: ndisFilled ? ndisSelectedBg : null),
               ),
@@ -565,7 +564,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: CalendarOrDropDown(
                           label: "NDIS Plan Start Date",
-                          hint: ndisStart,
+                          hint: ndisStart ?? "00/00/0000",
                           suffixIcon: "calendar",
                           bgColor: ndisFilled ? ndisSelectedBg : null),
                     ),
@@ -575,7 +574,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: CalendarOrDropDown(
                           label: "NDIS Plan End Date",
-                          hint: ndisEnd,
+                          hint: ndisEnd ?? "00/00/0000",
                           suffixIcon: "calendar",
                           bgColor: ndisFilled ? ndisSelectedBg : null),
                     ),
@@ -1232,7 +1231,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             FlutterSwitch(
               height: 22,
               width: 40,
-              value: toggleValues[toggleValueIndex],
+              value: toggleValues?[toggleValueIndex] == 0 ? false : true,
               toggleSize: 20,
               padding: 2,
               valueFontSize: 10,
@@ -1244,7 +1243,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   SvgPicture.asset("lib/resources/images/toggle_inactive.svg"),
               onToggle: (val) {
                 setState(() {
-                  toggleValues[toggleValueIndex] = val;
+                  if (val) {
+                    toggleValues?[toggleValueIndex] = 1;
+                  } else {
+                    toggleValues?[toggleValueIndex] = 0;
+                  }
                 });
               },
             ),
