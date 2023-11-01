@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/goal/create_goal_screen.dart';
 import 'package:mycareteam/screens/home/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "lib/resources/images/no_goals.svg",
                 ),
               ),
-              Text(
+              const Text(
                 "Still you don’t have any goals\n please add a new goal!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -79,8 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 14,
                     color: Color(0xff638381)),
               ),
-              SvgPicture.asset(
-                "lib/resources/images/create_goal.svg",
+              GestureDetector(
+                onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => const CreateGoalScreen()));
+                },
+                child: SvgPicture.asset(
+                  "lib/resources/images/create_goal.svg",
+                ),
               ),
             ],
           ),

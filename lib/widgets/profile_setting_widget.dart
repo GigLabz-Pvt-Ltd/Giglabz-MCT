@@ -74,9 +74,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
+    return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
@@ -743,7 +741,6 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             ],
           ),
         ),
-      ),
     );
   }
 
