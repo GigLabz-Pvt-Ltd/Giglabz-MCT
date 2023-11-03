@@ -65,6 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               statusTile(),
               Container(
+                height: 198,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                decoration: const BoxDecoration(
+                color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: Column(children: [
+                        Row(
+                          children: [
+                            
+                          ],
+                        )
+                ],),
+              ),
+              Container(
                 width: 130,
                 height: 136,
                 margin: EdgeInsets.only(top: 100, bottom: 12),
@@ -82,8 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => const CreateGoalScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const CreateGoalScreen()));
                 },
                 child: SvgPicture.asset(
                   "lib/resources/images/create_goal.svg",

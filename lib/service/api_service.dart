@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
@@ -80,6 +81,17 @@ class ApiService {
       },
     );
     final activity = getNdisQuesResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<GetProvidersResponse> getProviders() async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8080/api/ndis/providers"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getProvidersResponseApiFromJson(response.body);
     return activity;
   }
 }

@@ -22,3 +22,8 @@ const activeToggle = Color(0xFF44D788);
 const ndisSelectedBg = Color(0xFFF8F8F8);
 const interestNotSelected = Color(0xFFE4E9EB);
 const interestSelected = Color(0xFF019FFE);
+const checkColor = Color(0xFF6A6A6A);
+const checkBoxColor = Color(0xFFD0D2D2);
+
+
+
