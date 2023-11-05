@@ -1434,9 +1434,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     if (providers == null) {
       var mProviders = await ApiService().getProviders();
       var mStates = await ApiService().getStates(selectedCountry);
+      var mAreas = await ApiService().getAreas(selectedState);
       setState(() {
         providers = mProviders;
-        states = mStates.state!;
+        states = mStates.state;
       });
     }
   }

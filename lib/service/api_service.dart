@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
+import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
@@ -104,6 +105,17 @@ class ApiService {
       },
     );
     final activity = getStatesResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<GetAreasResponse> getAreas(String state) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8080/api/country/areas/$state"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getAreasResponseApiFromJson(response.body);
     return activity;
   }
 }
