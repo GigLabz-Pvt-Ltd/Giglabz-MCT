@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,13 +31,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _phoneNumController = TextEditingController();
-  var selectedCountry = countries[0];
+  var selectedPhoneCountry = countries[0];
+  List<String>? states = null;
+  var selectedCountry, selectedState, selectedArea;
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime selectedDob = DateTime.now();
-  var ndis;
-  var ndisStart;
-  var ndisEnd;
+  var ndis, ndisStart, ndisEnd;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
@@ -62,6 +61,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedDob =
         DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
     selectedGender = widget.user.participant.gender!;
+    selectedCountry = widget.user.participant.location;
+    selectedState = widget.user.participant.state;
+    selectedArea = widget.user.participant.areaSuburban;
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;
     ndisEnd = widget.user.participant.ndisStartDate;
@@ -70,7 +72,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     _aboutController.text = widget.user.participant.aboutUser!;
     countries.asMap().forEach((index, element) {
       if (element.code == widget.user.participant.countryCode) {
-        selectedCountry = countries[index];
+        selectedPhoneCountry = countries[index];
       }
     });
     widget.ndisQues.questions.asMap().forEach((index, element) {
@@ -450,10 +452,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               icon: const Icon(Icons.arrow_drop_down),
                               onChanged: (FlagsAndCode? newValue) {
                                 setState(() {
-                                  selectedCountry = newValue!;
+                                  selectedPhoneCountry = newValue!;
                                 });
                               },
-                              value: selectedCountry,
+                              value: selectedPhoneCountry,
                               items:
                                   countries.map((FlagsAndCode dropDownString) {
                                 return DropdownMenuItem<FlagsAndCode>(
@@ -616,15 +618,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         padding: const EdgeInsets.only(top: 30, left: 10),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                            alignment: Alignment.center,
                             icon: const Icon(null),
                             onChanged: (String? newValue) {
                               setState(() {
-                                selectedGender = newValue!;
+                                selectedCountry = newValue!;
                               });
                             },
-                            value: selectedGender,
-                            items: genders.map((String dropDownString) {
+                            value: selectedCountry,
+                            items: countriesStings.map((String dropDownString) {
                               return DropdownMenuItem<String>(
                                 value: dropDownString,
                                 child: Padding(
@@ -698,15 +699,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         padding: const EdgeInsets.only(top: 30, left: 10),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                            alignment: Alignment.center,
                             icon: const Icon(null),
                             onChanged: (String? newValue) {
                               setState(() {
-                                selectedGender = newValue!;
+                                selectedState = newValue!;
                               });
                             },
-                            value: selectedGender,
-                            items: genders.map((String dropDownString) {
+                            value: selectedState,
+                            items: states?.map((String dropDownString) {
                               return DropdownMenuItem<String>(
                                 value: dropDownString,
                                 child: Padding(
@@ -973,16 +973,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                     color: Colors.black),
                               ),
                               side: MaterialStateBorderSide.resolveWith(
-                                (states) =>
-                                    BorderSide(width: 1.0, color: checkBoxColor),
+                                (states) => BorderSide(
+                                    width: 1.0, color: checkBoxColor),
                               ),
                               value: checked,
                               checkColor: checkColor,
                               activeColor: grey,
                               overlayColor:
                                   MaterialStateProperty.all<Color>(Colors.red),
-                              fillColor:
-                                  MaterialStateProperty.all<Color>(Colors.white),
+                              fillColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
                               onChanged: (bool? value) {
                                 setState(() {
                                   checked = !checked;
@@ -992,31 +992,32 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12, left: 20, right: 20),
-                  child:
-                      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                    Text(
-                      "Your NDIS Plan Expiry",
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                    ),
-                    Container(
-                      height: 2,
-                      width: 60,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      color: dividerGrey,
-                    ),
-                    Text(
-                      "Days",
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                    ),
-                  ]),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Your NDIS Plan Expiry",
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                        Container(
+                          height: 2,
+                          width: 60,
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          color: dividerGrey,
+                        ),
+                        Text(
+                          "Days",
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                      ]),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -1230,12 +1231,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     toggle(2, "Fund management and claiming"),
                     toggle(3,
                         "Organising and planning supports over the life of the NDIS Plan"),
+                    toggle(4, "The role of community and mainstream supports"),
                     toggle(
-                        4, "The role of community and mainstream supports"),
-                    toggle(5,
-                        "How to access and use the My NDIS portal and App"),
-                    toggle(
-                        6, "The value and importance of service agreements"),
+                        5, "How to access and use the My NDIS portal and App"),
+                    toggle(6, "The value and importance of service agreements"),
                     toggle(7,
                         "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
                     GestureDetector(
@@ -1253,8 +1252,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
                           decoration: const BoxDecoration(
                             color: primaryColor,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(3)),
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
                           ),
                           child: Center(
                             child: Text(
@@ -1435,9 +1433,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   void getProviders() async {
     if (providers == null) {
       var mProviders = await ApiService().getProviders();
-
+      var mStates = await ApiService().getStates(selectedCountry);
       setState(() {
         providers = mProviders;
+        states = mStates.state!;
       });
     }
   }
