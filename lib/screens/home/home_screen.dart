@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
@@ -64,19 +65,316 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               statusTile(),
+              const Padding(
+                padding: EdgeInsets.only(left: 20, bottom: 12),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Goals Category",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: iconBlue),
+                  ),
+                ),
+              ),
               Container(
-                height: 198,
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.only(left: 20, right: 12, bottom: 10),
                 decoration: const BoxDecoration(
-                color: Colors.white,
+                    color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                child: Column(children: [
-                        Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 4,
+                          width: 44,
+                          margin: EdgeInsets.only(top: 16),
+                          decoration: const BoxDecoration(
+                              color: goalCategoryProgress,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                        ),
+                        const Spacer(),
+                        Container(
+                          height: 8,
+                          width: 8,
+                          margin: EdgeInsets.only(top: 16),
+                          decoration: const BoxDecoration(
+                              color: goalCategoryRed,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 12, left: 5, right: 10),
+                          child: const Text(
+                            "High",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: goalCategoryImportance),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/menu_button.svg",
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Text(
+                        "To Practice on self-love and self-compassion",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            color: goalCategoryBlue),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 5, top: 8),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/clock.svg",
+                            height: 12,
+                            width: 12,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 7, right: 12),
+                          child: Text(
+                            "Updated 2 hour ago",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 10,
+                                color: goalCategoryGrey),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: RatingBarIndicator(
+                            rating: 4.5,
+                            itemCount: 5,
+                            itemSize: 14.0,
+                            unratedColor: starEmpty,
+                            itemBuilder: (context, index) => const Icon(
+                              Icons.star,
+                              color: starFilled,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/pie_progress.svg",
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8, bottom: 6),
+                              child: Text(
+                                "Current Status",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10,
+                                    color: iconBlack),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(3)),
+                                border: Border.all(color: outlineGrey),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 8,
+                                    width: 8,
+                                    margin: const EdgeInsets.only(right: 4),
+                                    decoration: const BoxDecoration(
+                                        color: goalCategoryGreen,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15))),
+                                  ),
+                                  const Text(
+                                    "Completed",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: goalCategoryImportance),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
-                        )
-                ],),
+                        ),
+                        const Spacer(),
+                        const Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 12),
+                              child: Text(
+                                "Start Date",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10,
+                                    color: goalCategoryBlue),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 4),
+                              child: Text(
+                                "00-00-0000",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: goalCategoryGrey),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12),
+                          child: Column(
+                            children: [
+                              Text(
+                                "End Date",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10,
+                                    color: goalCategoryBlue),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 4),
+                                child: Text(
+                                  "00-00-0000",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: goalCategoryGrey),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8, bottom: 4),
+                              child: Text(
+                                "Shared With",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10,
+                                    color: iconBlack),
+                              ),
+                            ),
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: SvgPicture.asset(
+                                    "lib/resources/images/goal_profile.svg",
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
+                                 Padding(
+                                  padding: const EdgeInsets.only(top: 4, left: 16),
+                                  child: SvgPicture.asset(
+                                    "lib/resources/images/goal_profile.svg",
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
+                                 Padding(
+                                  padding: const EdgeInsets.only(top: 4, left: 32),
+                                  child: SvgPicture.asset(
+                                    "lib/resources/images/goal_profile.svg",
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4, left: 48),
+                                  child: SvgPicture.asset(
+                                    "lib/resources/images/goal_profile.svg",
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Reviewed By",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10,
+                                    color: iconBlack),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 8, top: 8),
+                                child: SvgPicture.asset(
+                                  "lib/resources/images/goal_profile.svg",
+                                  height: 24,
+                                  width: 24,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Container(
                 width: 130,
@@ -243,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       height: 87,
       width: 87,
-      margin: EdgeInsets.fromLTRB(18, 25, 0, 18),
+      margin: const EdgeInsets.fromLTRB(18, 25, 0, 18),
       child: Stack(
         children: <Widget>[
           Center(
