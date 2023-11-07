@@ -6,8 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
+import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
+import 'package:mycareteam/models/ndis_answers.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
+import 'package:mycareteam/models/ndis_response.dart';
+import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/service/api_service.dart';
@@ -33,7 +37,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _phoneNumController = TextEditingController();
   var selectedPhoneCountry = countries[0];
   List<String>? states = null;
-  var selectedCountry, selectedState, selectedArea;
+  var selectedCountry, selectedState, selectedArea, selectedPincode;
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime selectedDob = DateTime.now();
@@ -45,6 +49,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   bool checked = false;
   bool isLoading = false;
   GetProvidersResponse? providers;
+  List<String> areas = [];
+  List<String> pincodes = [];
 
   bool ndisFilled = false;
   var selectedInterest = null;
@@ -63,11 +69,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedGender = widget.user.participant.gender!;
     selectedCountry = widget.user.participant.location;
     selectedState = widget.user.participant.state;
-    selectedArea = widget.user.participant.areaSuburban;
+    selectedArea = "Acacia Hills";
+    // selectedArea = widget.user.participant.areaSuburban;
+    _postalController.text = widget.user.participant.postalCode!;
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;
     ndisEnd = widget.user.participant.ndisStartDate;
-    _postalController.text = widget.user.participant.postalCode!;
     _areaController.text = widget.user.participant.areaSuburban!;
     _aboutController.text = widget.user.participant.aboutUser!;
     countries.asMap().forEach((index, element) {
@@ -645,48 +652,6 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     ]),
                   ),
                   Container(
-                    height: 44,
-                    margin: const EdgeInsets.only(top: 24),
-                    child: TextField(
-                      controller: _postalController,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: InputDecoration(
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          color: iconBlack,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
-                          ),
-                        ),
-                        labelText: "Postal Code",
-                        border: InputBorder.none,
-                        hintText: 'Postal Code *',
-                      ),
-                    ),
-                  ),
-                  Container(
                     height: 70,
                     child: Stack(children: [
                       const CalendarOrDropDown(
@@ -725,10 +690,95 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ),
                     ]),
                   ),
-                  BorderedEditText(
-                      label: "Area / Sub urban",
-                      hint: "Sub Area Name *",
-                      controller: _areaController),
+                  Container(
+                    height: 70,
+                    child: Stack(children: [
+                      const CalendarOrDropDown(
+                          label: "Area / Sub urban",
+                          hint: "",
+                          suffixIcon: "dropdownArrow"),
+                      Container(
+                        height: 70,
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(top: 30, left: 10),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: const Icon(null),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedArea = newValue!;
+                                _postalController.text =
+                                    pincodes[areas.indexOf(selectedArea)];
+                              });
+                            },
+                            value: selectedArea,
+                            items: areas.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Container(
+                    height: 44,
+                    margin: const EdgeInsets.only(top: 24),
+                    child: TextField(
+                      controller: _postalController,
+                      enabled: false,
+                      style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          color: iconBlack,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        disabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        labelText: "Postal Code",
+                        border: InputBorder.none,
+                        hintText: 'Postal Code *',
+                      ),
+                    ),
+                  ),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -744,10 +794,37 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   aboutMeWidget(),
                   GestureDetector(
                     onTap: () {
-                      showDialog(
+                     showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return okDialog("update_profile");
+                            if (widget.user.participant.ndisAgreement != 1) {
+                              return okDialog("update_profile");
+                            } else if (widget.user.participant.ndisTc != 1) {
+                             return okDialog("ndis_agreement");
+                            }else{
+                                  var mParticipant = UpdateParticipant(
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
+                            phone: selectedPhoneCountry.code! +
+                                _phoneNumController.text,
+                            email: _emailController.text,
+                            gender: selectedGender,
+                            dateOfBirth: selectedDob.toString(),
+                            ndisNumber: null,
+                            aboutUser: _aboutController.text,
+                            postalCode: _postalController.text,
+                            areaSuburban: selectedArea,
+                            address: "some address",
+                            state: selectedState,
+                            country: selectedCountry,
+                            ndisStartDate: null,
+                            ndisEndDate: null,
+                            providers: [310, 364],
+                            interests: []);
+                        UpdateProfile profile =
+                            UpdateProfile(participant: mParticipant);
+                              return okDialog("terms_and_conditions");
+                            }
                           });
                     },
                     child: Container(
@@ -1239,12 +1316,27 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
                     GestureDetector(
                       onTap: () {
+                        List<Answers> ans = [];
+                        var index = 0;
+                        widget.ndisQues.questions.forEach((element) {
+                          ans.add(Answers(
+                              id: element.id,
+                              question: element.question,
+                              answer: toggleValues![index]));
+                          index++;
+                        });
+                        var ndisAnswers = NdisAnswers(
+                            email: widget.user.participant.email!,
+                            answers: ans);
+                        ApiService().postNdisAnswers(ndisAnswers);
                         Navigator.pop(context);
+                        if(widget.user.participant.ndisTc != 1){
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return okDialog("ndis_agreement");
                             });
+                        }
                       },
                       child: Container(
                           height: 40,
@@ -1368,13 +1460,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return okDialog("terms_and_conditions");
-                          });
+                    onTap: () async {
+                      NdisResponse respon = await ApiService()
+                          .postNdisTc(widget.user.participant.email!, 1);
+                        Navigator.pop(context);
                     },
                     child: Container(
                         height: 40,
@@ -1435,9 +1524,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       var mProviders = await ApiService().getProviders();
       var mStates = await ApiService().getStates(selectedCountry);
       var mAreas = await ApiService().getAreas(selectedState);
+
       setState(() {
         providers = mProviders;
         states = mStates.state;
+        mAreas.area.forEach((element) {
+          areas?.add(element.name);
+          pincodes?.add(element.postalCode);
+        });
       });
     }
   }
