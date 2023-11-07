@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
+import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
@@ -16,6 +17,7 @@ import '../models/login_response.dart';
 
 var BASE_URL = "http://dev.trackability.net.au:8081";
 var BASE_URL_8080 = "http://dev.trackability.net.au:8080";
+var BASE_URL_8082 = "http://dev.trackability.net.au:8082";
 
 class ApiService {
   Future<GetRolesResponse> getRoles() async {
@@ -159,6 +161,17 @@ class ApiService {
         },
         body: getUpdateProfileApiToJson(profile));
     final activity = getUpdateProfileResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<DashboardResponse> getDashBoard(String email) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/dashboard/gitowe3414@ipniel.com"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getDashboardResponseApiFromJson(response.body);
     return activity;
   }
 }
