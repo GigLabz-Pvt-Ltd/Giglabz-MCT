@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/goal/create_goal_screen.dart';
 import 'package:mycareteam/screens/home/profile_screen.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  var dashboard;
+  DashboardResponse? dashboard;
 
   @override
   Widget build(BuildContext context) {
@@ -458,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 4),
-                      child: const Row(
+                      child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -469,7 +470,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              "0%",
+                              dashboard != null
+                                  ? dashboard!.dashboardCount[0].TotalGoals
+                                      .toString()
+                                  : "",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -489,27 +493,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              "00",
+                              dashboard != null
+                                  ? dashboard!.dashboardCount[0].Pending
+                                      .toString()
+                                  : "",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              "00",
+                              dashboard != null
+                                  ? dashboard!.dashboardCount[0].Inprogress
+                                      .toString()
+                                  : "",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              "00",
+                              dashboard != null
+                                  ? dashboard!.dashboardCount[0].Completed
+                                      .toString()
+                                  : "",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -563,18 +576,22 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               width: 87,
               height: 87,
-              child: const CircularProgressIndicator(
+              child: CircularProgressIndicator(
                 color: Color(0xff00C3A5),
                 strokeWidth: 6,
-                value: 0.3,
+                value: dashboard != null
+                    ? dashboard!.dashboardCount[0].DraftPercentage / 100
+                    : 0.0,
                 backgroundColor: Colors.white, //<-- SEE HERE
                 strokeCap: StrokeCap.round,
               ),
             ),
           ),
-          const Center(
+          Center(
               child: Text(
-            "00",
+            dashboard != null
+                ? dashboard!.dashboardCount[0].DraftPercentage.toString()
+                : "",
             style: TextStyle(
                 color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           )),
