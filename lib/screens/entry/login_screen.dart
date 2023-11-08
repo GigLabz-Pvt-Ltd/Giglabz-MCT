@@ -457,6 +457,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             SnackBar(content: Text("Enter Password")));
                         return;
                       }
+                      final bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(_userNameController.text);
+                          if(!emailValid){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Invalid Email")));
+                        return;
+                          }
                       LoginResponse response = await ApiService().login(
                           _userNameController.text,
                           _passwordController.text,
