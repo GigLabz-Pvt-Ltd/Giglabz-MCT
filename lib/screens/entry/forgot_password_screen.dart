@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/entry/register_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -23,15 +24,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(top: 24, bottom: 32),
-                  child: SvgPicture.asset(
-                    "lib/resources/images/app_logo.svg",
-                    width: 226,
-                    height: 108,
-                  ),
-                ),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
@@ -41,6 +33,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       color: appBlack,
                       size: 20,
                     ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(top: 24, bottom: 32),
+                  child: SvgPicture.asset(
+                    "lib/resources/images/app_logo.svg",
+                    width: 226,
+                    height: 108,
                   ),
                 ),
                 Container(
@@ -143,14 +144,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        "Register",
-                        style: GoogleFonts.poppins(
-                          color: primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const RegisterScreen()));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          "Register",
+                          style: GoogleFonts.poppins(
+                            color: primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
