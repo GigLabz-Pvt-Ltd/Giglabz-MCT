@@ -823,6 +823,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             interests: []);
                         UpdateProfile profile =
                             UpdateProfile(participant: mParticipant);
+                            ApiService().updateProfile(profile);
                               return okDialog("terms_and_conditions");
                             }
                           });
