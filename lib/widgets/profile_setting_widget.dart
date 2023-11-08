@@ -69,8 +69,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedGender = widget.user.participant.gender!;
     selectedCountry = widget.user.participant.location;
     selectedState = widget.user.participant.state;
-    selectedArea = "Acacia Hills";
-    // selectedArea = widget.user.participant.areaSuburban;
+    // selectedArea = "Acacia Hills";
+    selectedArea = widget.user.participant.areaSuburban;
     _postalController.text = widget.user.participant.postalCode!;
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;

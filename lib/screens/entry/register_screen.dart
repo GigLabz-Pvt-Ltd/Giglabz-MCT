@@ -314,12 +314,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _firstNameController,
+                              maxLines: 1,
+                              maxLength: 50,
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   color: secondaryColor),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
+                                counterText: "",
                                 hintText: 'First name *',
                                 hintStyle: GoogleFonts.poppins(
                                   color: iconGrey,
@@ -344,11 +347,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             child: TextField(
                               controller: _lastNameController,
+                              maxLines: 1,
+                              maxLength: 50,
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   color: secondaryColor),
                               decoration: InputDecoration(
+                                counterText: "",
                                 border: InputBorder.none,
                                 hintText: 'Last name *',
                                 hintStyle: GoogleFonts.poppins(
