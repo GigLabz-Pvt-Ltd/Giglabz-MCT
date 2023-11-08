@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             selectedRole != -1
                                 ? roles![selectedRole].name
-                                : "Select",
+                                : "Select *",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 14,
@@ -452,12 +452,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SnackBar(content: Text("Enter User Name")));
                         return;
                       }
-                      if (_passwordController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter Password")));
-                        return;
-                      }
-                      final bool emailValid = RegExp(
+                       final bool emailValid = RegExp(
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(_userNameController.text);
                           if(!emailValid){
@@ -465,6 +460,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             SnackBar(content: Text("Invalid Email")));
                         return;
                           }
+                      if (_passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter Password")));
+                        return;
+                      }
                       LoginResponse response = await ApiService().login(
                           _userNameController.text,
                           _passwordController.text,

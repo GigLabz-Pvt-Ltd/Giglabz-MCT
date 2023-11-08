@@ -583,15 +583,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             SnackBar(content: Text("Select a Role")));
                         return;
                       }
-                      if (_firstNameController.text.trim() == "" ||
-                          _lastNameController.text.trim() == "" ||
-                          _phoneNumController.text.trim() == "" ||
-                          _emailController.text.trim() == "" ||
-                          _passwordController.text.trim() == "" ||
-                          _repasswordController.text.trim() == "") {
+                      if (_firstNameController.text.trim() == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text("Please enter all fields")));
+                                content: Text("Enter first name")));
+                        return;
+                      }
+                       if (_lastNameController.text.trim() == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Enter last name")));
+                        return;
+                      }
+                       if (_phoneNumController.text.trim() == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Enter phone number")));
+                        return;
+                      }
+                       if (_passwordController.text.trim() == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Enter password")));
+                        return;
+                      }
+                       if (_repasswordController.text.trim() == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Re-enter password")));
                         return;
                       }
                       if (_passwordController.text !=
@@ -601,6 +620,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 content: Text("Passwords don't match")));
                         return;
                       }
+                      final bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(_emailController.text);
+                          if(!emailValid){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Invalid Email")));
+                        return;
+                          }
                       if (!isPasswordValid(_passwordController.text)) {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text(
