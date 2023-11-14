@@ -69,8 +69,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedGender = widget.user.participant.gender!;
     selectedCountry = widget.user.participant.location;
     selectedState = widget.user.participant.state;
-    // selectedArea = "Acacia Hills";
-    selectedArea = widget.user.participant.areaSuburban;
+    selectedArea = "Acacia Hills";
+    // selectedArea = widget.user.participant.areaSuburban;
     _postalController.text = widget.user.participant.postalCode!;
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;
@@ -505,10 +505,54 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           )),
                     )
                   ]),
-                  BorderedEditText(
-                      label: "email",
-                      hint: "Enter email *",
-                      controller: _emailController),
+                  Container(
+                    height: 44,
+                    margin: const EdgeInsets.only(top: 24),
+                    child: TextField(
+                      controller: _emailController,
+                      enabled: false,
+                      style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          color: iconBlack,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        disabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: outlineGrey,
+                          ),
+                        ),
+                        labelText: "Email",
+                        border: InputBorder.none,
+                        hintText: 'Enter email *',
+                      ),
+                    ),
+                  ),
                   Row(children: [
                     Expanded(
                       child: GestureDetector(

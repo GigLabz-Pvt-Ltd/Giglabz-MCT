@@ -313,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: secondaryColor),
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Enter your name *',
+                          hintText: 'Enter your user name *',
                           hintStyle: GoogleFonts.poppins(
                             color: iconGrey,
                             fontSize: 14,
@@ -457,7 +457,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           .hasMatch(_userNameController.text);
                           if(!emailValid){
                             ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Invalid Email")));
+                            SnackBar(content: Text("Invalid User Name")));
                         return;
                           }
                       if (_passwordController.text.isEmpty) {

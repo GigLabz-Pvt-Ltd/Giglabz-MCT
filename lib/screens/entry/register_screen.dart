@@ -7,6 +7,7 @@ import 'package:mycareteam/models/get_roles_response.dart';
 import 'package:mycareteam/models/register_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
+import 'package:mycareteam/screens/entry/login_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
@@ -647,7 +648,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      const HomeScreen()),
+                                      const LoginScreen()),
                               (Route<dynamic> route) => false);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
