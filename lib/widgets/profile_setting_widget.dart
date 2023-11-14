@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,11 +14,13 @@ import 'package:mycareteam/models/ndis_answers.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/models/ndis_response.dart';
 import 'package:mycareteam/models/update_profile.dart';
+import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileSettingWidget extends StatefulWidget {
   ProfileSettingWidget(
@@ -36,6 +40,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _lastNameController = TextEditingController();
   final _phoneNumController = TextEditingController();
   var selectedPhoneCountry = countries[0];
+  Map<String, dynamic>? userMap;
   List<String>? states = null;
   var selectedCountry, selectedState, selectedArea, selectedPincode;
   final _emailController = TextEditingController();
@@ -60,37 +65,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   @override
   void initState() {
     super.initState();
-    _firstNameController.text = widget.user.participant.firstName!;
-    _lastNameController.text = widget.user.participant.lastName!;
-    _phoneNumController.text = widget.user.participant.phone!;
-    _emailController.text = widget.user.participant.email!;
-    selectedDob =
-        DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
-    selectedGender = widget.user.participant.gender!;
-    selectedCountry = widget.user.participant.location;
-    selectedState = widget.user.participant.state;
-    selectedArea = "Acacia Hills";
-    // selectedArea = widget.user.participant.areaSuburban;
-    _postalController.text = widget.user.participant.postalCode!;
-    ndis = widget.user.participant.ndis;
-    ndisStart = widget.user.participant.ndisEndDate;
-    ndisEnd = widget.user.participant.ndisStartDate;
-    _areaController.text = widget.user.participant.areaSuburban!;
-    _aboutController.text = widget.user.participant.aboutUser!;
-    countries.asMap().forEach((index, element) {
-      if (element.code == widget.user.participant.countryCode) {
-        selectedPhoneCountry = countries[index];
-      }
-    });
-    widget.ndisQues.questions.asMap().forEach((index, element) {
-      toggleValues?.add(element.answer);
-    });
+    init();
   }
 
   @override
   Widget build(BuildContext context) {
     getProviders();
-
+    
     return isLoading
         ? Center(
             child: CircularProgressIndicator(
@@ -838,36 +819,40 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   aboutMeWidget(),
                   GestureDetector(
                     onTap: () {
-                     showDialog(
+                      showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             if (widget.user.participant.ndisAgreement != 1) {
                               return okDialog("update_profile");
                             } else if (widget.user.participant.ndisTc != 1) {
-                             return okDialog("ndis_agreement");
-                            }else{
-                                  var mParticipant = UpdateParticipant(
-                            firstName: _firstNameController.text,
-                            lastName: _lastNameController.text,
-                            phone: selectedPhoneCountry.code! +
-                                _phoneNumController.text,
-                            email: _emailController.text,
-                            gender: selectedGender,
-                            dateOfBirth: selectedDob.toString(),
-                            ndisNumber: null,
-                            aboutUser: _aboutController.text,
-                            postalCode: _postalController.text,
-                            areaSuburban: selectedArea,
-                            address: "some address",
-                            state: selectedState,
-                            country: selectedCountry,
-                            ndisStartDate: null,
-                            ndisEndDate: null,
-                            providers: [310, 364],
-                            interests: []);
-                        UpdateProfile profile =
-                            UpdateProfile(participant: mParticipant);
-                            ApiService().updateProfile(profile);
+                              return okDialog("ndis_agreement");
+                            } else {
+                              var mParticipant = UpdateParticipant(
+                                  firstName: _firstNameController.text,
+                                  lastName: _lastNameController.text,
+                                  phone: selectedPhoneCountry.code! +
+                                      _phoneNumController.text,
+                                  email: _emailController.text,
+                                  gender: selectedGender,
+                                  dateOfBirth: selectedDob.day.toString() +
+                                      "/" +
+                                      selectedDob.month.toString() +
+                                      "/" +
+                                      selectedDob.year.toString(),
+                                  ndisNumber: ndis,
+                                  aboutUser: _aboutController.text,
+                                  postalCode: _postalController.text,
+                                  areaSuburban: selectedArea,
+                                  address: "some address",
+                                  state: selectedState,
+                                  country: selectedCountry,
+                                  ndisStartDate: ndisStart,
+                                  ndisEndDate: ndisEnd,
+                                  providers: [310, 364],
+                                  interests: []);
+                              UpdateProfile profile =
+                                  UpdateProfile(participant: mParticipant);
+                              updateProfile(profile);
                               return okDialog("terms_and_conditions");
                             }
                           });
@@ -1375,12 +1360,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             answers: ans);
                         ApiService().postNdisAnswers(ndisAnswers);
                         Navigator.pop(context);
-                        if(widget.user.participant.ndisTc != 1){
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return okDialog("ndis_agreement");
-                            });
+                        if (widget.user.participant.ndisTc != 1) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return okDialog("ndis_agreement");
+                              });
                         }
                       },
                       child: Container(
@@ -1508,7 +1493,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     onTap: () async {
                       NdisResponse respon = await ApiService()
                           .postNdisTc(widget.user.participant.email!, 1);
-                        Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: Container(
                         height: 40,
@@ -1579,5 +1564,50 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         });
       });
     }
+  }
+
+  void updateProfile(UpdateProfile profile) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    UpdateProfileResponse res = await ApiService().updateProfile(profile);
+    if (userMap != null && res.responseStatus == 200) {
+      var mProfile = await ApiService()
+          .getProfile(userMap?["user_name"], userMap?["role_id"]);
+          var a = mProfile;
+      setState(() {
+        widget.user = mProfile;
+        init();
+      });
+    }
+  }
+  
+  void init() {
+    _firstNameController.text = widget.user.participant.firstName!;
+    _lastNameController.text = widget.user.participant.lastName!;
+    _phoneNumController.text = widget.user.participant.phone!;
+    _emailController.text = widget.user.participant.email!;
+    selectedDob =
+        DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
+    selectedGender = widget.user.participant.gender!;
+    selectedCountry = widget.user.participant.location;
+    selectedState = widget.user.participant.state;
+    // selectedArea = "Acacia Hills";
+    selectedArea = widget.user.participant.areaSuburban;
+    _postalController.text = widget.user.participant.postalCode!;
+    ndis = widget.user.participant.ndis;
+    ndisStart = widget.user.participant.ndisEndDate;
+    ndisEnd = widget.user.participant.ndisStartDate;
+    _areaController.text = widget.user.participant.areaSuburban!;
+    _aboutController.text = widget.user.participant.aboutUser!;
+    countries.asMap().forEach((index, element) {
+      if (element.code == widget.user.participant.countryCode) {
+        selectedPhoneCountry = countries[index];
+      }
+    });
+    widget.ndisQues.questions.asMap().forEach((index, element) {
+      toggleValues?.add(element.answer);
+    });
   }
 }
