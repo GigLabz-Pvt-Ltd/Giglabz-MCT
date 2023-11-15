@@ -650,6 +650,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   builder: (BuildContext context) =>
                                       const LoginScreen()),
                               (Route<dynamic> route) => false);
+                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text("Registration successfull. "+response.responseMessage.toString())));
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content:
