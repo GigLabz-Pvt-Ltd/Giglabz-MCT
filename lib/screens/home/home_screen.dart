@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_pie_chart/easy_pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,6 +22,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   DashboardResponse? dashboard;
+  int? goalCount;
+  Map<String, double> dataMap = {"a": 10, "b": 4};
+  List<PopupMenuEntry<dynamic>> menuItems = [
+    PopupMenuItem(
+      child: Text('Option 1'),
+      value: 'option1',
+    ),
+    PopupMenuItem(
+      child: Text('Option 2'),
+      value: 'option2',
+    ),
+    // Add more PopupMenuItems as needed
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -70,354 +84,61 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: scaffoldGrey,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: ScrollPhysics(),
           child: Column(
             children: [
               statusTile(),
-              if (false)
-                const Padding(
-                  padding: EdgeInsets.only(left: 20, bottom: 12),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Goals Category",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: iconBlue),
-                    ),
+              const Padding(
+                padding: EdgeInsets.only(left: 20, bottom: 12),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Goals Category",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: iconBlue),
                   ),
                 ),
-              if (false)
+              ),
+              ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: goalCount ?? 0,
+                  itemBuilder: (context, index) {
+                    return goalTile(index);
+                  }),
+              if (goalCount == 0)
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 12, bottom: 10),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 4,
-                            width: 44,
-                            margin: EdgeInsets.only(top: 16),
-                            decoration: const BoxDecoration(
-                                color: goalCategoryProgress,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                          ),
-                          const Spacer(),
-                          Container(
-                            height: 8,
-                            width: 8,
-                            margin: EdgeInsets.only(top: 16),
-                            decoration: const BoxDecoration(
-                                color: goalCategoryRed,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                          ),
-                          Container(
-                            margin:
-                                EdgeInsets.only(top: 12, left: 5, right: 10),
-                            child: const Text(
-                              "High",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: goalCategoryImportance),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 12),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/menu_button.svg",
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text(
-                          "To Practice on self-love and self-compassion",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: goalCategoryBlue),
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(right: 5, top: 8),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/clock.svg",
-                              height: 12,
-                              width: 12,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 7, right: 12),
-                            child: Text(
-                              "Updated 2 hour ago",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                  color: goalCategoryGrey),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: RatingBarIndicator(
-                              rating: 4.5,
-                              itemCount: 5,
-                              itemSize: 14.0,
-                              unratedColor: starEmpty,
-                              itemBuilder: (context, index) => const Icon(
-                                Icons.star,
-                                color: starFilled,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 1),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/pie_progress.svg",
-                              height: 24,
-                              width: 24,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 8, bottom: 6),
-                                child: Text(
-                                  "Current Status",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: iconBlack),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                    left: 8, top: 3, right: 8, bottom: 3),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(3)),
-                                  border: Border.all(color: outlineGrey),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 8,
-                                      width: 8,
-                                      margin: const EdgeInsets.only(right: 4),
-                                      decoration: const BoxDecoration(
-                                          color: goalCategoryGreen,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15))),
-                                    ),
-                                    const Text(
-                                      "Completed",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12,
-                                          color: goalCategoryImportance),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          const Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 12),
-                                child: Text(
-                                  "Start Date",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: goalCategoryBlue),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Text(
-                                  "00-00-0000",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 10,
-                                      color: goalCategoryGrey),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10, top: 12),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "End Date",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: goalCategoryBlue),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    "00-00-0000",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 10,
-                                        color: goalCategoryGrey),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 8, bottom: 4),
-                                child: Text(
-                                  "Shared With",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: iconBlack),
-                                ),
-                              ),
-                              Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: SvgPicture.asset(
-                                      "lib/resources/images/goal_profile.svg",
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 4, left: 16),
-                                    child: SvgPicture.asset(
-                                      "lib/resources/images/goal_profile.svg",
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 4, left: 32),
-                                    child: SvgPicture.asset(
-                                      "lib/resources/images/goal_profile.svg",
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 4, left: 48),
-                                    child: SvgPicture.asset(
-                                      "lib/resources/images/goal_profile.svg",
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, top: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Reviewed By",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: iconBlack),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 8, top: 8),
-                                  child: SvgPicture.asset(
-                                    "lib/resources/images/goal_profile.svg",
-                                    height: 24,
-                                    width: 24,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  width: 130,
+                  height: 136,
+                  margin: EdgeInsets.only(top: 100, bottom: 12),
+                  child: SvgPicture.asset(
+                    "lib/resources/images/no_goals.svg",
                   ),
                 ),
-              Container(
-                width: 130,
-                height: 136,
-                margin: EdgeInsets.only(top: 100, bottom: 12),
-                child: SvgPicture.asset(
-                  "lib/resources/images/no_goals.svg",
+              if (goalCount == 0)
+                const Text(
+                  "Still you don’t have any goals\n please add a new goal!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Color(0xff638381)),
                 ),
-              ),
-              const Text(
-                "Still you don’t have any goals\n please add a new goal!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: Color(0xff638381)),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          const CreateGoalScreen()));
-                },
-                child: SvgPicture.asset(
-                  "lib/resources/images/create_goal.svg",
+              if (goalCount == 0)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const CreateGoalScreen()));
+                  },
+                  child: SvgPicture.asset(
+                    "lib/resources/images/create_goal.svg",
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -688,7 +409,348 @@ class _HomeScreenState extends State<HomeScreen> {
 
       setState(() {
         dashboard = mDashboard;
+        goalCount = mDashboard.goalList.length;
       });
     }
+  }
+
+  goalTile(int index) {
+    return Container(
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      padding: const EdgeInsets.only(left: 20, right: 12, bottom: 10),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15))),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 4,
+                width: 44,
+                margin: EdgeInsets.only(top: 16),
+                decoration: const BoxDecoration(
+                    color: goalCategoryProgress,
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+              ),
+              const Spacer(),
+              Container(
+                height: 8,
+                width: 8,
+                margin: EdgeInsets.only(top: 16),
+                decoration: BoxDecoration(
+                    color: dashboard?.goalList[index].GoalPriority == "High"
+                        ? goalCategoryRed
+                        : dashboard?.goalList[index].GoalPriority == "Medium"
+                            ? goalCategoryGreen
+                            : dashboard?.goalList[index].GoalPriority ==
+                                    "Medium"
+                                ? goalCategoryBlue
+                                : goalCategoryGrey,
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 12, left: 5, right: 10),
+                child: Text(
+                  dashboard?.goalList[index].GoalPriority ?? "",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: goalCategoryImportance),
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 12),
+              //   child: SvgPicture.asset(
+              //     "lib/resources/images/menu_button.svg",
+              //   ),
+              // ),
+              PopupMenuButton<dynamic>(
+                child: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: SvgPicture.asset(
+                  "lib/resources/images/menu_button.svg",
+                ),
+              ),
+                itemBuilder: (BuildContext context) {
+                  return menuItems;
+                },
+                onSelected: (dynamic value) {
+                  // Handle the selected option
+                  print('Selected: $value');
+                },
+              )
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              dashboard?.goalList[index].GoalName ?? "",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                  color: goalCategoryBlue),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 5, top: 8),
+                child: SvgPicture.asset(
+                  "lib/resources/images/clock.svg",
+                  height: 12,
+                  width: 12,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 7, right: 12),
+                child: Text(
+                  "Updated 2 hour ago",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: goalCategoryGrey),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: RatingBarIndicator(
+                  rating: dashboard?.goalList[index].Rating ?? 0.0,
+                  itemCount: 5,
+                  itemSize: 14.0,
+                  unratedColor: starEmpty,
+                  itemBuilder: (context, index) => const Icon(
+                    Icons.star,
+                    color: starFilled,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                height: 22,
+                width: 22,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: goalCategoryBlue,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: EasyPieChart(
+                    shouldAnimate: false,
+                    pieType: PieType.fill,
+                    style: TextStyle(fontSize: 0),
+                    children: [
+                      PieData(value: 70, color: goalCategoryBlue),
+                      PieData(value: 30, color: Colors.white),
+                    ]),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 1),
+              //   child: SvgPicture.asset(
+              //     "lib/resources/images/pie_progress.svg",
+              //     height: 24,
+              //     width: 24,
+              //   ),
+              // ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 6),
+                    child: Text(
+                      "Current Status",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10,
+                          color: iconBlack),
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 8,
+                          width: 8,
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: const BoxDecoration(
+                              color: goalCategoryGreen,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                        ),
+                        const Text(
+                          "Completed",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: goalCategoryImportance),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: Text(
+                      "Start Date",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10,
+                          color: goalCategoryBlue),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(
+                      dashboard?.goalList[index].StartDate ?? "00-00-0000",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 10,
+                          color: goalCategoryGrey),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 12),
+                child: Column(
+                  children: [
+                    Text(
+                      "End Date",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10,
+                          color: goalCategoryBlue),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        dashboard?.goalList[index].TargetDate ?? "00-00-0000",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 10,
+                            color: goalCategoryGrey),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 4),
+                    child: Text(
+                      "Shared With",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10,
+                          color: iconBlack),
+                    ),
+                  ),
+                  Stack(
+                    children: [
+                      if (dashboard!.goalList[index].SharedWith.length > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/goal_profile.svg",
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      if (dashboard!.goalList[index].SharedWith.length > 1)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, left: 16),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/goal_profile.svg",
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      if (dashboard!.goalList[index].SharedWith.length > 2)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, left: 32),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/goal_profile.svg",
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      if (dashboard!.goalList[index].SharedWith.length > 3)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, left: 48),
+                          child: SvgPicture.asset(
+                            "lib/resources/images/goal_profile.svg",
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Reviewed By",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10,
+                          color: iconBlack),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8, top: 8),
+                      child: SvgPicture.asset(
+                        "lib/resources/images/goal_profile.svg",
+                        height: 24,
+                        width: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
