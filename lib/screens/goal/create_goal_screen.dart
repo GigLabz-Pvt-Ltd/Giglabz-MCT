@@ -30,9 +30,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
 
   late final TabController _tabCont;
   var currentTab = 0;
-  Map<String, dynamic>? userMap;
-  GetProfileResponse? profile;
-  GetNdisQuesResponse? ndis;
+
 
   @override
   void initState() {
@@ -48,11 +46,9 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
 
   @override
   Widget build(BuildContext context) {
-    getProfile();
 
-    return profile != null
-        ? Scaffold(
-            backgroundColor: scaffoldGrey,
+    return Scaffold(
+            backgroundColor: Colors.white,
             body: NestedScrollView(
               headerSliverBuilder: (_, __) {
                 return [
@@ -102,13 +98,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 ],
               ),
             ),
-          )
-        : const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-                child: CircularProgressIndicator(
-              color: primaryColor,
-            )));
+          );
   }
 
   TabBar get _tabBar => TabBar(
@@ -133,19 +123,4 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
           ),
         ],
       );
-
-  void getProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userPref = prefs.getString('user')!;
-    userMap = jsonDecode(userPref) as Map<String, dynamic>;
-
-    if (userMap != null && profile == null) {
-      var mProfile = await ApiService().getProfile(userMap?["user_name"], userMap?["role_id"]);
-      var mNdis = await ApiService().getNdisQues(userMap?["user_name"]);
-      setState(() {
-        profile = mProfile;
-        ndis = mNdis;
-      });
-    }
-  }
 }

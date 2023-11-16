@@ -23,15 +23,20 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   DashboardResponse? dashboard;
   int? goalCount;
-  Map<String, double> dataMap = {"a": 10, "b": 4};
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
-      child: Text('Option 1'),
+      child: Row(children: [
+        SvgPicture.asset("lib/resources/images/share.svg"),
+        Text('  Share')
+      ]),
       value: 'option1',
     ),
     PopupMenuItem(
-      child: Text('Option 2'),
-      value: 'option2',
+      child: Row(children: [
+        SvgPicture.asset("lib/resources/images/delete.svg"),
+        Text('  Delete')
+      ]),
+      value: 'option1',
     ),
     // Add more PopupMenuItems as needed
   ];
@@ -41,6 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
     getDashBoard();
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => const CreateGoalScreen()));
+          }),
       appBar: AppBar(
         backgroundColor: scaffoldGrey,
         elevation: 0,
@@ -468,12 +479,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: goalCategoryImportance),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 12),
-              //   child: SvgPicture.asset(
-              //     "lib/resources/images/menu_button.svg",
-              //   ),
-              // ),
               PopupMenuButton<dynamic>(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -547,12 +552,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: EasyPieChart(
-                    shouldAnimate: false,
+                    shouldAnimate: true,
+                    animateDuration: Duration(milliseconds: 1500),
                     pieType: PieType.fill,
                     style: TextStyle(fontSize: 0),
                     children: [
-                      PieData(value: 70, color: goalCategoryBlue),
-                      PieData(value: 30, color: Colors.white),
+                      PieData(value: 75, color: goalCategoryBlue),
+                      PieData(value: 25, color: Colors.white),
                     ]),
               ),
               // Padding(
