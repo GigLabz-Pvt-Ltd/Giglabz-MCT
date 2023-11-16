@@ -166,8 +166,8 @@ class ApiService {
 
     Future<DashboardResponse> getDashBoard(String email) async {
     final response = await get(
-      Uri.parse("$BASE_URL_8082/goals/dashboard/gitowe3414@ipniel.com"),
-      // Uri.parse("$BASE_URL_8082/goals/dashboard/$email"),
+      // Uri.parse("$BASE_URL_8082/goals/dashboard/gitowe3414@ipniel.com"),
+      Uri.parse("$BASE_URL_8082/goals/dashboard/$email"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
