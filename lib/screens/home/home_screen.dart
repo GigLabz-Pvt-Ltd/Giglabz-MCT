@@ -88,20 +88,21 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               statusTile(),
-              const Padding(
-                padding: EdgeInsets.only(left: 20, bottom: 12),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Goals Category",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: iconBlue),
+              if (goalCount != 0)
+                const Padding(
+                  padding: EdgeInsets.only(left: 20, bottom: 12),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Goals Category",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: iconBlue),
+                    ),
                   ),
                 ),
-              ),
               ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -191,7 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              dashboard != null
+                              dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].TotalGoals
                                       .toString()
                                   : "",
@@ -220,7 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              dashboard != null
+                              dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Pending
                                       .toString()
                                   : "",
@@ -230,7 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              dashboard != null
+                              dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Inprogress
                                       .toString()
                                   : "",
@@ -240,7 +244,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              dashboard != null
+                              dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Completed
                                       .toString()
                                   : "",
@@ -300,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CircularProgressIndicator(
                 color: Color(0xff00C3A5),
                 strokeWidth: 6,
-                value: dashboard != null
+                value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
                     ? dashboard!.dashboardCount[0].DraftPercentage / 100
                     : 0.0,
                 backgroundColor: Colors.white, //<-- SEE HERE
@@ -310,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Center(
               child: Text(
-            dashboard != null
+            dashboard != null && dashboard!.dashboardCount.isNotEmpty
                 ? dashboard!.dashboardCount[0].DraftPercentage.toString()
                 : "",
             style: TextStyle(
@@ -471,11 +476,11 @@ class _HomeScreenState extends State<HomeScreen> {
               // ),
               PopupMenuButton<dynamic>(
                 child: Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: SvgPicture.asset(
-                  "lib/resources/images/menu_button.svg",
+                  padding: const EdgeInsets.only(top: 12),
+                  child: SvgPicture.asset(
+                    "lib/resources/images/menu_button.svg",
+                  ),
                 ),
-              ),
                 itemBuilder: (BuildContext context) {
                   return menuItems;
                 },
