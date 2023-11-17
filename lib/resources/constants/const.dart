@@ -9,6 +9,8 @@ List<FlagsAndCode> countries = [
 ];
 
 List<String> countriesStings = ["Select Country", "Australia", "Canada", "England", "india", "USA"];
+List<String> goalRecurring = ["Daily", "Weekly", "Monthly", "Yearly"];
+List<String> goalAreaList = ["Health", "Yoga", "Meditation"];
 
 List<String> genders = ["Male", "Female", "Other"];
 
