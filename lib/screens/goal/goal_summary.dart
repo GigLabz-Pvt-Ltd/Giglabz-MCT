@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/models/create_goal.dart';
+import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
+import 'package:mycareteam/service/api_service.dart';
 
 class GoalSummaryWidget extends StatefulWidget {
   GoalSummaryWidget({
@@ -25,6 +28,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
   var endSelectedMinutes = minutes[0];
   DateTime? selectedStartDate = null, selectedEndDate = null;
   DateTime selectedDob = DateTime.now();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +60,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
             border: Border.all(color: outlineGrey),
           ),
           child: TextField(
+            controller: _titleController,
             style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -98,13 +104,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
-                      if (selectedOption == 1) {
+                      if (selectedOption == "High") {
                         return iconBlue;
                       }
                       return borderGrey;
                     },
                   ),
-                  value: 1,
+                  value: "High",
                   groupValue: selectedOption,
                   onChanged: (value) {
                     setState(() {
@@ -126,13 +132,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
-                      if (selectedOption == 2) {
+                      if (selectedOption == "Medium") {
                         return iconBlue;
                       }
                       return borderGrey;
                     },
                   ),
-                  value: 2,
+                  value: "Medium",
                   focusColor: grey,
                   groupValue: selectedOption,
                   onChanged: (value) {
@@ -155,13 +161,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
-                      if (selectedOption == 3) {
+                      if (selectedOption == "Low") {
                         return iconBlue;
                       }
                       return borderGrey;
                     },
                   ),
-                  value: 3,
+                  value: "Low",
                   focusColor: grey,
                   groupValue: selectedOption,
                   onChanged: (value) {
@@ -385,13 +391,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalFor == 1) {
+                    if (goalFor == "Self") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 1,
+                value: "Self",
                 groupValue: goalFor,
                 onChanged: (value) {
                   setState(() {
@@ -413,13 +419,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalFor == 2) {
+                    if (goalFor == "Someone") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 2,
+                value: "Someone",
                 focusColor: grey,
                 groupValue: goalFor,
                 onChanged: (value) {
@@ -442,7 +448,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalFor == 3) {
+                    if (goalFor == "Group") {
                       return iconBlue;
                     }
                     return borderGrey;
@@ -450,7 +456,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 ),
                 value: 3,
                 focusColor: grey,
-                groupValue: goalFor,
+                groupValue: "Group",
                 onChanged: (value) {
                   setState(() {
                     goalFor = value;
@@ -1137,21 +1143,57 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Container(
-            height: 40,
-            width: 80,
-            margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-            decoration: const BoxDecoration(
-              color: primaryColor,
-              borderRadius: BorderRadius.all(Radius.circular(3)),
-            ),
-            child: Center(
-              child: Text(
-                "Save",
-                style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
+          child: GestureDetector(
+            onTap: () async {
+              List<ForSomeoneElse> someoneElse = [];
+              someoneElse.add(ForSomeoneElse(name: "name_1", email: "email_1"));
+              var goal = CreateGoal(
+                  title: _titleController.text,
+                  priority: selectedOption.toString(),
+                  area: GoalArea(name: "GoalArea_name", id: 0),
+                  areaCustom: selectedGoalArea,
+                  goalFor: goalFor.toString(),
+                  forSomeoneElse: someoneElse,
+                  recurring: selectedRecurring,
+                  startDate: selectedStartDate!.day.toString() +
+                      "/" +
+                      selectedStartDate!.month.toString() +
+                      "/" +
+                      selectedStartDate!.year.toString(),
+                  targetDate: selectedEndDate!.day.toString() +
+                      "/" +
+                      selectedEndDate!.month.toString() +
+                      "/" +
+                      selectedEndDate!.year.toString(),
+                  description: _descriptionController.text);
+              CreateGoalResponse response = await ApiService().createGoal(goal);
+              if (response.responseStatus == 200) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return okDialog("");
+                    });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Goal Creation Failed...")));
+              }
+            },
+            child: Container(
+              height: 40,
+              width: 80,
+              margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+              decoration: const BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.all(Radius.circular(3)),
+              ),
+              child: Center(
+                child: Text(
+                  "Save",
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -1384,6 +1426,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
         ),
         child: TextField(
           keyboardType: TextInputType.multiline,
+          controller: _descriptionController,
           minLines: 1,
           maxLines: 2,
           style: GoogleFonts.poppins(
@@ -1400,5 +1443,78 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
         ),
       ),
     ]);
+  }
+
+  Widget okDialog(String fromDialog) {
+    return Dialog(
+      child: Container(
+        height: 250,
+        decoration: const BoxDecoration(
+            color: scaffoldGrey,
+            borderRadius: BorderRadius.all(Radius.circular(3.0))),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(35, 35, 35, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("lib/resources/images/ndis_tick.svg"),
+                Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                'Goal summary details are saved Successfully!',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: '',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: secondaryColor),
+                          ),
+                          TextSpan(
+                            text: '',
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 24),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "OK",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

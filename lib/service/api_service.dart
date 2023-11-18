@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:mycareteam/models/create_goal.dart';
+import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
@@ -127,17 +129,17 @@ class ApiService {
   }
 
   Future<NdisResponse> postNdisAnswers(NdisAnswers answers) async {
-    final response = await post(Uri.parse("$BASE_URL_8080/api/ndis/save/answers"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: getNdisAnswersApiToJson(answers));
+    final response =
+        await post(Uri.parse("$BASE_URL_8080/api/ndis/save/answers"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: getNdisAnswersApiToJson(answers));
     final activity = geNdisResponseApiFromJson(response.body);
     return activity;
   }
 
-    Future<NdisResponse> postNdisTc(
-      String email, int tc) async {
+  Future<NdisResponse> postNdisTc(String email, int tc) async {
     final response = await post(Uri.parse("$BASE_URL_8080/api/ndis/save/tc"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -150,12 +152,14 @@ class ApiService {
     return activity;
   }
 
-    Future<UpdateProfileResponse> updateProfile(UpdateProfile profile) async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<UpdateProfileResponse> updateProfile(UpdateProfile profile) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-      
-    final response = await post(Uri.parse("$BASE_URL_8080/api/userprofile/update/user/${userMap["user_name"]}/${userMap["role_id"]}"),
+
+    final response = await post(
+        Uri.parse(
+            "$BASE_URL_8080/api/userprofile/update/user/${userMap["user_name"]}/${userMap["role_id"]}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -164,7 +168,7 @@ class ApiService {
     return activity;
   }
 
-    Future<DashboardResponse> getDashBoard(String email) async {
+  Future<DashboardResponse> getDashBoard(String email) async {
     final response = await get(
       // Uri.parse("$BASE_URL_8082/goals/dashboard/gitowe3414@ipniel.com"),
       Uri.parse("$BASE_URL_8082/goals/dashboard/$email"),
@@ -173,6 +177,21 @@ class ApiService {
       },
     );
     final activity = getDashboardResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<CreateGoalResponse> createGoal(CreateGoal goal) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    final response =
+        await post(Uri.parse("$BASE_URL_8082/goals/summary/save/2686"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: createGoalApiToJson(goal));
+    final activity = createGoalResponseApiFromJson(response.body);
     return activity;
   }
 }
