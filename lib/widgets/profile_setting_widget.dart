@@ -71,7 +71,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   @override
   Widget build(BuildContext context) {
     getProviders();
-    
+
     return isLoading
         ? Center(
             child: CircularProgressIndicator(
@@ -858,22 +858,23 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           });
                     },
                     child: Container(
-                        height: 40,
-                        width: double.infinity,
-                        margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
-                        decoration: const BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                      height: 40,
+                      width: double.infinity,
+                      margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Update Profile",
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white),
                         ),
-                        child: Center(
-                          child: Text(
-                            "Update Profile",
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        )),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -885,8 +886,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDob)
       setState(() {
@@ -1575,14 +1576,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     if (userMap != null && res.responseStatus == 200) {
       var mProfile = await ApiService()
           .getProfile(userMap?["user_name"], userMap?["role_id"]);
-          var a = mProfile;
+      var a = mProfile;
       setState(() {
         widget.user = mProfile;
         init();
       });
     }
   }
-  
+
   void init() {
     _firstNameController.text = widget.user.participant.firstName!;
     _lastNameController.text = widget.user.participant.lastName!;

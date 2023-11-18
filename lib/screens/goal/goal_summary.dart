@@ -14,11 +14,16 @@ class GoalSummaryWidget extends StatefulWidget {
 }
 
 class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
-  Object? selectedOption, goalFor, goalType, goalArea = 1;
+  Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
   var selectedInterest = null;
   var selectedName = null;
   var selectedRecurring = goalRecurring[0];
   var selectedGoalArea = goalAreaList[0];
+  var startSelectedHours = hours[0];
+  var startSelectedMinutes = minutes[0];
+  var endSelectedHours = hours[0];
+  var endSelectedMinutes = minutes[0];
+  DateTime? selectedStartDate = null, selectedEndDate = null;
   DateTime selectedDob = DateTime.now();
 
   @override
@@ -701,7 +706,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
-              )
+              ),
             ]),
             Row(children: [
               Radio(
@@ -783,7 +788,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                selectDate(context);
+                selectStartDate(context);
               },
               child: Container(
                 height: 50,
@@ -806,7 +811,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Start Date",
+                            selectedStartDate != null
+                                ? selectedStartDate!.day.toString() +
+                                    "/" +
+                                    selectedStartDate!.month.toString() +
+                                    "/" +
+                                    selectedStartDate!.year.toString()
+                                : "Start Date",
                             style: GoogleFonts.poppins(
                               color: secondaryColor,
                               fontSize: 14,
@@ -820,7 +831,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                selectDate(context);
+                selectEndDate(context);
               },
               child: Container(
                 height: 50,
@@ -843,7 +854,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "End Date",
+                            selectedEndDate != null
+                                ? selectedEndDate!.day.toString() +
+                                    "/" +
+                                    selectedEndDate!.month.toString() +
+                                    "/" +
+                                    selectedEndDate!.year.toString()
+                                : "End Date",
                             style: GoogleFonts.poppins(
                               color: secondaryColor,
                               fontSize: 14,
@@ -855,6 +872,290 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
             ),
           ),
         ]),
+        Container(
+          height: 50,
+          margin: EdgeInsets.only(left: 20, right: 20, top: 12),
+          child: Row(children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(right: 6),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
+                ),
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                startSelectedHours = newValue!;
+                              });
+                            },
+                            value: startSelectedHours,
+                            items: hours.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                startSelectedMinutes = newValue!;
+                              });
+                            },
+                            value: startSelectedMinutes,
+                            items: minutes.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(left: 6),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
+                ),
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                endSelectedHours = newValue!;
+                              });
+                            },
+                            value: endSelectedHours,
+                            items: hours.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                endSelectedMinutes = newValue!;
+                              });
+                            },
+                            value: endSelectedMinutes,
+                            items: minutes.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ]),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20, bottom: 10),
+          child: Divider(
+            color: dividerGrey,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 0, left: 20, right: 20),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Goal Summary",
+              style: GoogleFonts.poppins(
+                color: blueGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 20, right: 20, top: 8),
+          child: aboutMeWidget(),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 8, left: 20, right: 20),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Share your Goal to",
+              style: GoogleFonts.poppins(
+                color: blueGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            Row(children: [
+              Radio(
+                fillColor: MaterialStateColor.resolveWith(
+                  (Set<MaterialState> states) {
+                    if (shareGoalTo == 1) {
+                      return iconBlue;
+                    }
+                    return borderGrey;
+                  },
+                ),
+                value: 1,
+                groupValue: shareGoalTo,
+                onChanged: (value) {
+                  setState(() {
+                    shareGoalTo = value;
+                    print("Button value: $value");
+                  });
+                },
+              ),
+              Text(
+                "Family friends/Colleagues",
+                style: GoogleFonts.poppins(
+                  color: secondaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ]),
+            Row(children: [
+              Radio(
+                fillColor: MaterialStateColor.resolveWith(
+                  (Set<MaterialState> states) {
+                    if (shareGoalTo == 2) {
+                      return iconBlue;
+                    }
+                    return borderGrey;
+                  },
+                ),
+                value: 2,
+                focusColor: grey,
+                groupValue: shareGoalTo,
+                onChanged: (value) {
+                  setState(() {
+                    shareGoalTo = value;
+                    print("Button value: $value");
+                  });
+                },
+              ),
+              Text(
+                "Reviewer",
+                style: GoogleFonts.poppins(
+                  color: secondaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              )
+            ]),
+          ],
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            height: 40,
+            width: 80,
+            margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+            decoration: const BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+            ),
+            child: Center(
+              child: Text(
+                "Save",
+                style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              ),
+            ),
+          ),
+        ),
       ]),
     );
   }
@@ -1034,16 +1335,70 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
     );
   }
 
-  selectDate(BuildContext context) async {
+  selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDob)
       setState(() {
-        selectedDob = picked;
+        selectedStartDate = picked;
       });
+  }
+
+  selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDob, // Refer step 1
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedDob)
+      setState(() {
+        selectedEndDate = picked;
+      });
+  }
+
+  aboutMeWidget() {
+    return Stack(children: [
+      Container(
+        height: 90,
+        padding: const EdgeInsets.fromLTRB(0, 0, 6, 6),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: SvgPicture.asset(
+            "lib/resources/images/about_me.svg",
+          ),
+        ),
+      ),
+      Container(
+        height: 90,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(3)),
+          border: Border.all(color: outlineGrey),
+        ),
+        child: TextField(
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: 2,
+          style: GoogleFonts.poppins(
+              fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "",
+            hintStyle: GoogleFonts.poppins(
+              color: secondaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    ]);
   }
 }
