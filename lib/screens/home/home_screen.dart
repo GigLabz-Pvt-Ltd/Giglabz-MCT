@@ -46,12 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
     getDashBoard();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => const CreateGoalScreen()));
-          }),
+      floatingActionButton: goalCount != 0
+          ? FloatingActionButton(
+              child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        const CreateGoalScreen()));
+              })
+          : null,
       appBar: AppBar(
         backgroundColor: scaffoldGrey,
         elevation: 0,

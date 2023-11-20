@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/goal/goal_outcomes.dart';
 import 'package:mycareteam/screens/goal/goal_summary.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
@@ -92,7 +93,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 controller: _tabCont,
                 children: [
                   GoalSummaryWidget(),
-                  Center(child: Text("Coming Soon...")),
+                  GoalOutComesWidget(),
                   Center(child: Text("Coming Soon...")),
                   Center(child: Text("Coming Soon...")),
                 ],
