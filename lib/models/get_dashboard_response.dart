@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-DashboardResponse getDashboardResponseApiFromJson(String str) => DashboardResponse.fromJson(json.decode(str));
-String getDashboardResponseApiToJson(DashboardResponse data) => json.encode(data.toJson());
-
+DashboardResponse getDashboardResponseApiFromJson(String str) =>
+    DashboardResponse.fromJson(json.decode(str));
+String getDashboardResponseApiToJson(DashboardResponse data) =>
+    json.encode(data.toJson());
 
 class DashboardResponse {
   DashboardResponse({
@@ -11,16 +12,19 @@ class DashboardResponse {
   });
   late final List<DashboardCount> dashboardCount;
   late final List<GoalList> goalList;
-  
-  DashboardResponse.fromJson(Map<String, dynamic> json){
-    dashboardCount = List.from(json['DashboardCount']).map((e)=>DashboardCount.fromJson(e)).toList();
-    goalList = List.from(json['GoalList']).map((e)=>GoalList.fromJson(e)).toList();
+
+  DashboardResponse.fromJson(Map<String, dynamic> json) {
+    dashboardCount = List.from(json['DashboardCount'])
+        .map((e) => DashboardCount.fromJson(e))
+        .toList();
+    goalList =
+        List.from(json['GoalList']).map((e) => GoalList.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['DashboardCount'] = dashboardCount.map((e)=>e.toJson()).toList();
-    _data['GoalList'] = goalList.map((e)=>e.toJson()).toList();
+    _data['DashboardCount'] = dashboardCount.map((e) => e.toJson()).toList();
+    _data['GoalList'] = goalList.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -46,8 +50,8 @@ class DashboardCount {
   late final int PendingPercentage;
   late final int Completed;
   late final int CompletedPercentage;
-  
-  DashboardCount.fromJson(Map<String, dynamic> json){
+
+  DashboardCount.fromJson(Map<String, dynamic> json) {
     TotalGoals = json['Total_Goals'];
     DraftCount = json['Draft_count'];
     DraftPercentage = json['Draft_percentage'];
@@ -79,18 +83,18 @@ class GoalList {
     required this.GoalId,
     required this.GoalName,
     required this.GoalPriority,
-     this.GoalArea,
+    this.GoalArea,
     required this.GoalAreaCustom,
     required this.StartDate,
     required this.TargetDate,
     required this.GoalStatus,
     required this.GoalPercentage,
-     this.GoalReviewer,
+    this.GoalReviewer,
     required this.Rating,
     required this.SharedWith,
-    required this.reviewedBy,
-    required this.participants,
-     this.reviewed_by,
+    this.reviewedBy,
+    this.participants,
+    this.reviewed_by,
     required this.milestone,
   });
   late final int GoalId;
@@ -105,12 +109,12 @@ class GoalList {
   late final Null GoalReviewer;
   late final double Rating;
   late final List<dynamic> SharedWith;
-  late final List<ReviewedBy> reviewedBy;
-  late final List<DashBoardParticipants> participants;
+  late final List<ReviewedBy>? reviewedBy;
+  late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
   late final List<dynamic> milestone;
-  
-  GoalList.fromJson(Map<String, dynamic> json){
+
+  GoalList.fromJson(Map<String, dynamic> json) {
     GoalId = json['GoalId'];
     GoalName = json['Goal_Name'];
     GoalPriority = json['Goal_Priority'];
@@ -123,8 +127,22 @@ class GoalList {
     GoalReviewer = null;
     Rating = json['Rating'];
     SharedWith = List.castFrom<dynamic, dynamic>(json['Shared_with']);
-    reviewedBy = List.from(json['reviewedBy']).map((e)=>ReviewedBy.fromJson(e)).toList();
-    participants = List.from(json['participants']).map((e)=>DashBoardParticipants.fromJson(e)).toList();
+     var r = json['reviewedBy'];
+    if (r != null) {
+     reviewedBy = List.from(json['reviewedBy'])
+        .map((e) => ReviewedBy.fromJson(e))
+        .toList();
+    } else {
+      reviewedBy = null;
+    }
+    var p = json['participants'];
+    if (p != null) {
+      participants = List?.from(json['participants'])
+          ?.map((e) => DashBoardParticipants?.fromJson(e))
+          ?.toList();
+    } else {
+      participants = null;
+    }
     reviewed_by = null;
     milestone = List.castFrom<dynamic, dynamic>(json['milestone']);
   }
@@ -143,8 +161,8 @@ class GoalList {
     _data['Goal_Reviewer'] = GoalReviewer;
     _data['Rating'] = Rating;
     _data['Shared_with'] = SharedWith;
-    _data['reviewedBy'] = reviewedBy.map((e)=>e.toJson()).toList();
-    _data['participants'] = participants.map((e)=>e.toJson()).toList();
+    _data['reviewedBy'] = reviewedBy?.map((e) => e.toJson()).toList();
+    _data['participants'] = participants?.map((e) => e.toJson()).toList();
     _data['Reviewed_By'] = ReviewedBy;
     _data['milestone'] = milestone;
     return _data;
@@ -153,19 +171,19 @@ class GoalList {
 
 class ReviewedBy {
   ReviewedBy({
-     this.email,
-     this.firstName,
-     this.lastName,
-     this.fullName,
-     this.profilePic,
+    this.email,
+    this.firstName,
+    this.lastName,
+    this.fullName,
+    this.profilePic,
   });
   late final Null email;
   late final Null firstName;
   late final Null lastName;
   late final Null fullName;
   late final Null profilePic;
-  
-  ReviewedBy.fromJson(Map<String, dynamic> json){
+
+  ReviewedBy.fromJson(Map<String, dynamic> json) {
     email = null;
     firstName = null;
     lastName = null;
@@ -197,8 +215,8 @@ class DashBoardParticipants {
   late final String lastName;
   late final String fullName;
   late final String profilePic;
-  
-  DashBoardParticipants.fromJson(Map<String, dynamic> json){
+
+  DashBoardParticipants.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     firstName = json['firstName'];
     lastName = json['lastName'];

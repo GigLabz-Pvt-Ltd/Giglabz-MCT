@@ -45,7 +45,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedCountry, selectedState, selectedArea, selectedPincode;
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
-  DateTime selectedDob = DateTime.now();
+  DateTime? selectedDob = null;
   var ndis, ndisStart, ndisEnd;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
@@ -54,7 +54,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   bool checked = false;
   bool isLoading = false;
   GetProvidersResponse? providers;
-  List<String> areas = [];
+  List<String>? areas = null;
   List<String> pincodes = [];
 
   bool ndisFilled = false;
@@ -431,6 +431,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               color: outlineGrey,
                             ),
                           ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
+                          ),
                           labelText: "",
                           border: InputBorder.none,
                           hintText: 'Enter Phone number *',
@@ -542,11 +547,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         },
                         child: CalendarOrDropDown(
                             label: "Date of birth",
-                            hint: selectedDob.day.toString() +
-                                "/" +
-                                selectedDob.month.toString() +
-                                "/" +
-                                selectedDob.year.toString(),
+                            hint: selectedDob != null
+                                ? selectedDob!.day.toString() +
+                                    "/" +
+                                    selectedDob!.month.toString() +
+                                    "/" +
+                                    selectedDob!.year.toString()
+                                : "",
                             suffixIcon: "calendar"),
                       ),
                     ),
@@ -654,6 +661,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedCountry = newValue!;
+                                if (states == null) {
+                                  getProviders();
+                                }
                               });
                             },
                             value: selectedCountry,
@@ -694,6 +704,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               setState(() {
                                 selectedState = newValue!;
                               });
+                              if (areas == null) {
+                                getProviders();
+                              }
                             },
                             value: selectedState,
                             items: states?.map((String dropDownString) {
@@ -733,11 +746,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               setState(() {
                                 selectedArea = newValue!;
                                 _postalController.text =
-                                    pincodes[areas.indexOf(selectedArea)];
+                                    pincodes[areas!.indexOf(selectedArea)];
                               });
                             },
                             value: selectedArea,
-                            items: areas.map((String dropDownString) {
+                            items: areas?.map((String dropDownString) {
                               return DropdownMenuItem<String>(
                                 value: dropDownString,
                                 child: Padding(
@@ -834,11 +847,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                       _phoneNumController.text,
                                   email: _emailController.text,
                                   gender: selectedGender,
-                                  dateOfBirth: selectedDob.day.toString() +
-                                      "/" +
-                                      selectedDob.month.toString() +
-                                      "/" +
-                                      selectedDob.year.toString(),
+                                  dateOfBirth: selectedDob != null
+                                      ? selectedDob!.day.toString() +
+                                          "/" +
+                                          selectedDob!.month.toString() +
+                                          "/" +
+                                          selectedDob!.year.toString()
+                                      : "",
                                   ndisNumber: ndis,
                                   aboutUser: _aboutController.text,
                                   postalCode: _postalController.text,
@@ -885,7 +900,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDob, // Refer step 1
+      initialDate: selectedDob ?? DateTime.now(), // Refer step 1
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
@@ -1551,19 +1566,30 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   }
 
   void getProviders() async {
-    if (providers == null) {
+    if (providers == null ||
+        selectedCountry != "Select Country" ||
+        selectedState != null) {
       var mProviders = await ApiService().getProviders();
-      var mStates = await ApiService().getStates(selectedCountry);
-      var mAreas = await ApiService().getAreas(selectedState);
-
       setState(() {
         providers = mProviders;
-        states = mStates.state;
-        mAreas.area.forEach((element) {
-          areas?.add(element.name);
-          pincodes?.add(element.postalCode);
-        });
       });
+      var mStates, mAreas;
+      if (selectedCountry != "Select Country" && states == null) {
+        mStates = await ApiService().getStates(selectedCountry);
+        setState(() {
+          states = mStates?.state;
+        });
+      }
+      if (selectedState != null && areas == null) {
+        areas = [];
+        mAreas = await ApiService().getAreas(selectedState);
+        setState(() {
+          mAreas?.area.forEach((element) {
+            areas?.add(element.name);
+            pincodes?.add(element.postalCode);
+          });
+        });
+      }
     }
   }
 
@@ -1589,19 +1615,21 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     _lastNameController.text = widget.user.participant.lastName!;
     _phoneNumController.text = widget.user.participant.phone!;
     _emailController.text = widget.user.participant.email!;
-    selectedDob =
-        DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
-    selectedGender = widget.user.participant.gender!;
-    selectedCountry = widget.user.participant.location;
+    if (widget.user.participant.dateOfBirth != null) {
+      selectedDob =
+          DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
+    }
+    selectedGender = widget.user.participant.gender ?? "Other";
+    selectedCountry = widget.user.participant.location ?? "Select Country";
     selectedState = widget.user.participant.state;
     // selectedArea = "Acacia Hills";
     selectedArea = widget.user.participant.areaSuburban;
-    _postalController.text = widget.user.participant.postalCode!;
+    _postalController.text = widget.user.participant.postalCode ?? "";
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;
     ndisEnd = widget.user.participant.ndisStartDate;
-    _areaController.text = widget.user.participant.areaSuburban!;
-    _aboutController.text = widget.user.participant.aboutUser!;
+    _areaController.text = widget.user.participant.areaSuburban ?? "";
+    _aboutController.text = widget.user.participant.aboutUser ?? "";
     countries.asMap().forEach((index, element) {
       if (element.code == widget.user.participant.countryCode) {
         selectedPhoneCountry = countries[index];

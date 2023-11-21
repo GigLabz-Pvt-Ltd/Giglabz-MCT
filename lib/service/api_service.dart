@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
+import 'package:mycareteam/models/email_verify_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
@@ -192,6 +193,20 @@ class ApiService {
             },
             body: createGoalApiToJson(goal));
     final activity = createGoalResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<EmailVerifyResponse> emailVerify(String email, String code, String username) async {
+    final response = await post(Uri.parse("$BASE_URL/api/signup/emailverify"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "email": email,
+          "verifyCode": code,
+          "username": username
+        }));
+    final activity = emailVerifyResponseApiFromJson(response.body);
     return activity;
   }
 }
