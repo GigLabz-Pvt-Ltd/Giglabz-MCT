@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  bool isGoalClicked = false;
+  int isGoalClicked = -1;
   DashboardResponse? dashboard;
   int? goalCount;
   List<PopupMenuEntry<dynamic>> menuItems = [
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
             physics: ScrollPhysics(),
-            child: !isGoalClicked
+            child: isGoalClicked == -1
                 ? Column(
                     children: [
                       statusTile(),
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                isGoalClicked = false;
+                                isGoalClicked = -1;
                               });
                             },
                             child: const Padding(
@@ -207,9 +207,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
-                            itemCount: 5,
+                            itemCount: dashboard?.goalList[isGoalClicked]
+                                    .milestone.length ,
                             itemBuilder: (context, index) {
-                              return milestoneTile(index);
+                              return milestoneTile(isGoalClicked ,index);
                             }),
                       ),
                     ],
@@ -494,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          isGoalClicked = true;
+          isGoalClicked = index;
         });
       },
       child: Container(
@@ -760,7 +761,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Stack(
                       children: [
-                        if (dashboard!.goalList[index].SharedWith.length > 0)
+                        if (dashboard!.goalList[index].SharedWith!.length > 0)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: SvgPicture.asset(
@@ -769,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 24,
                             ),
                           ),
-                        if (dashboard!.goalList[index].SharedWith.length > 1)
+                        if (dashboard!.goalList[index].SharedWith!.length > 1)
                           Padding(
                             padding: const EdgeInsets.only(top: 4, left: 16),
                             child: SvgPicture.asset(
@@ -778,7 +779,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 24,
                             ),
                           ),
-                        if (dashboard!.goalList[index].SharedWith.length > 2)
+                        if (dashboard!.goalList[index].SharedWith!.length > 2)
                           Padding(
                             padding: const EdgeInsets.only(top: 4, left: 32),
                             child: SvgPicture.asset(
@@ -787,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 24,
                             ),
                           ),
-                        if (dashboard!.goalList[index].SharedWith.length > 3)
+                        if (dashboard!.goalList[index].SharedWith!.length > 3)
                           Padding(
                             padding: const EdgeInsets.only(top: 4, left: 48),
                             child: SvgPicture.asset(
@@ -833,7 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  milestoneTile(int index) {
+  milestoneTile(int goalIndex, int index) {
     return Container(
       // margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       // padding: const EdgeInsets.only(left: 20, right: 12, bottom: 10),
@@ -855,7 +856,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(
-              dashboard?.goalList[index].GoalName ?? "Walk",
+              dashboard?.goalList[goalIndex].GoalName ?? "Walk",
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -954,7 +955,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 4, left: 8),
                           child: Text(
-                            dashboard?.goalList[index].StartDate ??
+                            dashboard?.goalList[goalIndex].StartDate ??
                                 "00-00-0000",
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -991,7 +992,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 4),
                             child: Text(
-                              dashboard?.goalList[index].TargetDate ??
+                              dashboard?.goalList[goalIndex].TargetDate ??
                                   "00-00-0000",
                               textAlign: TextAlign.left,
                               style: TextStyle(

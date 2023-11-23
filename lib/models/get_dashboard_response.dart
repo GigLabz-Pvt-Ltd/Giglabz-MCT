@@ -91,7 +91,7 @@ class GoalList {
     required this.GoalPercentage,
     this.GoalReviewer,
     required this.Rating,
-    required this.SharedWith,
+    this.SharedWith,
     this.reviewedBy,
     this.participants,
     this.reviewed_by,
@@ -108,7 +108,7 @@ class GoalList {
   late final int GoalPercentage;
   late final Null GoalReviewer;
   late final double Rating;
-  late final List<dynamic> SharedWith;
+  late final List<dynamic>? SharedWith;
   late final List<ReviewedBy>? reviewedBy;
   late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
@@ -126,12 +126,17 @@ class GoalList {
     GoalPercentage = json['Goal_percentage'];
     GoalReviewer = null;
     Rating = json['Rating'];
-    SharedWith = List.castFrom<dynamic, dynamic>(json['Shared_with']);
-     var r = json['reviewedBy'];
+    var s = json['Shared_with'];
+    if (s != null) {
+      SharedWith = List.castFrom<dynamic, dynamic>(json['Shared_with']);
+    }else {
+      SharedWith = [];
+    }
+    var r = json['reviewedBy'];
     if (r != null) {
-     reviewedBy = List.from(json['reviewedBy'])
-        .map((e) => ReviewedBy.fromJson(e))
-        .toList();
+      reviewedBy = List.from(json['reviewedBy'])
+          .map((e) => ReviewedBy.fromJson(e))
+          .toList();
     } else {
       reviewedBy = null;
     }
