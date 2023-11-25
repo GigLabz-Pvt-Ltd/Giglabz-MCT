@@ -42,7 +42,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedPhoneCountry = countries[0];
   Map<String, dynamic>? userMap;
   List<String>? states = null;
-  var selectedCountry, selectedState, selectedArea, selectedPincode;
+  var selectedCountry, selectedState, selectedPincode;
+  String? selectedArea = null;
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime? selectedDob = null;
@@ -746,7 +747,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               setState(() {
                                 selectedArea = newValue!;
                                 _postalController.text =
-                                    pincodes[areas!.indexOf(selectedArea)];
+                                    pincodes[areas!.indexOf(selectedArea!)];
                               });
                             },
                             value: selectedArea,
@@ -857,7 +858,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                   ndisNumber: ndis,
                                   aboutUser: _aboutController.text,
                                   postalCode: _postalController.text,
-                                  areaSuburban: selectedArea,
+                                  areaSuburban: selectedArea ?? "",
                                   address: "some address",
                                   state: selectedState,
                                   country: selectedCountry,
@@ -1566,30 +1567,28 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   }
 
   void getProviders() async {
-    if (providers == null ||
-        selectedCountry != "Select Country" ||
-        selectedState != null) {
+    if (providers == null) {
       var mProviders = await ApiService().getProviders();
       setState(() {
         providers = mProviders;
       });
-      var mStates, mAreas;
-      if (selectedCountry != "Select Country" && states == null) {
-        mStates = await ApiService().getStates(selectedCountry);
-        setState(() {
-          states = mStates?.state;
+    }
+    var mStates, mAreas;
+    if (selectedCountry != "Select Country" && states == null) {
+      mStates = await ApiService().getStates(selectedCountry);
+      setState(() {
+        states = mStates?.state;
+      });
+    }
+    if (selectedState != null && areas == null) {
+      areas = [];
+      mAreas = await ApiService().getAreas(selectedState);
+      setState(() {
+        mAreas?.area.forEach((element) {
+          areas?.add(element.name);
+          pincodes?.add(element.postalCode);
         });
-      }
-      if (selectedState != null && areas == null) {
-        areas = [];
-        mAreas = await ApiService().getAreas(selectedState);
-        setState(() {
-          mAreas?.area.forEach((element) {
-            areas?.add(element.name);
-            pincodes?.add(element.postalCode);
-          });
-        });
-      }
+      });
     }
   }
 
@@ -1624,6 +1623,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedState = widget.user.participant.state;
     // selectedArea = "Acacia Hills";
     selectedArea = widget.user.participant.areaSuburban;
+    selectedArea = selectedArea?.toTitleCase();
     _postalController.text = widget.user.participant.postalCode ?? "";
     ndis = widget.user.participant.ndis;
     ndisStart = widget.user.participant.ndisEndDate;

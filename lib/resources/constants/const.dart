@@ -38,3 +38,9 @@ String termsAndCondition = "Please read these terms and conditions carefully bef
     "Country refers to: Victoria, Australia\n" +
     "Company (referred to as either \"the Company\", \"We\", \"Us\" or \"Our\" in this Agreement) refers to Four Square Venture Holdings , 3 Bravo Loop, Pakenham, Victoria, 3810.\n" +
     "Content refers to content such as text, images, or other information that can be posted, uploaded, linked to or otherwise made available by You, regardless of the form of that content.";
+
+
+extension StringCasingExtension on String {
+  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
+}
