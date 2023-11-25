@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/goal/create_goal_screen.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   int isGoalClicked = -1;
+  var goal_id;
   DashboardResponse? dashboard;
   int? goalCount;
   List<PopupMenuEntry<dynamic>> menuItems = [
@@ -51,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ? FloatingActionButton(
               child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        const CreateGoalScreen()));
+                getGoalId();
               })
           : null,
       appBar: AppBar(
@@ -148,9 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (goalCount == 0)
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const CreateGoalScreen()));
+                            getGoalId();
                           },
                           child: SvgPicture.asset(
                             "lib/resources/images/create_goal.svg",
@@ -207,10 +205,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
-                            itemCount: dashboard?.goalList[isGoalClicked]
-                                    .milestone.length ,
+                            itemCount: dashboard
+                                ?.goalList[isGoalClicked].milestone.length,
                             itemBuilder: (context, index) {
-                              return milestoneTile(isGoalClicked ,index);
+                              return milestoneTile(isGoalClicked, index);
                             }),
                       ),
                     ],
@@ -1075,5 +1073,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  getGoalId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    var response = await ApiService().getGoalId(userMap["user_name"]);
+    if (response.responseStatus == 200) {
+      goal_id = response.goalId;
+      var s = goal_id;
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              CreateGoalScreen(goalId: goal_id)));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(response.responseMessage)));
+    }
   }
 }

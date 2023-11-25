@@ -14,7 +14,12 @@ import 'package:mycareteam/widgets/profile_setting_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateGoalScreen extends StatefulWidget {
-  const CreateGoalScreen({Key? key}) : super(key: key);
+  CreateGoalScreen({
+    Key? key,
+    required int this.goalId,
+  }) : super(key: key);
+
+  int goalId;
 
   @override
   State<CreateGoalScreen> createState() => _CreateGoalScreenState();
@@ -32,7 +37,6 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
   late final TabController _tabCont;
   var currentTab = 0;
 
-
   @override
   void initState() {
     _tabCont = TabController(length: 4, vsync: this);
@@ -43,63 +47,65 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         currentTab = _tabCont.index;
       });
     });
+
+    var w = widget.goalId;
+
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-            backgroundColor: Colors.white,
-            body: NestedScrollView(
-              headerSliverBuilder: (_, __) {
-                return [
-                  SliverAppBar(
-                    backgroundColor: primaryColor,
-                    pinned: true,
-                    floating: false,
-                    forceElevated: true,
-                    elevation: 1,
-                    titleSpacing: 0,
-                    leading: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    title: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Create Goal",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    ),
-                    centerTitle: false,
-                    bottom: PreferredSize(
-                      preferredSize: _tabBar.preferredSize,
-                      child: ColoredBox(color: Colors.white, child: _tabBar),
-                    ),
-                  ),
-                ];
-              },
-              body: TabBarView(
-                controller: _tabCont,
-                children: [
-                  GoalSummaryWidget(),
-                  GoalOutComesWidget(),
-                  Center(child: Text("Coming Soon...")),
-                  Center(child: Text("Coming Soon...")),
-                ],
+      backgroundColor: Colors.white,
+      body: NestedScrollView(
+        headerSliverBuilder: (_, __) {
+          return [
+            SliverAppBar(
+              backgroundColor: primaryColor,
+              pinned: true,
+              floating: false,
+              forceElevated: true,
+              elevation: 1,
+              titleSpacing: 0,
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Create Goal",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                ),
+              ),
+              centerTitle: false,
+              bottom: PreferredSize(
+                preferredSize: _tabBar.preferredSize,
+                child: ColoredBox(color: Colors.white, child: _tabBar),
               ),
             ),
-          );
+          ];
+        },
+        body: TabBarView(
+          controller: _tabCont,
+          children: [
+            GoalSummaryWidget(),
+            GoalOutComesWidget(),
+            Center(child: Text("Coming Soon...")),
+            Center(child: Text("Coming Soon...")),
+          ],
+        ),
+      ),
+    );
   }
 
   TabBar get _tabBar => TabBar(

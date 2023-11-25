@@ -6,6 +6,7 @@ import 'package:mycareteam/models/email_verify_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
+import 'package:mycareteam/models/get_goal_id_response.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
@@ -196,7 +197,8 @@ class ApiService {
     return activity;
   }
 
-    Future<EmailVerifyResponse> emailVerify(String email, String code, String username) async {
+  Future<EmailVerifyResponse> emailVerify(
+      String email, String code, String username) async {
     final response = await post(Uri.parse("$BASE_URL/api/signup/emailverify"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -207,6 +209,19 @@ class ApiService {
           "username": username
         }));
     final activity = emailVerifyResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetGoalIdResponse> getGoalId(
+      String email) async {
+    final response = await post(Uri.parse("$BASE_URL_8082/goals/summary/create/$email"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "email": email,
+        }));
+    final activity = getGoalIdResponseApiFromJson(response.body);
     return activity;
   }
 }
