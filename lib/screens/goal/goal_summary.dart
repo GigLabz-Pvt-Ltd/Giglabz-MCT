@@ -29,10 +29,14 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
   }
 
   Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
-  var selectedInterest = null;
   var selectedName = null;
+  List<String> goalTypeList = [];
+  List<GoalArea> goalAreaList = [];
   var selectedRecurring = goalRecurring[0];
-  var selectedGoalArea = goalAreaList[0];
+  var selectedGoalType, customGoalArea;
+  GetAchieverGoalAreaResponse? areaResponse;
+  int selectedGoalAreaIndex = 0;
+  GoalArea? selectedGoalArea;
   var startSelectedHours = hours[0];
   var startSelectedMinutes = minutes[0];
   var endSelectedHours = hours[0];
@@ -311,11 +315,12 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                     icon: const Icon(null),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedGoalArea = newValue!;
+                        selectedGoalType = newValue!;
+                        updateAreas();
                       });
                     },
-                    value: selectedGoalArea,
-                    items: goalAreaList.map((String dropDownString) {
+                    value: selectedGoalType,
+                    items: goalTypeList.map((String dropDownString) {
                       return DropdownMenuItem<String>(
                         value: dropDownString,
                         child: Padding(
@@ -1162,7 +1167,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                   title: _titleController.text,
                   priority: selectedOption.toString(),
                   area: GoalArea(name: "GoalArea_name", id: 0),
-                  areaCustom: selectedGoalArea,
+                  areaCustom: customGoalArea,
                   goalFor: goalFor.toString(),
                   forSomeoneElse: someoneElse,
                   recurring: selectedRecurring,
@@ -1215,7 +1220,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
 
   selectGoalArea() {
     return Container(
-      height: 88,
       width: double.infinity,
       margin: const EdgeInsets.only(top: 0, left: 20, right: 20),
       padding: EdgeInsets.all(14),
@@ -1225,166 +1229,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
           Radius.circular(3),
         ),
       ),
-      child: Wrap(
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 0;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 0
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Health",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 0
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 0
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 1;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 1
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Sports",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 1
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 1
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 2;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 2
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Education",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 2
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 2
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 3;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 3
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Engineering",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 3
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 3
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-        ],
-      ),
+      child: Wrap(children: areaItems()),
     );
   }
 
@@ -1529,12 +1374,83 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
   }
 
   void init() async {
-    GetAchieverGoalAreaResponse area =
-        await ApiService().getAchieverGoalAreas();
-    var a = area;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
+    if (userMap["role_id"] == 1) {
+      areaResponse = await ApiService().getAchieverGoalAreas();
+
+      setState(() {
+        areaResponse?.achiever.forEach((element) {
+          goalTypeList.add(element.type);
+        });
+        selectedGoalType = goalTypeList[0];
+
+        areaResponse?.achiever[0].subTypes.forEach((element) {
+          goalAreaList.add(element);
+        });
+      });
+    }
+
+    // else {
+// values to be mapped once ui shared from the client
     GetInfluencerGoalAreaResponse Iarea =
         await ApiService().getInfluencerGoalAreas();
     var b = Iarea;
+    // }
+  }
+
+  List<Widget> areaItems() {
+    List<Widget> items = [];
+    goalAreaList.asMap().forEach((index, element) {
+      items.add(GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedGoalAreaIndex = index;
+          });
+        },
+        child: Container(
+          margin: EdgeInsets.only(right: 10, bottom: 10),
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: selectedGoalAreaIndex == index
+                ? interestSelected
+                : interestNotSelected,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              element.name,
+              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: selectedGoalAreaIndex == index
+                      ? Colors.white
+                      : secondaryColor),
+            ),
+            Container(
+              height: 24,
+              width: 12,
+            ),
+            selectedGoalAreaIndex == index
+                ? SvgPicture.asset(
+                    "lib/resources/images/interest_remove_selected.svg")
+                : SvgPicture.asset("lib/resources/images/interest_remove.svg")
+          ]),
+        ),
+      ));
+    });
+    return items;
+  }
+
+  void updateAreas() {
+    goalAreaList.clear();
+    int index = goalTypeList.indexOf(selectedGoalType);
+    areaResponse?.achiever[index].subTypes.forEach((element) {
+      goalAreaList.add(element);
+    });
   }
 }

@@ -10,7 +10,6 @@ List<FlagsAndCode> countries = [
 
 List<String> countriesStings = ["Select Country", "Australia", "Canada", "England", "India", "USA"];
 List<String> goalRecurring = ["Daily", "Weekly", "Monthly", "Yearly"];
-List<String> goalAreaList = ["Health", "Yoga", "Meditation"];
 List<String> genders = ["Male", "Female", "Other"];
 List<String> hours = [
   "00 H", "01 H", "02 H", "03 H", "04 H", "05 H", "06 H", "07 H", "08 H", "09 H", "10 H", "11 H", "12 H",

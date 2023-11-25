@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:mycareteam/models/create_goal.dart';
 
 GetInfluencerGoalAreaResponse getInfluencerGoalAreaResponseApiFromJson(String str) =>
     GetInfluencerGoalAreaResponse.fromJson(json.decode(str));
@@ -57,38 +58,17 @@ class ISubTypes {
     required this.goals,
   });
   late final String subType;
-  late final List<IGoals> goals;
+  late final List<GoalArea> goals;
   
   ISubTypes.fromJson(Map<String, dynamic> json){
     subType = json['subType'];
-    goals = List.from(json['goals']).map((e)=>IGoals.fromJson(e)).toList();
+    goals = List.from(json['goals']).map((e)=>GoalArea.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['subType'] = subType;
     _data['goals'] = goals.map((e)=>e.toJson()).toList();
-    return _data;
-  }
-}
-
-class IGoals {
-  IGoals({
-    required this.name,
-    required this.id,
-  });
-  late final String name;
-  late final int id;
-  
-  IGoals.fromJson(Map<String, dynamic> json){
-    name = json['name'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['id'] = id;
     return _data;
   }
 }

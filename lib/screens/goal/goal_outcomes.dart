@@ -21,7 +21,6 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   var selectedInterest = null;
   var selectedName = null;
   var selectedRecurring = goalRecurring[0];
-  var selectedGoalArea = goalAreaList[0];
   var startSelectedHours = hours[0];
   var startSelectedMinutes = minutes[0];
   var endSelectedHours = hours[0];
