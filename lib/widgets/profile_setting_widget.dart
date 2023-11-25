@@ -1626,8 +1626,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     selectedArea = selectedArea?.toTitleCase();
     _postalController.text = widget.user.participant.postalCode ?? "";
     ndis = widget.user.participant.ndis;
-    ndisStart = widget.user.participant.ndisEndDate;
-    ndisEnd = widget.user.participant.ndisStartDate;
+    ndisStart = widget.user.participant.ndisStartDate;
+    ndisEnd = widget.user.participant.ndisEndDate;
     _areaController.text = widget.user.participant.areaSuburban ?? "";
     _aboutController.text = widget.user.participant.aboutUser ?? "";
     countries.asMap().forEach((index, element) {

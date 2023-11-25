@@ -15,7 +15,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GoalSummaryWidget extends StatefulWidget {
   GoalSummaryWidget({
     Key? key,
+    required int this.goalId,
   }) : super(key: key);
+
+  int goalId;
 
   @override
   State<GoalSummaryWidget> createState() => _GoalSummaryWidgetState();
@@ -28,12 +31,16 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
     init();
   }
 
-  Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
+  Object? goalArea = 1;
+  Object? shareGoalTo = "family";
+  Object? goalType = "Recurring";
+  Object? selectedOption = "High";
+  Object? goalFor = "Self";
   var selectedName = null;
   List<String> goalTypeList = [];
   List<GoalArea> goalAreaList = [];
   var selectedRecurring = goalRecurring[0];
-  var selectedGoalType, customGoalArea;
+  var selectedGoalType;
   GetAchieverGoalAreaResponse? areaResponse;
   int selectedGoalAreaIndex = 0;
   GoalArea? selectedGoalArea;
@@ -44,6 +51,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
   DateTime? selectedStartDate = null, selectedEndDate = null;
   DateTime selectedDob = DateTime.now();
   final _titleController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _customAreaController = TextEditingController();
   final _descriptionController = TextEditingController();
 
   @override
@@ -316,6 +326,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedGoalType = newValue!;
+                        selectedGoalAreaIndex = 0;
                         updateAreas();
                       });
                     },
@@ -366,6 +377,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               border: Border.all(color: outlineGrey),
             ),
             child: TextField(
+              controller: _customAreaController,
               style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -435,13 +447,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalFor == "Someone") {
+                    if (goalFor == "Someone Else") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: "Someone",
+                value: "Someone Else",
                 focusColor: grey,
                 groupValue: goalFor,
                 onChanged: (value) {
@@ -464,7 +476,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalFor == "Group") {
+                    if (goalFor == "For Group") {
                       return iconBlue;
                     }
                     return borderGrey;
@@ -472,7 +484,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 ),
                 value: 3,
                 focusColor: grey,
-                groupValue: "Group",
+                groupValue: "For Group",
                 onChanged: (value) {
                   setState(() {
                     goalFor = value;
@@ -505,6 +517,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                   border: Border.all(color: outlineGrey),
                 ),
                 child: TextField(
+                  controller: _nameController,
                   style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -531,6 +544,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                   border: Border.all(color: outlineGrey),
                 ),
                 child: TextField(
+                  controller: _emailController,
                   style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -706,13 +720,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalType == 1) {
+                    if (goalType == "Recurring") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 1,
+                value: "Recurring",
                 groupValue: goalType,
                 onChanged: (value) {
                   setState(() {
@@ -734,13 +748,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalType == 2) {
+                    if (goalType == "OneTime") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 2,
+                value: "OneTime",
                 focusColor: grey,
                 groupValue: goalType,
                 onChanged: (value) {
@@ -1102,13 +1116,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (shareGoalTo == 1) {
+                    if (shareGoalTo == "family") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 1,
+                value: "family",
                 groupValue: shareGoalTo,
                 onChanged: (value) {
                   setState(() {
@@ -1130,13 +1144,13 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (shareGoalTo == 2) {
+                    if (shareGoalTo == "reviewer") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: 2,
+                value: "reviewer",
                 focusColor: grey,
                 groupValue: shareGoalTo,
                 onChanged: (value) {
@@ -1162,27 +1176,43 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
           child: GestureDetector(
             onTap: () async {
               List<ForSomeoneElse> someoneElse = [];
-              someoneElse.add(ForSomeoneElse(name: "name_1", email: "email_1"));
+              someoneElse.add(ForSomeoneElse(
+                  name: _nameController.text, email: _emailController.text));
+              if (_titleController.text == "") {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
+                return;
+              }
+              if (selectedStartDate == null && selectedEndDate == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Enter start Date and End Date")));
+                return;
+              }
+              if (_descriptionController.text == "") {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Enter Goal Summary")));
+                return;
+              }
               var goal = CreateGoal(
                   title: _titleController.text,
                   priority: selectedOption.toString(),
-                  area: GoalArea(name: "GoalArea_name", id: 0),
-                  areaCustom: customGoalArea,
+                  area: goalArea == 1
+                      ? goalAreaList[selectedGoalAreaIndex]
+                      : null,
+                  areaCustom: goalArea == 2 ? _customAreaController.text : null,
                   goalFor: goalFor.toString(),
-                  forSomeoneElse: someoneElse,
+                  forSomeoneElse:
+                      goalFor == "Someone Else" ? someoneElse : null,
                   recurring: selectedRecurring,
-                  startDate: selectedStartDate!.day.toString() +
-                      "/" +
-                      selectedStartDate!.month.toString() +
-                      "/" +
-                      selectedStartDate!.year.toString(),
-                  targetDate: selectedEndDate!.day.toString() +
-                      "/" +
-                      selectedEndDate!.month.toString() +
-                      "/" +
-                      selectedEndDate!.year.toString(),
+                  startDate:
+                      "${selectedStartDate!.day}/${selectedStartDate!.month}/${selectedStartDate!.year}",
+                  targetDate:
+                      "${selectedEndDate!.day}/${selectedEndDate!.month}/${selectedEndDate!.year}",
                   description: _descriptionController.text);
-              CreateGoalResponse response = await ApiService().createGoal(goal);
+
+              CreateGoalResponse response =
+                  await ApiService().createGoal(widget.goalId, goal);
+
               if (response.responseStatus == 200) {
                 showDialog(
                     context: context,
@@ -1191,7 +1221,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Goal Creation Failed...")));
+                    SnackBar(content: Text(response.responseMessage)));
               }
             },
             child: Container(

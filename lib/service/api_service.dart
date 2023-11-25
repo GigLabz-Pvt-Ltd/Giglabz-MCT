@@ -184,13 +184,13 @@ class ApiService {
     return activity;
   }
 
-  Future<CreateGoalResponse> createGoal(CreateGoal goal) async {
+  Future<CreateGoalResponse> createGoal(int goalId, CreateGoal goal) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
     final response =
-        await post(Uri.parse("$BASE_URL_8082/goals/summary/save/2686"),
+        await post(Uri.parse("$BASE_URL_8082/goals/summary/save/$goalId"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },

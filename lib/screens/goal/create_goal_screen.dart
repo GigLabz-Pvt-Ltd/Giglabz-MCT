@@ -49,7 +49,6 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
     });
 
     var w = widget.goalId;
-
   }
 
   @override
@@ -98,7 +97,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         body: TabBarView(
           controller: _tabCont,
           children: [
-            GoalSummaryWidget(),
+            GoalSummaryWidget(goalId: widget.goalId),
             GoalOutComesWidget(),
             Center(child: Text("Coming Soon...")),
             Center(child: Text("Coming Soon...")),
