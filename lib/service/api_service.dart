@@ -6,7 +6,9 @@ import 'package:mycareteam/models/email_verify_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
+import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
 import 'package:mycareteam/models/get_goal_id_response.dart';
+import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
@@ -212,16 +214,38 @@ class ApiService {
     return activity;
   }
 
-  Future<GetGoalIdResponse> getGoalId(
-      String email) async {
-    final response = await post(Uri.parse("$BASE_URL_8082/goals/summary/create/$email"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "email": email,
-        }));
+  Future<GetGoalIdResponse> getGoalId(String email) async {
+    final response =
+        await post(Uri.parse("$BASE_URL_8082/goals/summary/create/$email"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              "email": email,
+            }));
     final activity = getGoalIdResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetAchieverGoalAreaResponse> getAchieverGoalAreas() async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/summary/areas/achiever"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getAchieverGoalAreaResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<GetInfluencerGoalAreaResponse> getInfluencerGoalAreas() async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/summary/areas/influencer"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final activity = getInfluencerGoalAreaResponseApiFromJson(response.body);
     return activity;
   }
 }

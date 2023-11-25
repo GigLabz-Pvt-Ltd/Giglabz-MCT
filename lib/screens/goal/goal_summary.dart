@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
+import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
+import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/service/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalSummaryWidget extends StatefulWidget {
   GoalSummaryWidget({
@@ -17,6 +22,12 @@ class GoalSummaryWidget extends StatefulWidget {
 }
 
 class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
   Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
   var selectedInterest = null;
   var selectedName = null;
@@ -1458,37 +1469,36 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset("lib/resources/images/ndis_tick.svg"),
-                Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                                'Goal summary details are saved Successfully!',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: secondaryColor),
-                          ),
-                          TextSpan(
-                            text: '',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: secondaryColor),
-                          ),
-                          TextSpan(
-                            text: '',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: secondaryColor),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    )),
+              Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Goal summary details are saved Successfully!',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -1516,5 +1526,15 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
         ),
       ),
     );
+  }
+
+  void init() async {
+    GetAchieverGoalAreaResponse area =
+        await ApiService().getAchieverGoalAreas();
+    var a = area;
+
+    GetInfluencerGoalAreaResponse Iarea =
+        await ApiService().getInfluencerGoalAreas();
+    var b = Iarea;
   }
 }

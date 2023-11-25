@@ -1083,7 +1083,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
-      var s = goal_id;
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) =>
