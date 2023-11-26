@@ -112,7 +112,7 @@ class GoalList {
   late final List<ReviewedBy>? reviewedBy;
   late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
-  late final List<dynamic>? milestone;
+  late final List<Milestone>? milestone;
 
   GoalList.fromJson(Map<String, dynamic> json) {
     GoalId = json['GoalId'];
@@ -129,7 +129,7 @@ class GoalList {
     var s = json['Shared_with'];
     if (s != null) {
       SharedWith = List.castFrom<dynamic, dynamic>(json['Shared_with']);
-    }else {
+    } else {
       SharedWith = [];
     }
     var r = json['reviewedBy'];
@@ -149,7 +149,8 @@ class GoalList {
       participants = null;
     }
     reviewed_by = null;
-    milestone = List.castFrom<dynamic, dynamic>(json['milestone']);
+    milestone =
+        List.from(json['milestone']).map((e) => Milestone.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -169,7 +170,7 @@ class GoalList {
     _data['reviewedBy'] = reviewedBy?.map((e) => e.toJson()).toList();
     _data['participants'] = participants?.map((e) => e.toJson()).toList();
     _data['Reviewed_By'] = ReviewedBy;
-    _data['milestone'] = milestone;
+    _data['milestone'] = milestone?.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -236,6 +237,67 @@ class DashBoardParticipants {
     _data['lastName'] = lastName;
     _data['fullName'] = fullName;
     _data['profilePic'] = profilePic;
+    return _data;
+  }
+}
+
+class Milestone {
+  Milestone({
+    required this.name,
+    required this.riskAnalysis,
+    required this.targetDate,
+    required this.lastReviewDate,
+    required this.progress,
+    this.reviewerComment,
+    required this.celebrations,
+    required this.milestoneStatus,
+    this.workingWellComment,
+    this.enjoyingAndProgressingComment,
+    this.whatHasChanged,
+    required this.sno,
+  });
+  late final String name;
+  late final int riskAnalysis;
+  late final String targetDate;
+  late final String lastReviewDate;
+  late final int progress;
+  late final String? reviewerComment;
+  late final String celebrations;
+  late final int milestoneStatus;
+  late final String? workingWellComment;
+  late final String? enjoyingAndProgressingComment;
+  late final String? whatHasChanged;
+  late final int sno;
+
+  Milestone.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    riskAnalysis = json['riskAnalysis'];
+    targetDate = json['targetDate'];
+    lastReviewDate = json['lastReviewDate'];
+    progress = json['progress'];
+    reviewerComment = null;
+    celebrations = json['celebrations'];
+    milestoneStatus = json['milestoneStatus'];
+    workingWellComment = null;
+    enjoyingAndProgressingComment = null;
+    whatHasChanged = null;
+    sno = json['sno'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['name'] = name;
+    _data['riskAnalysis'] = riskAnalysis;
+    _data['targetDate'] = targetDate;
+    _data['lastReviewDate'] = lastReviewDate;
+    _data['progress'] = progress;
+    _data['reviewerComment'] = reviewerComment;
+    _data['celebrations'] = celebrations;
+    _data['milestoneStatus'] = milestoneStatus;
+    _data['workingWellComment'] = workingWellComment;
+    _data['enjoyingAndProgressingComment'] = enjoyingAndProgressingComment;
+    _data['whatHasChanged'] = whatHasChanged;
+    _data['sno'] = sno;
     return _data;
   }
 }

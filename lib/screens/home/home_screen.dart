@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     getDashBoard();
-    getProfile();
 
     return Scaffold(
       floatingActionButton: goalCount != 0
@@ -1100,5 +1099,4 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void getProfile() {}
 }

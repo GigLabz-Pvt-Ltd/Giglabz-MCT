@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
+import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/service/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalOutComesWidget extends StatefulWidget {
   GoalOutComesWidget({
@@ -20,6 +24,11 @@ class GoalOutComesWidget extends StatefulWidget {
 }
 
 class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
+  void initState() {
+    super.initState();
+    getMilestone();
+  }
+
   Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
   var selectedInterest = null;
   var selectedName = null;
@@ -34,6 +43,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   DateTime selectedDob = DateTime.now();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  List<Milestone> milestone = [];
 
   @override
   Widget build(BuildContext context) {
@@ -197,182 +207,15 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             ),
           )
         ]),
+        ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: milestone?.length,
+            itemBuilder: (context, index) {
+              return milestoneTile(index);
+            }),
       ]),
-    );
-  }
-
-  selectGoalArea() {
-    return Container(
-      height: 88,
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 0, left: 20, right: 20),
-      padding: EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        border: Border.all(width: 1, color: outlineGrey),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(3),
-        ),
-      ),
-      child: Wrap(
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 0;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 0
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Health",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 0
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 0
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 1;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 1
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Sports",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 1
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 1
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 2;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 2
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Education",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 2
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 2
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedInterest = 3;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 10, bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: selectedInterest == 3
-                    ? interestSelected
-                    : interestNotSelected,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(
-                  "Engineering",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: selectedInterest == 3
-                          ? Colors.white
-                          : secondaryColor),
-                ),
-                Container(
-                  height: 24,
-                  width: 12,
-                ),
-                selectedInterest == 3
-                    ? SvgPicture.asset(
-                        "lib/resources/images/interest_remove_selected.svg")
-                    : SvgPicture.asset(
-                        "lib/resources/images/interest_remove.svg")
-              ]),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -818,5 +661,142 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
         ),
       );
     });
+  }
+
+  Widget milestoneTile(int index) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      margin: EdgeInsets.only(top: 8, left: 20, right: 20, bottom: 12),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        border: Border.all(color: outlineGrey),
+      ),
+      child: Column(children: [
+        Row(children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              milestone?[index].name ?? "SomeText",
+              style: GoogleFonts.poppins(
+                color: iconBlue,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              milestone?[index].reviewerComment ?? "SomeText",
+              style: GoogleFonts.poppins(
+                color: secondaryColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ]),
+          Spacer(),
+          SvgPicture.asset("lib/resources/images/delete_milestone.svg")
+        ]),
+        Padding(
+          padding: const EdgeInsets.only(top : 8.0),
+          child: Row(children: [
+            Expanded(
+              child:
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  "Start Date",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  milestone?[index].lastReviewDate ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ]),
+            ),
+            Expanded(
+              child:
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  "End Date",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  milestone?[index].targetDate ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ]),
+            ),
+            Expanded(
+              child:
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  "Celebrations",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  milestone?[index].celebrations ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: LinearProgressIndicator(
+            backgroundColor: interestNotSelected,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Colors.amber,
+            ),
+            value: milestone?[index].progress != null
+                ? milestone![index].progress / 100
+                : 0.0,
+            minHeight: 6,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  void getMilestone() async {
+    if (milestone.isEmpty) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userPref = prefs.getString('user')!;
+      var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+      var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
+      setState(() {
+        mDashboard.goalList.forEach((element) {
+          if (element.GoalId == widget.goalId) {
+            element.milestone?.forEach((element) {
+              milestone?.add(element);
+            });
+          }
+        });
+      });
+    }
   }
 }
