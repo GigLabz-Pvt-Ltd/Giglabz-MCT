@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   int isGoalClicked = -1;
-  var goal_id;
+  var goal_id, name;
   DashboardResponse? dashboard;
   int? goalCount;
   List<PopupMenuEntry<dynamic>> menuItems = [
@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     getDashBoard();
+    getProfile();
 
     return Scaffold(
       floatingActionButton: goalCount != 0
@@ -234,8 +235,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Hey, Gabriel",
+                    Text(
+                      name ?? "",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -482,9 +483,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
       var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
 
+      var mProfile = await ApiService()
+          .getProfile(userMap?["user_name"], userMap?["role_id"]);
+
       setState(() {
         dashboard = mDashboard;
         goalCount = mDashboard.goalList.length;
+        name = mProfile.participant.firstName! +
+            " " +
+            mProfile.participant.lastName!;
       });
     }
   }
@@ -1092,4 +1099,6 @@ class _HomeScreenState extends State<HomeScreen> {
           .showSnackBar(SnackBar(content: Text(response.responseMessage)));
     }
   }
+
+  void getProfile() {}
 }
