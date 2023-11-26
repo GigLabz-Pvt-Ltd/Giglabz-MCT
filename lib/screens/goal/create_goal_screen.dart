@@ -98,7 +98,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
           controller: _tabCont,
           children: [
             GoalSummaryWidget(goalId: widget.goalId),
-            GoalOutComesWidget(),
+            GoalOutComesWidget(goalId: widget.goalId),
             Center(child: Text("Coming Soon...")),
             Center(child: Text("Coming Soon...")),
           ],
