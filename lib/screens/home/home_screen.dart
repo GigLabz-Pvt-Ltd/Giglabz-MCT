@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             itemCount: dashboard
-                                ?.goalList[isGoalClicked].milestone.length,
+                                ?.goalList[isGoalClicked].milestone?.length,
                             itemBuilder: (context, index) {
                               return milestoneTile(isGoalClicked, index);
                             }),

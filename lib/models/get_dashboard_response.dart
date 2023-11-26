@@ -85,34 +85,34 @@ class GoalList {
     required this.GoalPriority,
     this.GoalArea,
     required this.GoalAreaCustom,
-    required this.StartDate,
-    required this.TargetDate,
+    this.StartDate,
+    this.TargetDate,
     required this.GoalStatus,
     required this.GoalPercentage,
     this.GoalReviewer,
-    required this.Rating,
+    this.Rating,
     this.SharedWith,
     this.reviewedBy,
     this.participants,
     this.reviewed_by,
-    required this.milestone,
+    this.milestone,
   });
   late final int GoalId;
   late final String GoalName;
   late final String GoalPriority;
   late final Null GoalArea;
   late final String GoalAreaCustom;
-  late final String StartDate;
-  late final String TargetDate;
+  late final String? StartDate;
+  late final String? TargetDate;
   late final int GoalStatus;
   late final int GoalPercentage;
   late final Null GoalReviewer;
-  late final double Rating;
+  late final double? Rating;
   late final List<dynamic>? SharedWith;
   late final List<ReviewedBy>? reviewedBy;
   late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
-  late final List<dynamic> milestone;
+  late final List<dynamic>? milestone;
 
   GoalList.fromJson(Map<String, dynamic> json) {
     GoalId = json['GoalId'];
