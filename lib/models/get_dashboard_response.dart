@@ -112,7 +112,7 @@ class GoalList {
   late final List<ReviewedBy>? reviewedBy;
   late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
-  late final List<Milestone>? milestone;
+  late final List<DashboardMilestone>? milestone;
 
   GoalList.fromJson(Map<String, dynamic> json) {
     GoalId = json['GoalId'];
@@ -150,7 +150,7 @@ class GoalList {
     }
     reviewed_by = null;
     milestone =
-        List.from(json['milestone']).map((e) => Milestone.fromJson(e)).toList();
+        List.from(json['milestone']).map((e) => DashboardMilestone.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -241,8 +241,8 @@ class DashBoardParticipants {
   }
 }
 
-class Milestone {
-  Milestone({
+class DashboardMilestone {
+  DashboardMilestone({
     required this.name,
     required this.riskAnalysis,
     required this.targetDate,
@@ -269,7 +269,7 @@ class Milestone {
   late final String? whatHasChanged;
   late final int sno;
 
-  Milestone.fromJson(Map<String, dynamic> json) {
+  DashboardMilestone.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     riskAnalysis = json['riskAnalysis'];
     targetDate = json['targetDate'];

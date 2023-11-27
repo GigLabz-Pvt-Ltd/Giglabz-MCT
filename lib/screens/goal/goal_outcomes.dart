@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
+import 'package:mycareteam/models/create_milestone.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
@@ -24,11 +25,6 @@ class GoalOutComesWidget extends StatefulWidget {
 }
 
 class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
-  void initState() {
-    super.initState();
-    getMilestone();
-  }
-
   Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
   var selectedInterest = null;
   var selectedName = null;
@@ -346,6 +342,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                   border: Border.all(color: outlineGrey),
                 ),
                 child: TextField(
+                  controller: _titleController,
                   style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -382,6 +379,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                   border: Border.all(color: outlineGrey),
                 ),
                 child: TextField(
+                  controller: _descriptionController,
                   style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -635,6 +633,18 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
               ]),
               GestureDetector(
                 onTap: () {
+                  milestone.add(Milestone(
+                      name: _titleController.text,
+                      description: _descriptionController.text,
+                      startDate:
+                          "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
+                      targetDate:
+                          "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
+                      celebrations: selectedCelebration,
+                      progress: selectedPercent,
+                      value: false,
+                      action: 1));
+                  update();
                   Navigator.pop(context);
                 },
                 child: Container(
@@ -684,7 +694,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
               ),
             ),
             Text(
-              milestone?[index].reviewerComment ?? "SomeText",
+              milestone?[index].celebrations ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 12,
@@ -693,73 +703,82 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             ),
           ]),
           Spacer(),
-          SvgPicture.asset("lib/resources/images/delete_milestone.svg")
+          GestureDetector(
+              onTap: () {
+                milestone.removeAt(index);
+                update();
+              },
+              child:
+                  SvgPicture.asset("lib/resources/images/delete_milestone.svg"))
         ]),
         Padding(
-          padding: const EdgeInsets.only(top : 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: Row(children: [
             Expanded(
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  "Start Date",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  milestone?[index].lastReviewDate ?? "SomeText",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ]),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Start Date",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      milestone?[index].startDate ?? "SomeText",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
             ),
             Expanded(
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  "End Date",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  milestone?[index].targetDate ?? "SomeText",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ]),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "End Date",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      milestone?[index].targetDate ?? "SomeText",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
             ),
             Expanded(
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  "Celebrations",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  milestone?[index].celebrations ?? "SomeText",
-                  style: GoogleFonts.poppins(
-                    color: secondaryColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ]),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Celebrations",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      milestone?[index].celebrations ?? "SomeText",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
             ),
           ]),
         ),
@@ -771,7 +790,10 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
               Colors.amber,
             ),
             value: milestone?[index].progress != null
-                ? milestone![index].progress / 100
+                ? int.parse(milestone![index]
+                        .progress
+                        .substring(0, milestone![index].progress.length - 1)) /
+                    100
                 : 0.0,
             minHeight: 6,
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -781,22 +803,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
     );
   }
 
-  void getMilestone() async {
-    if (milestone.isEmpty) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userPref = prefs.getString('user')!;
-      var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-
-      var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
-      setState(() {
-        mDashboard.goalList.forEach((element) {
-          if (element.GoalId == widget.goalId) {
-            element.milestone?.forEach((element) {
-              milestone?.add(element);
-            });
-          }
-        });
-      });
-    }
+  void update() async {
+    setState(() {});
   }
 }
