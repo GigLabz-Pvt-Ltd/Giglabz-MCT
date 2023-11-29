@@ -1349,76 +1349,78 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(3.0))),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: alertDialogTitleBgLite,
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                      child: Text(
-                        "Confirm that the following topics have been discussed and understood by the participant.",
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: iconBlack),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: alertDialogTitleBgLite,
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: Text(
+                          "Confirm that the following topics have been discussed and understood by the participant.",
+                          style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: iconBlack),
+                        ),
                       ),
-                    ),
-                    toggle(0,
-                        "Plan Funding Included in the participant’s NDIS Plan"),
-                    toggle(1,
-                        "The different support categories and their flexibility"),
-                    toggle(2, "Fund management and claiming"),
-                    toggle(3,
-                        "Organising and planning supports over the life of the NDIS Plan"),
-                    toggle(4, "The role of community and mainstream supports"),
-                    toggle(
-                        5, "How to access and use the My NDIS portal and App"),
-                    toggle(6, "The value and importance of service agreements"),
-                    toggle(7,
-                        "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
-                    GestureDetector(
-                      onTap: () {
-                        List<Answers> ans = [];
-                        var index = 0;
-                        widget.ndisQues.questions.forEach((element) {
-                          ans.add(Answers(
-                              id: element.id,
-                              question: element.question,
-                              answer: toggleValues![index]));
-                          index++;
-                        });
-                        var ndisAnswers = NdisAnswers(
-                            email: widget.user.participant.email!,
-                            answers: ans);
-                        ApiService().postNdisAnswers(ndisAnswers);
-                        Navigator.pop(context);
-                        if (widget.user.participant.ndisTc != 1) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return okDialog("ndis_agreement");
-                              });
-                        }
-                      },
-                      child: Container(
-                          height: 40,
-                          width: double.infinity,
-                          margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                          decoration: const BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Submit",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
+                      toggle(0,
+                          "Plan Funding Included in the participant’s NDIS Plan"),
+                      toggle(1,
+                          "The different support categories and their flexibility"),
+                      toggle(2, "Fund management and claiming"),
+                      toggle(3,
+                          "Organising and planning supports over the life of the NDIS Plan"),
+                      toggle(4, "The role of community and mainstream supports"),
+                      toggle(
+                          5, "How to access and use the My NDIS portal and App"),
+                      toggle(6, "The value and importance of service agreements"),
+                      toggle(7,
+                          "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
+                      GestureDetector(
+                        onTap: () {
+                          List<Answers> ans = [];
+                          var index = 0;
+                          widget.ndisQues.questions.forEach((element) {
+                            ans.add(Answers(
+                                id: element.id,
+                                question: element.question,
+                                answer: toggleValues![index]));
+                            index++;
+                          });
+                          var ndisAnswers = NdisAnswers(
+                              email: widget.user.participant.email!,
+                              answers: ans);
+                          ApiService().postNdisAnswers(ndisAnswers);
+                          Navigator.pop(context);
+                          if (widget.user.participant.ndisTc != 1) {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return okDialog("ndis_agreement");
+                                });
+                          }
+                        },
+                        child: Container(
+                            height: 40,
+                            width: double.infinity,
+                            margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                            decoration: const BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.all(Radius.circular(3)),
                             ),
-                          )),
-                    ),
-                  ],
+                            child: Center(
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1459,8 +1461,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   toggle(int toggleValueIndex, String message) {
     return StatefulBuilder(builder: (context, setState) {
       return Container(
-        height: 50,
-        padding: const EdgeInsets.only(left: 16, right: 16),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
