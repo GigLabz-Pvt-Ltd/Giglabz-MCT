@@ -41,7 +41,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _phoneNumController = TextEditingController();
   var selectedPhoneCountry = countries[0];
   Map<String, dynamic>? userMap;
-  List<String>? states = null;
+  List<String>? states = [];
   var selectedCountry, selectedState, selectedPincode;
   String? selectedArea = null;
   final _emailController = TextEditingController();
@@ -55,7 +55,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   bool checked = false;
   bool isLoading = false;
   GetProvidersResponse? providers;
-  List<String>? areas = null;
+  List<String>? areas = [];
   List<String> pincodes = [];
 
   bool ndisFilled = false;
@@ -665,8 +665,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedCountry = newValue!;
-                                if (states == null) {
-                                  getProviders();
+                                states = [];
+                                selectedState = null;
+                                if (selectedCountry != "Select Country") {
+                                  getStates();
                                 }
                               });
                             },
@@ -708,10 +710,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               onChanged: (String? newValue) {
                                 setState(() {
                                   selectedState = newValue!;
+                                  areas = [];
+                                  selectedArea = null;
+                                  pincodes = [];
+                                  if (selectedState != null) {
+                                    getAreas();
+                                  }
                                 });
-                                if (areas == null) {
-                                  getProviders();
-                                }
                               },
                               value: selectedState,
                               items: states?.map((String dropDownString) {
@@ -1583,23 +1588,6 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         providers = mProviders;
       });
     }
-    var mStates, mAreas;
-    if (selectedCountry != "Select Country" && states == null) {
-      mStates = await ApiService().getStates(selectedCountry);
-      setState(() {
-        states = mStates?.state;
-      });
-    }
-    if (selectedState != null && areas == null) {
-      areas = [];
-      mAreas = await ApiService().getAreas(selectedState);
-      setState(() {
-        mAreas?.area.forEach((element) {
-          areas?.add(element.name);
-          pincodes?.add(element.postalCode);
-        });
-      });
-    }
   }
 
   void updateProfile(UpdateProfile profile) async {
@@ -1664,5 +1652,25 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       return Image.asset(
           "/Users/swaran/Downloads/giglabz-mct/lib/resources/images/place_holder.png");
     }
+  }
+
+  void getStates() async {
+    var mStates;
+    mStates = await ApiService().getStates(selectedCountry);
+    setState(() {
+      states = mStates?.state;
+    });
+  }
+
+  void getAreas() async {
+    var mAreas;
+    areas = [];
+    mAreas = await ApiService().getAreas(selectedState);
+    setState(() {
+      mAreas?.area.forEach((element) {
+        areas?.add(element.name);
+        pincodes?.add(element.postalCode);
+      });
+    });
   }
 }
