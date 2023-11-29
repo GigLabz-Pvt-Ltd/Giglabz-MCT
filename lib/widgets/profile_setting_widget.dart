@@ -96,8 +96,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               child: ClipRRect(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(50.0)),
-                                  child: Image.network(
-                                      widget.user.participant.profilePic!)),
+                                  child: getImage()),
                             ),
                             Positioned(
                               top: 63,
@@ -131,7 +130,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                       color: secondaryColor),
                                 ),
                                 Text(
-                                  widget.user.role,
+                                  widget.user.role.toCapitalized(),
                                   textAlign: TextAlign.left,
                                   style: GoogleFonts.poppins(
                                       fontSize: 14,
@@ -1638,5 +1637,21 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     widget.ndisQues.questions.asMap().forEach((index, element) {
       toggleValues?.add(element.answer);
     });
+  }
+
+  getImage() {
+    if (widget.user.participant.profilePic != null) {
+      return Image.network(
+        widget.user.participant.profilePic!,
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return Image.asset(
+              "/Users/swaran/Downloads/giglabz-mct/lib/resources/images/place_holder.png");
+        },
+      );
+    } else {
+      return Image.asset(
+          "/Users/swaran/Downloads/giglabz-mct/lib/resources/images/place_holder.png");
+    }
   }
 }
