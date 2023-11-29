@@ -454,11 +454,15 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                 return DropdownMenuItem<FlagsAndCode>(
                                   value: dropDownString,
                                   child: Row(children: [
-                                    SvgPicture.asset(
-                                      "lib/resources/images/${dropDownString.svg!}.svg",
-                                      width: 20,
-                                      height: 20,
-                                      fit: BoxFit.cover,
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Image.asset(
+                                        "lib/resources/images/${dropDownString.svg!}.png",
+                                        width: 30,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 4),
@@ -686,137 +690,144 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ),
                     ]),
                   ),
-                  Container(
-                    height: 70,
-                    child: Stack(children: [
-                      const CalendarOrDropDown(
-                          label: "State",
-                          hint: "",
-                          suffixIcon: "dropdownArrow"),
-                      Container(
-                        height: 70,
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(top: 30, left: 10),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            icon: const Icon(null),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedState = newValue!;
-                              });
-                              if (areas == null) {
-                                getProviders();
-                              }
-                            },
-                            value: selectedState,
-                            items: states?.map((String dropDownString) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownString,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Text(
-                                    dropDownString,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        const TextStyle(color: secondaryColor),
+                  if (selectedCountry != "Select Country")
+                    Container(
+                      height: 70,
+                      child: Stack(children: [
+                        CalendarOrDropDown(
+                            label: "State",
+                            hint: selectedState == null ? "Select State" : "",
+                            suffixIcon: "dropdownArrow"),
+                        Container(
+                          height: 70,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(top: 30, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedState = newValue!;
+                                });
+                                if (areas == null) {
+                                  getProviders();
+                                }
+                              },
+                              value: selectedState,
+                              items: states?.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: secondaryColor),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    ]),
-                  ),
-                  Container(
-                    height: 70,
-                    child: Stack(children: [
-                      const CalendarOrDropDown(
-                          label: "Area / Sub urban",
-                          hint: "",
-                          suffixIcon: "dropdownArrow"),
-                      Container(
-                        height: 70,
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(top: 30, left: 10),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            icon: const Icon(null),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedArea = newValue!;
-                                _postalController.text =
-                                    pincodes[areas!.indexOf(selectedArea!)];
-                              });
-                            },
-                            value: selectedArea,
-                            items: areas?.map((String dropDownString) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownString,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Text(
-                                    dropDownString,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        const TextStyle(color: secondaryColor),
+                      ]),
+                    ),
+                  if (selectedCountry != "Select Country" &&
+                      selectedState != null)
+                    Container(
+                      height: 70,
+                      child: Stack(children: [
+                        CalendarOrDropDown(
+                            label: "Area / Sub urban",
+                            hint: selectedArea == null ? "Select Area" : "",
+                            suffixIcon: "dropdownArrow"),
+                        Container(
+                          height: 70,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(top: 30, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedArea = newValue!;
+                                  _postalController.text =
+                                      pincodes[areas!.indexOf(selectedArea!)];
+                                });
+                              },
+                              value: selectedArea,
+                              items: areas?.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: secondaryColor),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    ]),
-                  ),
-                  Container(
-                    height: 44,
-                    margin: const EdgeInsets.only(top: 24),
-                    child: TextField(
-                      controller: _postalController,
-                      enabled: false,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: InputDecoration(
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          color: iconBlack,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        disabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
+                      ]),
+                    ),
+                  if (selectedCountry != "Select Country" &&
+                      selectedState != null &&
+                      selectedArea != null)
+                    Container(
+                      height: 44,
+                      margin: const EdgeInsets.only(top: 24),
+                      child: TextField(
+                        controller: _postalController,
+                        enabled: false,
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                          hintStyle: GoogleFonts.poppins(
+                            color: secondaryColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
+                          labelStyle: GoogleFonts.poppins(
+                            color: iconBlack,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                        contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
+                          disabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
                           ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
+                          ),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: outlineGrey,
+                            ),
+                          ),
+                          labelText: "Postal Code",
+                          border: InputBorder.none,
+                          hintText: 'Postal Code *',
                         ),
-                        labelText: "Postal Code",
-                        border: InputBorder.none,
-                        hintText: 'Postal Code *',
                       ),
                     ),
-                  ),
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
