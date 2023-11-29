@@ -1619,8 +1619,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     }
     selectedGender = widget.user.participant.gender ?? "Other";
     selectedCountry = widget.user.participant.location ?? "Select Country";
+    if(selectedCountry != "Select Country"){
+      getStates();
+    }
     selectedState = widget.user.participant.state;
-    // selectedArea = "Acacia Hills";
+    if(selectedCountry != "Select Country"){
+      getAreas();
+    }
     selectedArea = widget.user.participant.areaSuburban;
     selectedArea = selectedArea?.toTitleCase();
     _postalController.text = widget.user.participant.postalCode ?? "";
