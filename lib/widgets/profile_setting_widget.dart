@@ -948,8 +948,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               var mParticipant = UpdateParticipant(
                                   firstName: _firstNameController.text,
                                   lastName: _lastNameController.text,
-                                  phone: selectedPhoneCountry.code! +
-                                      _phoneNumController.text,
+                                  phone: _phoneNumController.text,
                                   email: _emailController.text,
                                   gender: selectedGender,
                                   dateOfBirth: selectedDob != null
