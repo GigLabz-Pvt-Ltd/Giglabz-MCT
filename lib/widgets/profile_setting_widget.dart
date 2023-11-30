@@ -866,6 +866,70 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   aboutMeWidget(),
                   GestureDetector(
                     onTap: () {
+                      if (_firstNameController.text == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter first name")));
+                        return;
+                      }
+                      if (_lastNameController.text == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter Last name")));
+                        return;
+                      }
+                      if (_phoneNumController.text == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter phone number")));
+                        return;
+                      }
+                      if (selectedDob == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter date of birth")));
+                        return;
+                      }
+                      if (ndis == null || ndis == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter NDIS number")));
+                        return;
+                      }
+                      if (ndis == null || ndis == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter NDIS number")));
+                        return;
+                      }
+                      if (ndisStart == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter NDIS start date")));
+                        return;
+                      }
+                      if (ndisEnd == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter NDIS start date")));
+                        return;
+                      }
+                      print("start ${ndisStart!.millisecondsSinceEpoch}");
+                      print("end   ${ndisEnd!.millisecondsSinceEpoch}");
+                      if (ndisEnd!.millisecondsSinceEpoch <
+                          ndisStart!.millisecondsSinceEpoch) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "Enter NDIS end date is before start date")));
+                        return;
+                      }
+                      if (selectedCountry == "Select Country") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Select a country")));
+                        return;
+                      }
+                      if (selectedState == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Select a state")));
+                        return;
+                      }
+                      if (selectedArea == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Select a area")));
+                        return;
+                      }
                       updateNdisValues();
                       showDialog(
                           context: context,
@@ -1699,6 +1763,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         widget.user = mProfile;
         init();
       });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(res.responseMessage)));
     }
   }
 
