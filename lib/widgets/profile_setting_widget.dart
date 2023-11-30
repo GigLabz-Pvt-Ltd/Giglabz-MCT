@@ -57,12 +57,15 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
   final _ndisNumberController = TextEditingController();
+  final _otherInterestController = TextEditingController();
   bool showProviderOptions = false;
   List<bool> listChecked = [];
   bool isLoading = false;
   GetProvidersResponse? providers;
   List<String>? areas = [];
   List<String> pincodes = [];
+  List<String> interests = ["Health", "Sports", "Education", "Engineering"];
+  int selectedInterestIndex = 0;
 
   bool ndisFilled = false;
   var selectedInterest = 0;
@@ -148,182 +151,183 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           )
                         ]),
                   ),
-                  Container(
-                    height: 88,
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(top: 20),
-                    padding: EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: outlineGrey),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(3),
-                      ),
-                    ),
-                    child: Wrap(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedInterest = 0;
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10, bottom: 10),
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: selectedInterest == 0
-                                  ? interestSelected
-                                  : interestNotSelected,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                "Health",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: selectedInterest == 0
-                                        ? Colors.white
-                                        : secondaryColor),
-                              ),
-                              Container(
-                                height: 24,
-                                width: 12,
-                              ),
-                              selectedInterest == 0
-                                  ? SvgPicture.asset(
-                                      "lib/resources/images/interest_remove_selected.svg")
-                                  : SvgPicture.asset(
-                                      "lib/resources/images/interest_remove.svg")
-                            ]),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedInterest = 1;
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10, bottom: 10),
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: selectedInterest == 1
-                                  ? interestSelected
-                                  : interestNotSelected,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                "Sports",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: selectedInterest == 1
-                                        ? Colors.white
-                                        : secondaryColor),
-                              ),
-                              Container(
-                                height: 24,
-                                width: 12,
-                              ),
-                              selectedInterest == 1
-                                  ? SvgPicture.asset(
-                                      "lib/resources/images/interest_remove_selected.svg")
-                                  : SvgPicture.asset(
-                                      "lib/resources/images/interest_remove.svg")
-                            ]),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedInterest = 2;
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10, bottom: 10),
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: selectedInterest == 2
-                                  ? interestSelected
-                                  : interestNotSelected,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                "Education",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: selectedInterest == 2
-                                        ? Colors.white
-                                        : secondaryColor),
-                              ),
-                              Container(
-                                height: 24,
-                                width: 12,
-                              ),
-                              selectedInterest == 2
-                                  ? SvgPicture.asset(
-                                      "lib/resources/images/interest_remove_selected.svg")
-                                  : SvgPicture.asset(
-                                      "lib/resources/images/interest_remove.svg")
-                            ]),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedInterest = 3;
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10, bottom: 10),
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: selectedInterest == 3
-                                  ? interestSelected
-                                  : interestNotSelected,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                "Engineering",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: selectedInterest == 3
-                                        ? Colors.white
-                                        : secondaryColor),
-                              ),
-                              Container(
-                                height: 24,
-                                width: 12,
-                              ),
-                              selectedInterest == 3
-                                  ? SvgPicture.asset(
-                                      "lib/resources/images/interest_remove_selected.svg")
-                                  : SvgPicture.asset(
-                                      "lib/resources/images/interest_remove.svg")
-                            ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   height: 88,
+                  //   width: double.infinity,
+                  //   margin: const EdgeInsets.only(top: 20),
+                  //   padding: EdgeInsets.all(14),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(width: 1, color: outlineGrey),
+                  //     borderRadius: const BorderRadius.all(
+                  //       Radius.circular(3),
+                  //     ),
+                  //   ),
+                  //   child: Wrap(
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedInterest = 0;
+                  //           });
+                  //         },
+                  //         child: Container(
+                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
+                  //           padding: EdgeInsets.symmetric(horizontal: 8),
+                  //           decoration: BoxDecoration(
+                  //             color: selectedInterest == 0
+                  //                 ? interestSelected
+                  //                 : interestNotSelected,
+                  //             borderRadius: const BorderRadius.all(
+                  //               Radius.circular(20),
+                  //             ),
+                  //           ),
+                  //           child:
+                  //               Row(mainAxisSize: MainAxisSize.min, children: [
+                  //             Text(
+                  //               "Health",
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 12,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: selectedInterest == 0
+                  //                       ? Colors.white
+                  //                       : secondaryColor),
+                  //             ),
+                  //             Container(
+                  //               height: 24,
+                  //               width: 12,
+                  //             ),
+                  //             selectedInterest == 0
+                  //                 ? SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove_selected.svg")
+                  //                 : SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove.svg")
+                  //           ]),
+                  //         ),
+                  //       ),
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedInterest = 1;
+                  //           });
+                  //         },
+                  //         child: Container(
+                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
+                  //           padding: EdgeInsets.symmetric(horizontal: 8),
+                  //           decoration: BoxDecoration(
+                  //             color: selectedInterest == 1
+                  //                 ? interestSelected
+                  //                 : interestNotSelected,
+                  //             borderRadius: const BorderRadius.all(
+                  //               Radius.circular(20),
+                  //             ),
+                  //           ),
+                  //           child:
+                  //               Row(mainAxisSize: MainAxisSize.min, children: [
+                  //             Text(
+                  //               "Sports",
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 12,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: selectedInterest == 1
+                  //                       ? Colors.white
+                  //                       : secondaryColor),
+                  //             ),
+                  //             Container(
+                  //               height: 24,
+                  //               width: 12,
+                  //             ),
+                  //             selectedInterest == 1
+                  //                 ? SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove_selected.svg")
+                  //                 : SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove.svg")
+                  //           ]),
+                  //         ),
+                  //       ),
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedInterest = 2;
+                  //           });
+                  //         },
+                  //         child: Container(
+                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
+                  //           padding: EdgeInsets.symmetric(horizontal: 8),
+                  //           decoration: BoxDecoration(
+                  //             color: selectedInterest == 2
+                  //                 ? interestSelected
+                  //                 : interestNotSelected,
+                  //             borderRadius: const BorderRadius.all(
+                  //               Radius.circular(20),
+                  //             ),
+                  //           ),
+                  //           child:
+                  //               Row(mainAxisSize: MainAxisSize.min, children: [
+                  //             Text(
+                  //               "Education",
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 12,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: selectedInterest == 2
+                  //                       ? Colors.white
+                  //                       : secondaryColor),
+                  //             ),
+                  //             Container(
+                  //               height: 24,
+                  //               width: 12,
+                  //             ),
+                  //             selectedInterest == 2
+                  //                 ? SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove_selected.svg")
+                  //                 : SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove.svg")
+                  //           ]),
+                  //         ),
+                  //       ),
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedInterest = 3;
+                  //           });
+                  //         },
+                  //         child: Container(
+                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
+                  //           padding: EdgeInsets.symmetric(horizontal: 8),
+                  //           decoration: BoxDecoration(
+                  //             color: selectedInterest == 3
+                  //                 ? interestSelected
+                  //                 : interestNotSelected,
+                  //             borderRadius: const BorderRadius.all(
+                  //               Radius.circular(20),
+                  //             ),
+                  //           ),
+                  //           child:
+                  //               Row(mainAxisSize: MainAxisSize.min, children: [
+                  //             Text(
+                  //               "Engineering",
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 12,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: selectedInterest == 3
+                  //                       ? Colors.white
+                  //                       : secondaryColor),
+                  //             ),
+                  //             Container(
+                  //               height: 24,
+                  //               width: 12,
+                  //             ),
+                  //             selectedInterest == 3
+                  //                 ? SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove_selected.svg")
+                  //                 : SvgPicture.asset(
+                  //                     "lib/resources/images/interest_remove.svg")
+                  //           ]),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  selectInterestsLayout(),
                   Row(mainAxisSize: MainAxisSize.max, children: [
                     Expanded(
                       child: Container(
@@ -338,6 +342,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           border: Border.all(color: outlineGrey),
                         ),
                         child: TextField(
+                          controller: _otherInterestController,
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -356,8 +361,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        var a = _firstNameController.text;
-                        var b = a;
+                        setState(() {
+                          interests.add(_otherInterestController.text);
+                        });
                       },
                       child: Container(
                         height: 40,
@@ -1861,5 +1867,79 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       ndisTc = profile.participant.ndisTc;
       var a = 10;
     });
+  }
+
+  selectInterestsLayout() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 20, left: 0, right: 0),
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: outlineGrey),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(3),
+        ),
+      ),
+      child: Wrap(children: interestItems()),
+    );
+  }
+
+  List<Widget> interestItems() {
+    List<Widget> items = [];
+    interests.asMap().forEach((index, element) {
+      items.add(Container(
+        margin: EdgeInsets.only(right: 10, bottom: 10),
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: selectedInterestIndex == index
+              ? interestSelected
+              : interestNotSelected,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedInterestIndex = index;
+              });
+            },
+            child: Text(
+              element,
+              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: selectedInterestIndex == index
+                      ? Colors.white
+                      : secondaryColor),
+            ),
+          ),
+          Container(
+            height: 24,
+            width: 12,
+          ),
+          selectedInterestIndex == index
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      interests.removeAt(index);
+                    });
+                  },
+                  child: SvgPicture.asset(
+                      "lib/resources/images/interest_remove_selected.svg"),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      interests.removeAt(index);
+                    });
+                  },
+                  child: SvgPicture.asset(
+                      "lib/resources/images/interest_remove.svg"))
+        ]),
+      ));
+    });
+    return items;
   }
 }
