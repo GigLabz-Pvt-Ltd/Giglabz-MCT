@@ -362,7 +362,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          interests.add(_otherInterestController.text);
+                          if (_otherInterestController.text != "") {
+                            interests.add(_otherInterestController.text);
+                          }
                         });
                       },
                       child: Container(
