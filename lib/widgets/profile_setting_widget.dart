@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
@@ -42,24 +43,29 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedPhoneCountry = countries[0];
   Map<String, dynamic>? userMap;
   List<String>? states = [];
+  List<String> selectedProviders = [];
+  List<int> selectedProvidersIndex = [];
   var selectedCountry, selectedState, selectedPincode;
   String? selectedArea = null;
   final _emailController = TextEditingController();
   var selectedGender = genders[0];
   DateTime? selectedDob = null;
-  var ndis, ndisStart, ndisEnd;
+  DateTime? ndisStart = null;
+  DateTime? ndisEnd = null;
+  var ndis, imgResponse, ndisAgreement, ndisTc;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
+  final _ndisNumberController = TextEditingController();
   bool showProviderOptions = false;
-  bool checked = false;
+  List<bool> listChecked = [];
   bool isLoading = false;
   GetProvidersResponse? providers;
   List<String>? areas = [];
   List<String> pincodes = [];
 
   bool ndisFilled = false;
-  var selectedInterest = null;
+  var selectedInterest = 0;
 
   List<int>? toggleValues = [];
 
@@ -547,7 +553,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          selectDate(context);
+                          selectDobDate(context);
                         },
                         child: CalendarOrDropDown(
                             label: "Date of birth",
@@ -631,7 +637,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         Expanded(
                           child: CalendarOrDropDown(
                               label: "NDIS Plan Start Date",
-                              hint: ndisStart ?? "00/00/0000",
+                              hint: ndisStart != null
+                                  ? ndisStart!.day.toString() +
+                                      "/" +
+                                      ndisStart!.month.toString() +
+                                      "/" +
+                                      ndisStart!.year.toString()
+                                  : "00/00/0000",
                               suffixIcon: "calendar",
                               bgColor: ndisFilled ? ndisSelectedBg : null),
                         ),
@@ -641,7 +653,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         Expanded(
                           child: CalendarOrDropDown(
                               label: "NDIS Plan End Date",
-                              hint: ndisEnd ?? "00/00/0000",
+                              hint: ndisEnd != null
+                                  ? ndisEnd!.day.toString() +
+                                      "/" +
+                                      ndisEnd!.month.toString() +
+                                      "/" +
+                                      ndisEnd!.year.toString()
+                                  : "00/00/0000",
                               suffixIcon: "calendar",
                               bgColor: ndisFilled ? ndisSelectedBg : null),
                         ),
@@ -848,12 +866,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   aboutMeWidget(),
                   GestureDetector(
                     onTap: () {
+                      updateNdisValues();
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            if (widget.user.participant.ndisAgreement != 1) {
+                            if (ndisAgreement != 1) {
                               return okDialog("update_profile");
-                            } else if (widget.user.participant.ndisTc != 1) {
+                            } else if (ndisTc != 1) {
                               return okDialog("ndis_agreement");
                             } else {
                               var mParticipant = UpdateParticipant(
@@ -877,8 +896,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                   address: "some address",
                                   state: selectedState,
                                   country: selectedCountry,
-                                  ndisStartDate: ndisStart,
-                                  ndisEndDate: ndisEnd,
+                                  ndisStartDate: ndisStart!.day.toString() +
+                                      "/" +
+                                      ndisStart!.month.toString() +
+                                      "/" +
+                                      ndisStart!.year.toString(),
+                                  ndisEndDate: ndisEnd!.day.toString() +
+                                      "/" +
+                                      ndisEnd!.month.toString() +
+                                      "/" +
+                                      ndisEnd!.year.toString(),
                                   providers: [310, 364],
                                   interests: []);
                               UpdateProfile profile =
@@ -913,7 +940,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
           );
   }
 
-  selectDate(BuildContext context) async {
+  selectDobDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDob ?? DateTime.now(), // Refer step 1
@@ -924,6 +951,38 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       setState(() {
         selectedDob = picked;
       });
+  }
+
+  selectNdisStartDate(BuildContext context, StateSetter setState) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDob ?? DateTime.now(), // Refer step 1
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != ndisStart) {
+      setState(() {
+        ndisStart = picked;
+      });
+      update();
+      setState;
+    }
+  }
+
+  selectNdisEndDate(BuildContext context, StateSetter setState) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDob ?? DateTime.now(), // Refer step 1
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != ndisEnd) {
+      setState(() {
+        ndisEnd = picked;
+      });
+      update();
+      setState;
+    }
   }
 
   aboutMeWidget() {
@@ -1010,6 +1069,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   height: 44,
                   margin: const EdgeInsets.only(top: 24, left: 20, right: 20),
                   child: TextField(
+                    controller: _ndisNumberController,
                     style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -1049,25 +1109,37 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectDate(context);
+                    selectNdisStartDate(context, setState);
                   },
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: CalendarOrDropDown(
                         label: "NDIS Plan Start Date",
-                        hint: "00-00-0000",
+                        hint: ndisStart != null
+                            ? ndisStart!.day.toString() +
+                                "/" +
+                                ndisStart!.month.toString() +
+                                "/" +
+                                ndisStart!.year.toString()
+                            : "00/00/0000",
                         suffixIcon: "calendar"),
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectDate(context);
+                    selectNdisEndDate(context, setState);
                   },
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: CalendarOrDropDown(
                         label: "NDIS Plan End Date",
-                        hint: "00-00-0000",
+                        hint: ndisEnd != null
+                            ? ndisEnd!.day.toString() +
+                                "/" +
+                                ndisEnd!.month.toString() +
+                                "/" +
+                                ndisEnd!.year.toString()
+                            : "00/00/0000",
                         suffixIcon: "calendar"),
                   ),
                 ),
@@ -1115,7 +1187,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                 (states) => BorderSide(
                                     width: 1.0, color: checkBoxColor),
                               ),
-                              value: checked,
+                              value: listChecked[index],
                               checkColor: checkColor,
                               activeColor: grey,
                               overlayColor:
@@ -1124,7 +1196,19 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                   Colors.white),
                               onChanged: (bool? value) {
                                 setState(() {
-                                  checked = !checked;
+                                  if (value! &&
+                                      !selectedProvidersIndex.contains(index)) {
+                                    listChecked[index] = true;
+                                    selectedProvidersIndex.add(index);
+                                  } else {
+                                    if (selectedProvidersIndex
+                                        .contains(index)) {
+                                      listChecked[index] = false;
+                                      selectedProvidersIndex.remove(index);
+                                    }
+                                  }
+                                  print("Swaran $selectedProvidersIndex");
+                                  print("Swaran $listChecked");
                                 });
                               });
                         }),
@@ -1162,7 +1246,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   onTap: () {
                     Navigator.pop(context);
                     setState(() {
+                      ndis = _ndisNumberController.text;
                       ndisFilled = true;
+                      update();
                     });
                   },
                   child: Container(
@@ -1293,6 +1379,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   if (fromDialog == "update_profile") {
+                    updateNdisValues();
                     Navigator.pop(context);
                     showDialog(
                         context: context,
@@ -1301,6 +1388,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         });
                   }
                   if (fromDialog == "ndis_agreement") {
+                    updateNdisValues();
                     Navigator.pop(context);
                     showDialog(
                         context: context,
@@ -1309,6 +1397,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         });
                   }
                   if (fromDialog == "terms_and_conditions") {
+                    updateNdisValues();
                     Navigator.pop(context);
                   }
                 },
@@ -1371,14 +1460,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       toggle(2, "Fund management and claiming"),
                       toggle(3,
                           "Organising and planning supports over the life of the NDIS Plan"),
-                      toggle(4, "The role of community and mainstream supports"),
                       toggle(
-                          5, "How to access and use the My NDIS portal and App"),
-                      toggle(6, "The value and importance of service agreements"),
+                          4, "The role of community and mainstream supports"),
+                      toggle(5,
+                          "How to access and use the My NDIS portal and App"),
+                      toggle(
+                          6, "The value and importance of service agreements"),
                       toggle(7,
                           "If any supports have been listed in the plan, the participant knows who can deliver the support and how it may be provided"),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           List<Answers> ans = [];
                           var index = 0;
                           widget.ndisQues.questions.forEach((element) {
@@ -1391,9 +1482,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           var ndisAnswers = NdisAnswers(
                               email: widget.user.participant.email!,
                               answers: ans);
-                          ApiService().postNdisAnswers(ndisAnswers);
+                          await ApiService().postNdisAnswers(ndisAnswers);
+                          updateNdisValues();
                           Navigator.pop(context);
-                          if (widget.user.participant.ndisTc != 1) {
+                          if (ndisTc != 1) {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -1407,7 +1499,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             margin: const EdgeInsets.fromLTRB(20, 16, 20, 16),
                             decoration: const BoxDecoration(
                               color: primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(3)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3)),
                             ),
                             child: Center(
                               child: Text(
@@ -1526,6 +1619,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     onTap: () async {
                       NdisResponse respon = await ApiService()
                           .postNdisTc(widget.user.participant.email!, 1);
+                      updateNdisValues();
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -1608,7 +1702,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     }
   }
 
-  void init() {
+  void init() async {
     _firstNameController.text = widget.user.participant.firstName!;
     _lastNameController.text = widget.user.participant.lastName!;
     _phoneNumController.text = widget.user.participant.phone!;
@@ -1619,19 +1713,25 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     }
     selectedGender = widget.user.participant.gender ?? "Other";
     selectedCountry = widget.user.participant.location ?? "Select Country";
-    if(selectedCountry != "Select Country"){
+    if (selectedCountry != "Select Country") {
       getStates();
     }
     selectedState = widget.user.participant.state;
-    if(selectedCountry != "Select Country"){
+    if (selectedCountry != "Select Country") {
       getAreas();
     }
     selectedArea = widget.user.participant.areaSuburban;
     selectedArea = selectedArea?.toTitleCase();
     _postalController.text = widget.user.participant.postalCode ?? "";
     ndis = widget.user.participant.ndis;
-    ndisStart = widget.user.participant.ndisStartDate;
-    ndisEnd = widget.user.participant.ndisEndDate;
+    if (widget.user.participant.ndisStartDate != null) {
+      ndisStart = DateFormat("dd/MM/yyyy")
+          .parse(widget.user.participant.ndisStartDate!);
+    }
+    if (widget.user.participant.ndisEndDate != null) {
+      ndisEnd =
+          DateFormat("dd/MM/yyyy").parse(widget.user.participant.ndisEndDate!);
+    }
     _areaController.text = widget.user.participant.areaSuburban ?? "";
     _aboutController.text = widget.user.participant.aboutUser ?? "";
     countries.asMap().forEach((index, element) {
@@ -1639,24 +1739,22 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         selectedPhoneCountry = countries[index];
       }
     });
+    ndisAgreement = widget.user.participant.ndisAgreement;
+    ndisTc = widget.user.participant.ndisTc;
     widget.ndisQues.questions.asMap().forEach((index, element) {
       toggleValues?.add(element.answer);
+    });
+    imgResponse = await get(Uri.parse(widget.user.participant.profilePic!));
+    providers?.providerNames.forEach((element) {
+      listChecked.add(false);
     });
   }
 
   getImage() {
-    if (widget.user.participant.profilePic != null) {
-      return Image.network(
-        widget.user.participant.profilePic!,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace? stackTrace) {
-          return Image.asset(
-              "/Users/swaran/Downloads/giglabz-mct/lib/resources/images/place_holder.png");
-        },
-      );
+    if (widget.user.participant.profilePic != null && imgResponse == 200) {
+      return Image.network(widget.user.participant.profilePic!);
     } else {
-      return Image.asset(
-          "/Users/swaran/Downloads/giglabz-mct/lib/resources/images/place_holder.png");
+      return Image.asset("lib/resources/images/place_holder.png");
     }
   }
 
@@ -1677,6 +1775,24 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         areas?.add(element.name);
         pincodes?.add(element.postalCode);
       });
+    });
+  }
+
+  void update() async {
+    setState(() {});
+  }
+
+  void updateNdisValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    var profile = await ApiService()
+        .getProfile(userMap?["user_name"], userMap?["role_id"]);
+    setState(() {
+      ndisAgreement = profile.participant.ndisAgreement;
+      ndisTc = profile.participant.ndisTc;
+      var a = 10;
     });
   }
 }
