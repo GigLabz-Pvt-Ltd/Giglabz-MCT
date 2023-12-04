@@ -77,13 +77,18 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
               ),
               title: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "Create Goal",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+                child: GestureDetector(
+                  onTap: () {
+                    updateSelectedTab(3);
+                  },
+                  child: Text(
+                    "Create Goal",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
                 ),
               ),
               centerTitle: false,
@@ -98,13 +103,17 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
           controller: _tabCont,
           children: [
             GoalSummaryWidget(goalId: widget.goalId),
-            GoalOutComesWidget(goalId: widget.goalId),
+            GoalOutComesWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
             Center(child: Text("Coming Soon...")),
             Center(child: Text("Coming Soon...")),
           ],
         ),
       ),
     );
+  }
+
+  updateSelectedTab(int index){
+    _tabCont.animateTo(index);
   }
 
   TabBar get _tabBar => TabBar(

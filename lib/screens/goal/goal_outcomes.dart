@@ -16,17 +16,18 @@ class GoalOutComesWidget extends StatefulWidget {
   GoalOutComesWidget({
     Key? key,
     required int this.goalId,
+    required Function this.updateTab,
   }) : super(key: key);
 
   int goalId;
-
+  Function updateTab;
   @override
   State<GoalOutComesWidget> createState() => _GoalSummaryWidgetState();
 }
 
 class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   Object? goalFor, goalType, shareGoalTo, goalArea = 1;
-  int selectedOption = 1;
+  int selectedOption = 0;
   var selectedInterest = null;
   var selectedName = null;
   var selectedRecurring = goalRecurring[0];
@@ -160,6 +161,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                       setState(() {
                         selectedOption = int.parse(value.toString());
                         print("Button value: $value");
+                        milestone.clear();
+                        widget.updateTab(2);
                       });
                     },
                   ),
@@ -176,35 +179,37 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             ],
           ),
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Padding(
-            padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Milestones",
-                style: GoogleFonts.poppins(
-                  color: blueGrey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+        if (selectedOption == 1)
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Padding(
+              padding: EdgeInsets.only(top: 14, left: 20, right: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Milestones",
+                  style: GoogleFonts.poppins(
+                    color: blueGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return addMilestoneDialog("");
-                  });
-            },
-            child: Padding(
-              padding: EdgeInsets.only(top: 14, right: 20),
-              child: SvgPicture.asset("lib/resources/images/add_milestone.svg"),
-            ),
-          )
-        ]),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addMilestoneDialog("");
+                    });
+              },
+              child: Padding(
+                padding: EdgeInsets.only(top: 14, right: 20),
+                child:
+                    SvgPicture.asset("lib/resources/images/add_milestone.svg"),
+              ),
+            )
+          ]),
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
