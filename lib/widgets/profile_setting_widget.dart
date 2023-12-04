@@ -1317,7 +1317,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   onTap: () {
                     Navigator.pop(context);
                     setState(() {
-                      ndis = _ndisNumberController.text;
+                      if (_ndisNumberController.text != "") {
+                        ndis = _ndisNumberController.text;
+                      }
                       ndisFilled = true;
                       update();
                     });
