@@ -25,7 +25,8 @@ class GoalOutComesWidget extends StatefulWidget {
 }
 
 class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
-  Object? selectedOption, goalFor, goalType, shareGoalTo, goalArea = 1;
+  Object? goalFor, goalType, shareGoalTo, goalArea = 1;
+  int selectedOption = 1;
   var selectedInterest = null;
   var selectedName = null;
   var selectedRecurring = goalRecurring[0];
@@ -37,6 +38,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   var endSelectedMinutes = minutes[0];
   DateTime? selectedStartDate = null, selectedEndDate = null;
   DateTime selectedDob = DateTime.now();
+  final _outcomeController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   List<Milestone> milestone = [];
@@ -70,7 +72,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             border: Border.all(color: outlineGrey),
           ),
           child: TextField(
-            controller: _titleController,
+            controller: _outcomeController,
             style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -115,17 +117,17 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
-                      if (selectedOption == "Yes") {
+                      if (selectedOption == 1) {
                         return iconBlue;
                       }
                       return borderGrey;
                     },
                   ),
-                  value: "Yes",
+                  value: 1,
                   groupValue: selectedOption,
                   onChanged: (value) {
                     setState(() {
-                      selectedOption = value;
+                      selectedOption = int.parse(value.toString());
                       print("Button value: $value");
                     });
                   },
@@ -145,18 +147,18 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                   Radio(
                     fillColor: MaterialStateColor.resolveWith(
                       (Set<MaterialState> states) {
-                        if (selectedOption == "No") {
+                        if (selectedOption == 0) {
                           return iconBlue;
                         }
                         return borderGrey;
                       },
                     ),
-                    value: "No",
+                    value: 0,
                     focusColor: grey,
                     groupValue: selectedOption,
                     onChanged: (value) {
                       setState(() {
-                        selectedOption = value;
+                        selectedOption = int.parse(value.toString());
                         print("Button value: $value");
                       });
                     },
@@ -211,6 +213,48 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             itemBuilder: (context, index) {
               return milestoneTile(index);
             }),
+        if (milestone.isNotEmpty)
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () async {
+                var response = await ApiService().createMilestone(
+                    CreateMilestone(
+                        expectedOutcome: _outcomeController.text,
+                        breakdown: selectedOption,
+                        milestone: milestone,
+                        goalId: widget.goalId));
+
+                if (response.responseStatus == 200) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return okDialog("");
+                      });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(response.responseMessage)));
+                }
+              },
+              child: Container(
+                height: 40,
+                width: 82,
+                margin: EdgeInsets.only(top: 8, right: 20),
+                color: primaryColor,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Save",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
       ]),
     );
   }
@@ -245,6 +289,78 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
       setState(() {
         selectedEndDate = picked;
       });
+  }
+
+  Widget okDialog(String fromDialog) {
+    return Dialog(
+      child: Container(
+        height: 250,
+        decoration: const BoxDecoration(
+            color: scaffoldGrey,
+            borderRadius: BorderRadius.all(Radius.circular(3.0))),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(35, 35, 35, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("lib/resources/images/ndis_tick.svg"),
+              Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Goal Outcomes details are saved Successfully!',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 24),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "OK",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   aboutMeWidget() {
@@ -633,6 +749,21 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
               ]),
               GestureDetector(
                 onTap: () {
+                  if (_titleController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Milestone name can't be empty")));
+                    return;
+                  }
+                  if (_descriptionController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Description can't be empty")));
+                    return;
+                  }
+                  if (selectedStartDate == null || selectedEndDate == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Select Start and End date")));
+                    return;
+                  }
                   milestone.add(Milestone(
                       name: _titleController.text,
                       description: _descriptionController.text,
@@ -641,7 +772,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
                       targetDate:
                           "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
                       celebrations: selectedCelebration,
-                      progress: selectedPercent,
+                      progress: selectedPercent.substring(
+                          0, selectedPercent.length - 1),
                       value: false,
                       action: 1));
                   update();
@@ -789,12 +921,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
             valueColor: AlwaysStoppedAnimation<Color>(
               Colors.amber,
             ),
-            value: milestone?[index].progress != null
-                ? int.parse(milestone![index]
-                        .progress
-                        .substring(0, milestone![index].progress.length - 1)) /
-                    100
-                : 0.0,
+            value: double.parse(milestone[index].progress) / 100,
             minHeight: 6,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),

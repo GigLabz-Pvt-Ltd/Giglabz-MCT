@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
+import 'package:mycareteam/models/create_milestone.dart';
 import 'package:mycareteam/models/email_verify_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
@@ -238,7 +239,7 @@ class ApiService {
     return activity;
   }
 
-    Future<GetInfluencerGoalAreaResponse> getInfluencerGoalAreas() async {
+  Future<GetInfluencerGoalAreaResponse> getInfluencerGoalAreas() async {
     final response = await get(
       Uri.parse("$BASE_URL_8082/goals/summary/areas/influencer"),
       headers: <String, String>{
@@ -246,6 +247,19 @@ class ApiService {
       },
     );
     final activity = getInfluencerGoalAreaResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<CreateGoalResponse> createMilestone(
+      CreateMilestone milestoneBody) async {
+        var a = milestoneBody;
+    final response =
+        await post(Uri.parse("$BASE_URL_8082/api/goals/outcomes/add/outcome"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: createMilestoneApiToJson(milestoneBody));
+    final activity = createGoalResponseApiFromJson(response.body);
     return activity;
   }
 }

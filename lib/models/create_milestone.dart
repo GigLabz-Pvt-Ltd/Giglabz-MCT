@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-CreateMilestone createGoalApiFromJson(String str) =>
+CreateMilestone createMilestoneApiFromJson(String str) =>
     CreateMilestone.fromJson(json.decode(str));
-String createGoalApiToJson(CreateMilestone data) => json.encode(data.toJson());
+String createMilestoneApiToJson(CreateMilestone data) =>
+    json.encode(data.toJson());
 
 class CreateMilestone {
   CreateMilestone({
@@ -15,11 +16,12 @@ class CreateMilestone {
   late final int breakdown;
   late final List<Milestone> milestone;
   late final int goalId;
-  
-  CreateMilestone.fromJson(Map<String, dynamic> json){
+
+  CreateMilestone.fromJson(Map<String, dynamic> json) {
     expectedOutcome = json['expectedOutcome'];
     breakdown = json['breakdown'];
-    milestone = List.from(json['milestone']).map((e)=>Milestone.fromJson(e)).toList();
+    milestone =
+        List.from(json['milestone']).map((e) => Milestone.fromJson(e)).toList();
     goalId = json['goalId'];
   }
 
@@ -27,7 +29,7 @@ class CreateMilestone {
     final _data = <String, dynamic>{};
     _data['expectedOutcome'] = expectedOutcome;
     _data['breakdown'] = breakdown;
-    _data['milestone'] = milestone.map((e)=>e.toJson()).toList();
+    _data['milestone'] = milestone.map((e) => e.toJson()).toList();
     _data['goalId'] = goalId;
     return _data;
   }
@@ -52,8 +54,8 @@ class Milestone {
   late final String progress;
   late final bool value;
   late final int action;
-  
-  Milestone.fromJson(Map<String, dynamic> json){
+
+  Milestone.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     description = json['description'];
     startDate = json['startDate'];

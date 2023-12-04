@@ -7,13 +7,13 @@ class CreateGoalResponse {
   CreateGoalResponse({
     required this.responseStatus,
     required this.responseMessage,
-    required this.goalId,
-    required this.goalPercent,
+    this.goalId,
+    this.goalPercent,
   });
   late final int responseStatus;
   late final String responseMessage;
-  late final int goalId;
-  late final int goalPercent;
+  late final int? goalId;
+  late final int? goalPercent;
   
   CreateGoalResponse.fromJson(Map<String, dynamic> json){
     responseStatus = json['responseStatus'];

@@ -7,8 +7,8 @@ import 'package:mycareteam/screens/home/profile_screen.dart';
 import 'package:mycareteam/screens/splash_screen.dart';
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
-   await SystemChrome.setPreferredOrientations([
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
   runApp(const MainApplication());
