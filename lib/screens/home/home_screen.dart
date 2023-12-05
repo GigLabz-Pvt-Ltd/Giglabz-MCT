@@ -476,22 +476,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getDashBoard() async {
     if (dashboard == null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userPref = prefs.getString('user')!;
-      var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-
-      var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
-
-      var mProfile = await ApiService()
-          .getProfile(userMap?["user_name"], userMap?["role_id"]);
-
-      setState(() {
-        dashboard = mDashboard;
-        goalCount = mDashboard.goalList.length;
-        name = mProfile.participant.firstName! +
-            " " +
-            mProfile.participant.lastName!;
-      });
+      makeApiCall();
     }
   }
 
@@ -1090,13 +1075,49 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              CreateGoalScreen(goalId: goal_id)));
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  CreateGoalScreen(goalId: goal_id)))
+          .then((value) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String userPref = prefs.getString('user')!;
+        var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+        var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
+
+        var mProfile = await ApiService()
+            .getProfile(userMap?["user_name"], userMap?["role_id"]);
+        setState(() {
+          dashboard = mDashboard;
+          goalCount = mDashboard.goalList.length;
+          name = mProfile.participant.firstName! +
+              " " +
+              mProfile.participant.lastName!;
+        });
+      });
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(response.responseMessage)));
     }
   }
 
+  void makeApiCall() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
+
+    var mProfile = await ApiService()
+        .getProfile(userMap?["user_name"], userMap?["role_id"]);
+
+    setState(() {
+      dashboard = mDashboard;
+      goalCount = mDashboard.goalList.length;
+      name = mProfile.participant.firstName! +
+          " " +
+          mProfile.participant.lastName!;
+    });
+  }
 }
