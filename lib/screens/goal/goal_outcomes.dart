@@ -27,7 +27,7 @@ class GoalOutComesWidget extends StatefulWidget {
 
 class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   Object? goalFor, goalType, shareGoalTo, goalArea = 1;
-  int selectedOption = 0;
+  int selectedOption = 1;
   var selectedInterest = null;
   var selectedName = null;
   var selectedRecurring = goalRecurring[0];
