@@ -12,6 +12,8 @@ List<String> countriesStings = ["Select Country", "Australia", "Canada", "Englan
 List<String> goalRecurring = ["Daily", "Weekly", "Monthly", "Yearly"];
 List<String> progressPercent = ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
 List<String> yesNo = ["Yes", "No"];
+List<String> peopleRole = ["Select Role", "Nominated" , "Primary Contact" , "Secondary Contact" , "Others"];
+List<String> peoplePermissions = ["View access", "Frequency of Notification"];
 List<String> genders = ["Male", "Female", "Other"];
 List<String> hours = [
   "00 H", "01 H", "02 H", "03 H", "04 H", "05 H", "06 H", "07 H", "08 H", "09 H", "10 H", "11 H", "12 H",

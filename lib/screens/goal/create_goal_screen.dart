@@ -8,6 +8,7 @@ import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/goal/goal_outcomes.dart';
 import 'package:mycareteam/screens/goal/goal_summary.dart';
+import 'package:mycareteam/screens/goal/share_goal.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/profile_setting_widget.dart';
@@ -104,7 +105,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
           children: [
             GoalSummaryWidget(goalId: widget.goalId),
             GoalOutComesWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
-            Center(child: Text("Coming Soon...")),
+            ShareGoalWidget(goalId: widget.goalId),
             Center(child: Text("Coming Soon...")),
           ],
         ),
