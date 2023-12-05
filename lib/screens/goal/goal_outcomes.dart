@@ -25,7 +25,8 @@ class GoalOutComesWidget extends StatefulWidget {
   State<GoalOutComesWidget> createState() => _GoalSummaryWidgetState();
 }
 
-class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
+class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
+    with AutomaticKeepAliveClientMixin<GoalOutComesWidget> {
   Object? goalFor, goalType, shareGoalTo, goalArea = 1;
   int selectedOption = 1;
   var selectedInterest = null;
@@ -944,4 +945,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget> {
   void update() async {
     setState(() {});
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

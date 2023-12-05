@@ -24,7 +24,8 @@ class GoalSummaryWidget extends StatefulWidget {
   State<GoalSummaryWidget> createState() => _GoalSummaryWidgetState();
 }
 
-class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
+class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
+    with AutomaticKeepAliveClientMixin<GoalSummaryWidget> {
   @override
   void initState() {
     super.initState();
@@ -1189,8 +1190,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
                 return;
               }
               if (_descriptionController.text == "") {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Enter Goal Summary")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Enter Goal Summary")));
                 return;
               }
               var goal = CreateGoal(
@@ -1483,4 +1484,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget> {
       goalAreaList.add(element);
     });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
