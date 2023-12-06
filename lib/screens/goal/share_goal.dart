@@ -35,7 +35,48 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
   final _emailController = TextEditingController();
   final _phoneNumController = TextEditingController();
   final _reasonController = TextEditingController();
+
+  var selectedRFrequency = goalRecurring[0];
+  var selectedRRole = peopleRole[0];
+  final _firstnameRController = TextEditingController();
+  final _lastnameRController = TextEditingController();
+  final _emailRController = TextEditingController();
+  final _phoneNumRController = TextEditingController();
+  final _parameterRController = TextEditingController();
+  final _reasonRController = TextEditingController();
+
+  final _paramController = TextEditingController();
+
+  bool isBeingEdited = false;
   List<FamilyColleagueList> people = [];
+  List<ReviewerList> reviewer = [];
+  List<ParametersToReview> parametersToReview = [
+    ParametersToReview(
+        id: 1,
+        parameter: "Basic Needs (food, water, air, rest etc)",
+        frequency: goalRecurring[0],
+        proofOfProgress: ""),
+    ParametersToReview(
+        id: 2,
+        parameter: "Security and Stability (home and personal safety)",
+        frequency: goalRecurring[0],
+        proofOfProgress: ""),
+    ParametersToReview(
+        id: 3,
+        parameter: "Love and Belonging (relationships)",
+        frequency: goalRecurring[0],
+        proofOfProgress: ""),
+    ParametersToReview(
+        id: 4,
+        parameter: "Esteem",
+        frequency: goalRecurring[0],
+        proofOfProgress: ""),
+    ParametersToReview(
+        id: 5,
+        parameter: "Self Actualisation",
+        frequency: goalRecurring[0],
+        proofOfProgress: ""),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -145,30 +186,89 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
           GestureDetector(
             onTap: () {
               if (selectedOption == 0) {
+                resetPeopleFields();
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return addPeopleDialog("");
                     });
               }
+              if (selectedOption == 1) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addReviewerDialog("");
+                    });
+              }
             },
             child: Padding(
-              padding: EdgeInsets.only(top: 14, right: 20),
-              child: selectedOption == 0
-                  ? SvgPicture.asset("lib/resources/images/add_people.svg")
-                  : SvgPicture.asset("lib/resources/images/add_reviewer.svg"),
-            ),
+                padding: EdgeInsets.only(top: 14, right: 20),
+                child: Row(
+                  children: [
+                    if (selectedOption == 0 && people.length < 4)
+                      SvgPicture.asset("lib/resources/images/add_people.svg"),
+                    if (selectedOption == 0 && people.length == 4)
+                      SvgPicture.asset(
+                          "lib/resources/images/add_people_disabled.svg"),
+                    if (selectedOption == 1 && reviewer.isEmpty)
+                      SvgPicture.asset("lib/resources/images/add_reviewer.svg"),
+                    if (selectedOption == 1 && reviewer.isNotEmpty)
+                      SvgPicture.asset(
+                          "lib/resources/images/add_reviewer_disabled.svg"),
+                  ],
+                )),
           )
         ]),
-        ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: people.length,
-            itemBuilder: (context, index) {
-              return peopleTile(index);
-            }),
-        if (people.isNotEmpty)
+        if (selectedOption == 0)
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: people.length,
+              itemBuilder: (context, index) {
+                return peopleTile(index);
+              }),
+        if (selectedOption == 1)
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: reviewer.length,
+              itemBuilder: (context, index) {
+                return reviewerTile(index);
+              }),
+        if (selectedOption == 1 && reviewer.isNotEmpty)
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Parameters to Review",
+              style: GoogleFonts.poppins(
+                color: blueGrey,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        if (selectedOption == 1 && reviewer.isNotEmpty)
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 8, left: 20, right: 20, bottom: 12),
+            padding: EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              border: Border.all(color: outlineGrey),
+            ),
+            child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: parametersToReview.length,
+                itemBuilder: (context, index) {
+                  return paramsToReview(index);
+                }),
+          ),
+        if (selectedOption == 1 && reviewer.isNotEmpty)
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -194,7 +294,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               child: Container(
                 height: 40,
                 width: 82,
-                margin: EdgeInsets.only(top: 8, right: 20),
+                margin: EdgeInsets.only(top: 8, right: 20, bottom: 20),
                 color: primaryColor,
                 child: Align(
                   alignment: Alignment.center,
@@ -286,7 +386,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
     );
   }
 
-  StatefulWidget addPeopleDialog(String fromDialog) {
+  StatefulWidget addPeopleDialog(String index) {
     return StatefulBuilder(builder: (context, StateSetter setState) {
       return Dialog(
         child: Container(
@@ -718,21 +818,48 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           SnackBar(content: Text("Last name can't be empty")));
                       return;
                     }
-                    people.add(FamilyColleagueList(
-                        firstName: _firstnameController.text,
-                        lastName: _lastnameController.text,
-                        email: _emailController.text,
-                        phoneNo: _phoneNumController.text,
-                        role: selectedPeopleRole,
-                        shareReason: _reasonController.text,
-                        notificatioin: 0,
-                        editable: false,
-                        view: selectedPeoplePermission == "View access" ? 0 : 1,
-                        frequency: selectedPeoplePermission == "View access"
-                            ? ""
-                            : selectedFrequency));
+                    if (isBeingEdited) {
+                      var inde = int.parse(index);
+
+                      people[inde] = FamilyColleagueList(
+                          firstName: _firstnameController.text,
+                          lastName: _lastnameController.text,
+                          email: _emailController.text,
+                          phoneNo: _phoneNumController.text,
+                          role: selectedPeopleRole,
+                          shareReason: _reasonController.text,
+                          notificatioin: selectedPeoplePermission ==
+                                  "Frequency of Notification"
+                              ? 1
+                              : 0,
+                          editable: false,
+                          view:
+                              selectedPeoplePermission == "View access" ? 1 : 0,
+                          frequency: selectedPeoplePermission == "View access"
+                              ? ""
+                              : selectedFrequency);
+                    } else {
+                      people.add(FamilyColleagueList(
+                          firstName: _firstnameController.text,
+                          lastName: _lastnameController.text,
+                          email: _emailController.text,
+                          phoneNo: _phoneNumController.text,
+                          role: selectedPeopleRole,
+                          shareReason: _reasonController.text,
+                          notificatioin: selectedPeoplePermission ==
+                                  "Frequency of Notification"
+                              ? 1
+                              : 0,
+                          editable: false,
+                          view:
+                              selectedPeoplePermission == "View access" ? 1 : 0,
+                          frequency: selectedPeoplePermission == "View access"
+                              ? ""
+                              : selectedFrequency));
+                    }
                     update();
                     Navigator.pop(context);
+                    isBeingEdited = false;
                   },
                   child: Container(
                       height: 40,
@@ -773,26 +900,46 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
       child: Column(children: [
         Row(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              people[index].firstName ?? "SomeText",
-              style: GoogleFonts.poppins(
-                color: iconBlue,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              children: [
+                Text(
+                  people[index].firstName ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  " ",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  people[index].lastName ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
             Text(
-              people[index].lastName ?? "SomeText",
+              people[index].email ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: secondaryColor,
-                fontSize: 12,
+                fontSize: 13,
                 fontWeight: FontWeight.w400,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Text(
-                people[index].email ?? "SomeText",
+                people[index].phoneNo ?? "SomeText",
                 style: GoogleFonts.poppins(
                   color: secondaryColor,
                   fontSize: 13,
@@ -804,8 +951,13 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
           Spacer(),
           GestureDetector(
               onTap: () {
-                // people.removeAt(index);
-                // update();
+                isBeingEdited = true;
+                setCurrentPeopleValues(index);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addPeopleDialog(index.toString());
+                    });
               },
               child: SvgPicture.asset("lib/resources/images/edit_people.svg")),
           Container(
@@ -883,13 +1035,46 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Text(
-                     peoplePermissions[people[index].view] +", "+ people[index].frequency ?? "SomeText",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          if (people[index].view == 1)
+                            TextSpan(
+                              text: peoplePermissions[0],
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
+                            ),
+                          if (people[index].notificatioin == 1)
+                            TextSpan(
+                              text: peoplePermissions[
+                                  people[index].notificatioin],
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
+                            ),
+                          if (people[index].notificatioin == 1)
+                            TextSpan(
+                              text: ', ',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
+                            ),
+                          if (people[index].notificatioin == 1)
+                            TextSpan(
+                              text: people[index].frequency,
+                              style: GoogleFonts.poppins(
+                                color: secondaryColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                        ],
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ]),
             ),
@@ -906,4 +1091,895 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  void resetPeopleFields() {
+    _firstnameController.text = "";
+    _lastnameController.text = "";
+    _emailController.text = "";
+    _phoneNumController.text = "";
+    _reasonController.text = "";
+    selectedPeopleRole = peopleRole[0];
+    selectedPeoplePermission = peoplePermissions[0];
+    selectedFrequency = goalRecurring[0];
+  }
+
+  setCurrentPeopleValues(int index) {
+    _firstnameController.text = people[index].firstName;
+    _lastnameController.text = people[index].lastName;
+    _emailController.text = people[index].email;
+    _phoneNumController.text = people[index].phoneNo;
+    _reasonController.text = people[index].shareReason;
+    selectedPeopleRole = people[index].role;
+    print("selectedPeoplePermission ${people[index].view}");
+    if (people[index].view == 1) {
+      selectedPeoplePermission = peoplePermissions[0];
+      selectedFrequency = goalRecurring[0];
+    } else {
+      selectedPeoplePermission = peoplePermissions[1];
+      selectedFrequency = people[index].frequency;
+    }
+  }
+
+  StatefulWidget addReviewerDialog(String index) {
+    return StatefulBuilder(builder: (context, StateSetter setState) {
+      return Dialog(
+        child: Container(
+          decoration: const BoxDecoration(
+              color: scaffoldGrey,
+              borderRadius: BorderRadius.all(Radius.circular(3.0))),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 20,
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Add Reviewer",
+                          style: GoogleFonts.poppins(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: blueGrey),
+                        ),
+                        SvgPicture.asset(
+                            "lib/resources/images/close_verify_otp.svg"),
+                      ]),
+                ),
+                Divider(
+                  color: dividerGrey,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    "First Name",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _firstnameRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter First Name',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 14),
+                  child: Text(
+                    "Last Name",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _lastnameRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Last Name',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 14),
+                  child: Text(
+                    "Email",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _emailRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter email',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 14),
+                  child: Text(
+                    "Phone Number",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _phoneNumRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Phone Number',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  margin: const EdgeInsets.only(left: 20, top: 12),
+                  child: Row(children: [
+                    Expanded(
+                      child: Text(
+                        "Role",
+                        style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: blueGrey),
+                      ),
+                    ),
+                  ]),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                      padding: EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3)),
+                        border: Border.all(color: outlineGrey),
+                      ),
+                      child: Stack(children: [
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: SvgPicture.asset(
+                                "lib/resources/images/dropdownArrow.svg")),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          // color: Colors.amber,
+                          padding: const EdgeInsets.only(top: 0, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedRRole = newValue!;
+                                });
+                              },
+                              value: selectedRRole,
+                              items: peopleRole.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: secondaryColor),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 14),
+                  child: Text(
+                    "Reason to share",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _reasonRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Write Reason',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 14),
+                  child: Text(
+                    "Parameters to Review",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _parameterRController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Write Parameter',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  margin: const EdgeInsets.only(left: 20, top: 12),
+                  child: Row(children: [
+                    Expanded(
+                      child: Text(
+                        "Frequency",
+                        style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: blueGrey),
+                      ),
+                    ),
+                  ]),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                      padding: EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3)),
+                        border: Border.all(color: outlineGrey),
+                      ),
+                      child: Stack(children: [
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: SvgPicture.asset(
+                                "lib/resources/images/dropdownArrow.svg")),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          // color: Colors.amber,
+                          padding: const EdgeInsets.only(top: 0, left: 10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              icon: const Icon(null),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedRFrequency = newValue!;
+                                });
+                              },
+                              value: selectedRFrequency,
+                              items: goalRecurring.map((String dropDownString) {
+                                return DropdownMenuItem<String>(
+                                  value: dropDownString,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      dropDownString,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: secondaryColor),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
+                GestureDetector(
+                  onTap: () {
+                    if (_firstnameRController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("First name can't be empty")));
+                      return;
+                    }
+                    if (_lastnameRController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Last name can't be empty")));
+                      return;
+                    }
+                    if (reviewer.isNotEmpty) {
+                      reviewer[0] = ReviewerList(
+                          firstName: _firstnameRController.text,
+                          lastName: _lastnameRController.text,
+                          email: _emailRController.text,
+                          phoneNo: _phoneNumRController.text,
+                          role: selectedRRole,
+                          shareReason: _reasonRController.text,
+                          editable: false);
+                    } else {
+                      reviewer.add(ReviewerList(
+                          firstName: _firstnameRController.text,
+                          lastName: _lastnameRController.text,
+                          email: _emailRController.text,
+                          phoneNo: _phoneNumRController.text,
+                          role: selectedRRole,
+                          shareReason: _reasonRController.text,
+                          editable: false));
+                    }
+                    update();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                      height: 40,
+                      margin: const EdgeInsets.only(
+                          top: 24, left: 20, right: 20, bottom: 20),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Add Reviewer",
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white),
+                        ),
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget reviewerTile(int index) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      margin: EdgeInsets.only(top: 8, left: 20, right: 20, bottom: 12),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        border: Border.all(color: outlineGrey),
+      ),
+      child: Column(children: [
+        Row(children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(
+              children: [
+                Text(
+                  reviewer[index].firstName ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  " ",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  reviewer[index].lastName ?? "SomeText",
+                  style: GoogleFonts.poppins(
+                    color: iconBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              reviewer[index].email ?? "SomeText",
+              style: GoogleFonts.poppins(
+                color: secondaryColor,
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                reviewer[index].phoneNo ?? "SomeText",
+                style: GoogleFonts.poppins(
+                  color: secondaryColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ]),
+          Spacer(),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addReviewerDialog(index.toString());
+                    });
+              },
+              child: SvgPicture.asset("lib/resources/images/edit_people.svg")),
+          Container(
+            width: 10,
+          ),
+          GestureDetector(
+              onTap: () {
+                reviewer.removeAt(index);
+                update();
+              },
+              child:
+                  SvgPicture.asset("lib/resources/images/delete_milestone.svg"))
+        ]),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Role",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      reviewer[index].role ?? "SomeText",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
+            ),
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Reason to share",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      reviewer[index].shareReason ?? "SomeText",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
+            ),
+          ]),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Parameters to Review",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      _parameterRController.text,
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
+            ),
+            Container(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Review Frequency",
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      selectedRFrequency,
+                      style: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
+            ),
+            SvgPicture.asset("lib/resources/images/download.svg")
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  paramsToReview(int index) {
+    return Column(children: [
+      Padding(
+        padding: EdgeInsets.only(left: 20, right: 10),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 15,
+              child: Container(
+                child: Text(
+                  parametersToReview[index].parameter,
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            Text(
+              parametersToReview[index].frequency,
+              style: GoogleFonts.poppins(
+                color: iconBlue,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Container(
+              width: 10,
+            ),
+            SvgPicture.asset("lib/resources/images/reviewer_parameter_red.svg"),
+            Container(
+              width: 10,
+            ),
+            GestureDetector(
+                onTap: () {
+                  setParamInField(index);
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return updateParameter(index);
+                      });
+                },
+                child:
+                    SvgPicture.asset("lib/resources/images/edit_people.svg")),
+          ],
+        ),
+      ),
+      if (index < parametersToReview.length - 1)
+        Padding(
+          padding: EdgeInsets.only(top: 4, bottom: 4),
+          child: Divider(
+            color: dividerGrey,
+          ),
+        ),
+    ]);
+  }
+
+  StatefulWidget updateParameter(int index) {
+    return StatefulBuilder(builder: (context, StateSetter setState) {
+      return Dialog(
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              color: scaffoldGrey,
+              borderRadius: BorderRadius.all(Radius.circular(3.0))),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 24,
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Update Parameter",
+                          style: GoogleFonts.poppins(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: blueGrey),
+                        ),
+                        SvgPicture.asset(
+                            "lib/resources/images/close_verify_otp.svg"),
+                      ]),
+                ),
+                addParamWidget(),
+                Container(
+                  height: 80,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                                height: 40,
+                                margin: const EdgeInsets.only(
+                                    top: 24, left: 20, right: 10, bottom: 20),
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                  color: iconGrey,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3)),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Cancel",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white),
+                                  ),
+                                )),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (_paramController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text("Parameter can't be empty")));
+                                return;
+                              }
+
+                              parametersToReview[index] = ParametersToReview(
+                                  id: parametersToReview[index].id,
+                                  parameter: _paramController.text,
+                                  frequency:
+                                      parametersToReview[index].frequency,
+                                  proofOfProgress: parametersToReview[index]
+                                      .proofOfProgress);
+
+                              update();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                                height: 40,
+                                margin: const EdgeInsets.only(
+                                    top: 24, left: 10, right: 20, bottom: 20),
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3)),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Update",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white),
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  addParamWidget() {
+    return Stack(children: [
+      Container(
+        height: 90,
+        margin: EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.fromLTRB(0, 0, 6, 6),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: SvgPicture.asset(
+            "lib/resources/images/about_me.svg",
+          ),
+        ),
+      ),
+      Container(
+        height: 90,
+        margin: EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(3)),
+          border: Border.all(color: outlineGrey),
+        ),
+        child: TextField(
+          keyboardType: TextInputType.multiline,
+          controller: _paramController,
+          minLines: 1,
+          maxLines: 2,
+          style: GoogleFonts.poppins(
+              fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Enter your parameter",
+            hintStyle: GoogleFonts.poppins(
+              color: secondaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    ]);
+  }
+  
+  void setParamInField(int index) {
+    _paramController.text = parametersToReview[index].parameter;
+  }
+  
+
 }
