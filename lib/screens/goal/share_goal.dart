@@ -273,23 +273,25 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
             alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () async {
-                // var response = await ApiService().createMilestone(
-                //     CreateMilestone(
-                //         expectedOutcome: _outcomeController.text,
-                //         breakdown: selectedOption,
-                //         milestone: milestone,
-                //         goalId: widget.goalId));
+                var response = await ApiService().shareGoal(ShareGoal(
+                    shareGoalTo: 2,
+                    goalId: widget.goalId,
+                    family: Family(familyColleagueList: people),
+                    reviewer: Reviewer(
+                        parametersToReview: parametersToReview,
+                        reviewerList: reviewer)));
 
-                // if (response.responseStatus == 200) {
-                //   showDialog(
-                //       context: context,
-                //       builder: (BuildContext context) {
-                //         return okDialog("");
-                //       });
-                // } else {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(content: Text(response.responseMessage)));
-                // }
+                if (response.responseStatus == 200) {
+                  print(response.responseMessage);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return okDialog("");
+                        });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(response.responseMessage)));
+                }
               },
               child: Container(
                 height: 40,
@@ -333,7 +335,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Goal Outcomes details are saved Successfully!',
+                          text: 'Yoy have been set a Goal Successfully',
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -388,363 +390,194 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
   StatefulWidget addPeopleDialog(String index) {
     return StatefulBuilder(builder: (context, StateSetter setState) {
-      return Dialog(
-        child: Container(
-          decoration: const BoxDecoration(
-              color: scaffoldGrey,
-              borderRadius: BorderRadius.all(Radius.circular(3.0))),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 20,
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Add People",
-                          style: GoogleFonts.poppins(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: blueGrey),
-                        ),
-                        SvgPicture.asset(
-                            "lib/resources/images/close_verify_otp.svg"),
-                      ]),
-                ),
-                Divider(
-                  color: dividerGrey,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "First Name",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _firstnameController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter First Name',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Last Name",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _lastnameController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter Last Name',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Email",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _emailController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter email',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Phone Number",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _phoneNumController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter Phone Number',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 20,
-                  margin: const EdgeInsets.only(left: 20, top: 12),
-                  child: Row(children: [
-                    Expanded(
-                      child: Text(
-                        "Role",
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: blueGrey),
-                      ),
-                    ),
-                  ]),
-                ),
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                      padding: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
-                        border: Border.all(color: outlineGrey),
-                      ),
-                      child: Stack(children: [
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: SvgPicture.asset(
-                                "lib/resources/images/dropdownArrow.svg")),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          // color: Colors.amber,
-                          padding: const EdgeInsets.only(top: 0, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedPeopleRole = newValue!;
-                                });
-                              },
-                              value: selectedPeopleRole,
-                              items: peopleRole.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+      return Padding(
+        padding: EdgeInsets.only(bottom: 24),
+        child: Dialog(
+          child: Container(
+            decoration: const BoxDecoration(
+                color: scaffoldGrey,
+                borderRadius: BorderRadius.all(Radius.circular(3.0))),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 20,
+                    margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Add People",
+                            style: GoogleFonts.poppins(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: blueGrey),
                           ),
+                          SvgPicture.asset(
+                              "lib/resources/images/close_verify_otp.svg"),
+                        ]),
+                  ),
+                  Divider(
+                    color: dividerGrey,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      "First Name",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _firstnameController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter First Name',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ]),
-                    ),
-                  ),
-                ]),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Reason to share",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _reasonController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Write Reason',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 20,
-                  margin: const EdgeInsets.only(left: 20, top: 12),
-                  child: Row(children: [
-                    Expanded(
-                      child: Text(
-                        "Permissions",
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: blueGrey),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Last Name",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
                     ),
-                  ]),
-                ),
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                      padding: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
-                        border: Border.all(color: outlineGrey),
-                      ),
-                      child: Stack(children: [
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: SvgPicture.asset(
-                                "lib/resources/images/dropdownArrow.svg")),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          // color: Colors.amber,
-                          padding: const EdgeInsets.only(top: 0, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedPeoplePermission = newValue!;
-                                });
-                              },
-                              value: selectedPeoplePermission,
-                              items: peoplePermissions
-                                  .map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _lastnameController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Last Name',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ]),
+                      ),
                     ),
                   ),
-                ]),
-                if (selectedPeoplePermission == "Frequency of Notification")
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Email",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _emailController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter email',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Phone Number",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _phoneNumController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Phone Number',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
                   Container(
                     height: 20,
                     margin: const EdgeInsets.only(left: 20, top: 12),
                     child: Row(children: [
                       Expanded(
                         child: Text(
-                          "Frequency",
+                          "Role",
                           style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -753,7 +586,6 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       ),
                     ]),
                   ),
-                if (selectedPeoplePermission == "Frequency of Notification")
                   Row(children: [
                     Expanded(
                       child: Container(
@@ -780,12 +612,11 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                                 icon: const Icon(null),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedFrequency = newValue!;
+                                    selectedPeopleRole = newValue!;
                                   });
                                 },
-                                value: selectedFrequency,
-                                items:
-                                    goalRecurring.map((String dropDownString) {
+                                value: selectedPeopleRole,
+                                items: peopleRole.map((String dropDownString) {
                                   return DropdownMenuItem<String>(
                                     value: dropDownString,
                                     child: Padding(
@@ -806,81 +637,277 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       ),
                     ),
                   ]),
-                GestureDetector(
-                  onTap: () {
-                    if (_firstnameController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("First name can't be empty")));
-                      return;
-                    }
-                    if (_lastnameController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Last name can't be empty")));
-                      return;
-                    }
-                    if (isBeingEdited) {
-                      var inde = int.parse(index);
-
-                      people[inde] = FamilyColleagueList(
-                          firstName: _firstnameController.text,
-                          lastName: _lastnameController.text,
-                          email: _emailController.text,
-                          phoneNo: _phoneNumController.text,
-                          role: selectedPeopleRole,
-                          shareReason: _reasonController.text,
-                          notificatioin: selectedPeoplePermission ==
-                                  "Frequency of Notification"
-                              ? 1
-                              : 0,
-                          editable: false,
-                          view:
-                              selectedPeoplePermission == "View access" ? 1 : 0,
-                          frequency: selectedPeoplePermission == "View access"
-                              ? ""
-                              : selectedFrequency);
-                    } else {
-                      people.add(FamilyColleagueList(
-                          firstName: _firstnameController.text,
-                          lastName: _lastnameController.text,
-                          email: _emailController.text,
-                          phoneNo: _phoneNumController.text,
-                          role: selectedPeopleRole,
-                          shareReason: _reasonController.text,
-                          notificatioin: selectedPeoplePermission ==
-                                  "Frequency of Notification"
-                              ? 1
-                              : 0,
-                          editable: false,
-                          view:
-                              selectedPeoplePermission == "View access" ? 1 : 0,
-                          frequency: selectedPeoplePermission == "View access"
-                              ? ""
-                              : selectedFrequency));
-                    }
-                    update();
-                    Navigator.pop(context);
-                    isBeingEdited = false;
-                  },
-                  child: Container(
-                      height: 40,
-                      margin: const EdgeInsets.only(
-                          top: 24, left: 20, right: 20, bottom: 20),
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(3)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Add People",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Reason to share",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _reasonController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Write Reason',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                      )),
-                ),
-              ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 20,
+                    margin: const EdgeInsets.only(left: 20, top: 12),
+                    child: Row(children: [
+                      Expanded(
+                        child: Text(
+                          "Permissions",
+                          style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: blueGrey),
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Row(children: [
+                    Expanded(
+                      child: Container(
+                        height: 40,
+                        margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: Stack(children: [
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: SvgPicture.asset(
+                                  "lib/resources/images/dropdownArrow.svg")),
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            // color: Colors.amber,
+                            padding: const EdgeInsets.only(top: 0, left: 10),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                icon: const Icon(null),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPeoplePermission = newValue!;
+                                  });
+                                },
+                                value: selectedPeoplePermission,
+                                items: peoplePermissions
+                                    .map((String dropDownString) {
+                                  return DropdownMenuItem<String>(
+                                    value: dropDownString,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 4),
+                                      child: Text(
+                                        dropDownString,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: secondaryColor),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ]),
+                  if (selectedPeoplePermission == "Frequency of Notification")
+                    Container(
+                      height: 20,
+                      margin: const EdgeInsets.only(left: 20, top: 12),
+                      child: Row(children: [
+                        Expanded(
+                          child: Text(
+                            "Frequency",
+                            style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: blueGrey),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  if (selectedPeoplePermission == "Frequency of Notification")
+                    Row(children: [
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                          padding: EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(3)),
+                            border: Border.all(color: outlineGrey),
+                          ),
+                          child: Stack(children: [
+                            Align(
+                                alignment: Alignment.centerRight,
+                                child: SvgPicture.asset(
+                                    "lib/resources/images/dropdownArrow.svg")),
+                            Container(
+                              height: 50,
+                              width: double.infinity,
+                              // color: Colors.amber,
+                              padding: const EdgeInsets.only(top: 0, left: 10),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  icon: const Icon(null),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedFrequency = newValue!;
+                                    });
+                                  },
+                                  value: selectedFrequency,
+                                  items: goalRecurring
+                                      .map((String dropDownString) {
+                                    return DropdownMenuItem<String>(
+                                      value: dropDownString,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 4),
+                                        child: Text(
+                                          dropDownString,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: secondaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ),
+                    ]),
+                  GestureDetector(
+                    onTap: () {
+                      if (_firstnameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("First name can't be empty")));
+                        return;
+                      }
+                      if (_lastnameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Last name can't be empty")));
+                        return;
+                      }
+                      if (_emailController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Email can't be empty")));
+                        return;
+                      }
+                      if (_phoneNumController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Phone num can't be empty")));
+                        return;
+                      }
+                      if (_reasonController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Reason can't be empty")));
+                        return;
+                      }
+                      if (selectedPeopleRole == "Select Role") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Role can't be empty")));
+                        return;
+                      }
+                      if (isBeingEdited) {
+                        var inde = int.parse(index);
+
+                        people[inde] = FamilyColleagueList(
+                            firstName: _firstnameController.text,
+                            lastName: _lastnameController.text,
+                            email: _emailController.text,
+                            phoneNo: _phoneNumController.text,
+                            role: selectedPeopleRole,
+                            shareReason: _reasonController.text,
+                            notificatioin: selectedPeoplePermission ==
+                                    "Frequency of Notification"
+                                ? 1
+                                : 0,
+                            editable: false,
+                            view: selectedPeoplePermission == "View access"
+                                ? 1
+                                : 0,
+                            frequency: selectedPeoplePermission == "View access"
+                                ? ""
+                                : selectedFrequency);
+                      } else {
+                        people.add(FamilyColleagueList(
+                            firstName: _firstnameController.text,
+                            lastName: _lastnameController.text,
+                            email: _emailController.text,
+                            phoneNo: _phoneNumController.text,
+                            role: selectedPeopleRole,
+                            shareReason: _reasonController.text,
+                            notificatioin: selectedPeoplePermission ==
+                                    "Frequency of Notification"
+                                ? 1
+                                : 0,
+                            editable: false,
+                            view: selectedPeoplePermission == "View access"
+                                ? 1
+                                : 0,
+                            frequency: selectedPeoplePermission == "View access"
+                                ? ""
+                                : selectedFrequency));
+                      }
+                      update();
+                      Navigator.pop(context);
+                      isBeingEdited = false;
+                    },
+                    child: Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(
+                            top: 24, left: 20, right: 20, bottom: 20),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Add People",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1122,445 +1149,475 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
   StatefulWidget addReviewerDialog(String index) {
     return StatefulBuilder(builder: (context, StateSetter setState) {
-      return Dialog(
-        child: Container(
-          decoration: const BoxDecoration(
-              color: scaffoldGrey,
-              borderRadius: BorderRadius.all(Radius.circular(3.0))),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 20,
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Add Reviewer",
+      return Padding(
+        padding: EdgeInsets.only(bottom: 24),
+        child: Dialog(
+          child: Container(
+            decoration: const BoxDecoration(
+                color: scaffoldGrey,
+                borderRadius: BorderRadius.all(Radius.circular(3.0))),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 20,
+                    margin: EdgeInsets.fromLTRB(20, 20, 20, 14),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Add Reviewer",
+                            style: GoogleFonts.poppins(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: blueGrey),
+                          ),
+                          SvgPicture.asset(
+                              "lib/resources/images/close_verify_otp.svg"),
+                        ]),
+                  ),
+                  Divider(
+                    color: dividerGrey,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      "First Name",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _firstnameRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter First Name',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Last Name",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _lastnameRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Last Name',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Email",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _emailRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter email',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Phone Number",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _phoneNumRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Phone Number',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 20,
+                    margin: const EdgeInsets.only(left: 20, top: 12),
+                    child: Row(children: [
+                      Expanded(
+                        child: Text(
+                          "Role",
                           style: GoogleFonts.poppins(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
                               color: blueGrey),
                         ),
-                        SvgPicture.asset(
-                            "lib/resources/images/close_verify_otp.svg"),
-                      ]),
-                ),
-                Divider(
-                  color: dividerGrey,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "First Name",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _firstnameRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter First Name',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
-                    ),
+                    ]),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Last Name",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _lastnameRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter Last Name',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Email",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _emailRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter email',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Phone Number",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _phoneNumRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter Phone Number',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 20,
-                  margin: const EdgeInsets.only(left: 20, top: 12),
-                  child: Row(children: [
+                  Row(children: [
                     Expanded(
-                      child: Text(
-                        "Role",
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: blueGrey),
+                      child: Container(
+                        height: 40,
+                        margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: Stack(children: [
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: SvgPicture.asset(
+                                  "lib/resources/images/dropdownArrow.svg")),
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            // color: Colors.amber,
+                            padding: const EdgeInsets.only(top: 0, left: 10),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                icon: const Icon(null),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedRRole = newValue!;
+                                  });
+                                },
+                                value: selectedRRole,
+                                items: peopleRole.map((String dropDownString) {
+                                  return DropdownMenuItem<String>(
+                                    value: dropDownString,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 4),
+                                      child: Text(
+                                        dropDownString,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: secondaryColor),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ]),
                       ),
                     ),
                   ]),
-                ),
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                      padding: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
-                        border: Border.all(color: outlineGrey),
-                      ),
-                      child: Stack(children: [
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: SvgPicture.asset(
-                                "lib/resources/images/dropdownArrow.svg")),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          // color: Colors.amber,
-                          padding: const EdgeInsets.only(top: 0, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedRRole = newValue!;
-                                });
-                              },
-                              value: selectedRRole,
-                              items: peopleRole.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Reason to share",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _reasonRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Write Reason',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ]),
-                    ),
-                  ),
-                ]),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Reason to share",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _reasonRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Write Reason',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 14),
-                  child: Text(
-                    "Parameters to Review",
-                    style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: blueGrey),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: TextField(
-                    controller: _parameterRController,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryColor),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Write Parameter',
-                      hintStyle: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 14),
+                    child: Text(
+                      "Parameters to Review",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: blueGrey),
                     ),
                   ),
-                ),
-                Container(
-                  height: 20,
-                  margin: const EdgeInsets.only(left: 20, top: 12),
-                  child: Row(children: [
-                    Expanded(
-                      child: Text(
-                        "Frequency",
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: blueGrey),
-                      ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
                     ),
-                  ]),
-                ),
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                      padding: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
-                        border: Border.all(color: outlineGrey),
-                      ),
-                      child: Stack(children: [
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: SvgPicture.asset(
-                                "lib/resources/images/dropdownArrow.svg")),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          // color: Colors.amber,
-                          padding: const EdgeInsets.only(top: 0, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedRFrequency = newValue!;
-                                });
-                              },
-                              value: selectedRFrequency,
-                              items: goalRecurring.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      border: Border.all(color: outlineGrey),
+                    ),
+                    child: TextField(
+                      controller: _parameterRController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Write Parameter',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ]),
+                      ),
                     ),
                   ),
-                ]),
-                GestureDetector(
-                  onTap: () {
-                    if (_firstnameRController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("First name can't be empty")));
-                      return;
-                    }
-                    if (_lastnameRController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Last name can't be empty")));
-                      return;
-                    }
-                    if (reviewer.isNotEmpty) {
-                      reviewer[0] = ReviewerList(
-                          firstName: _firstnameRController.text,
-                          lastName: _lastnameRController.text,
-                          email: _emailRController.text,
-                          phoneNo: _phoneNumRController.text,
-                          role: selectedRRole,
-                          shareReason: _reasonRController.text,
-                          editable: false);
-                    } else {
-                      reviewer.add(ReviewerList(
-                          firstName: _firstnameRController.text,
-                          lastName: _lastnameRController.text,
-                          email: _emailRController.text,
-                          phoneNo: _phoneNumRController.text,
-                          role: selectedRRole,
-                          shareReason: _reasonRController.text,
-                          editable: false));
-                    }
-                    update();
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                      height: 40,
-                      margin: const EdgeInsets.only(
-                          top: 24, left: 20, right: 20, bottom: 20),
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(3)),
-                      ),
-                      child: Center(
+                  Container(
+                    height: 20,
+                    margin: const EdgeInsets.only(left: 20, top: 12),
+                    child: Row(children: [
+                      Expanded(
                         child: Text(
-                          "Add Reviewer",
+                          "Frequency",
                           style: GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.w400,
-                              color: Colors.white),
+                              color: blueGrey),
                         ),
-                      )),
-                ),
-              ],
+                      ),
+                    ]),
+                  ),
+                  Row(children: [
+                    Expanded(
+                      child: Container(
+                        height: 40,
+                        margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3)),
+                          border: Border.all(color: outlineGrey),
+                        ),
+                        child: Stack(children: [
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: SvgPicture.asset(
+                                  "lib/resources/images/dropdownArrow.svg")),
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            // color: Colors.amber,
+                            padding: const EdgeInsets.only(top: 0, left: 10),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                icon: const Icon(null),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedRFrequency = newValue!;
+                                  });
+                                },
+                                value: selectedRFrequency,
+                                items:
+                                    goalRecurring.map((String dropDownString) {
+                                  return DropdownMenuItem<String>(
+                                    value: dropDownString,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 4),
+                                      child: Text(
+                                        dropDownString,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: secondaryColor),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ]),
+                  GestureDetector(
+                    onTap: () {
+                      if (_firstnameRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("First name can't be empty")));
+                        return;
+                      }
+                      if (_lastnameRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Last name can't be empty")));
+                        return;
+                      }
+                      if (_emailRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("email can't be empty")));
+                        return;
+                      }
+                      if (_phoneNumRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Phone number can't be empty")));
+                        return;
+                      }
+                      if (_parameterRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text("Parameters to review can't be empty")));
+                        return;
+                      }
+                      if (_reasonRController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Reason can't be empty")));
+                        return;
+                      }
+                      if (selectedRRole == "Select Role") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Role can't be empty")));
+                        return;
+                      }
+                      if (reviewer.isNotEmpty) {
+                        reviewer[0] = ReviewerList(
+                            firstName: _firstnameRController.text,
+                            lastName: _lastnameRController.text,
+                            email: _emailRController.text,
+                            phoneNo: _phoneNumRController.text,
+                            role: selectedRRole,
+                            shareReason: _reasonRController.text,
+                            editable: false);
+                      } else {
+                        reviewer.add(ReviewerList(
+                            firstName: _firstnameRController.text,
+                            lastName: _lastnameRController.text,
+                            email: _emailRController.text,
+                            phoneNo: _phoneNumRController.text,
+                            role: selectedRRole,
+                            shareReason: _reasonRController.text,
+                            editable: false));
+                      }
+                      update();
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(
+                            top: 24, left: 20, right: 20, bottom: 20),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Add Reviewer",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1976,10 +2033,8 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
       ),
     ]);
   }
-  
+
   void setParamInField(int index) {
     _paramController.text = parametersToReview[index].parameter;
   }
-  
-
 }

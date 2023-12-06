@@ -16,6 +16,7 @@ import 'package:mycareteam/models/get_roles_response.dart';
 import 'package:mycareteam/models/ndis_answers.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/models/ndis_response.dart';
+import 'package:mycareteam/models/share_goal.dart';
 import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -259,6 +260,18 @@ class ApiService {
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: createMilestoneApiToJson(milestoneBody));
+    final activity = createGoalResponseApiFromJson(response.body);
+    return activity;
+  }
+
+    Future<CreateGoalResponse> shareGoal(
+      ShareGoal shareGoal) async {
+    final response =
+        await post(Uri.parse("$BASE_URL_8082/api/sharegoals/save"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: shareGoalApiToJson(shareGoal));
     final activity = createGoalResponseApiFromJson(response.body);
     return activity;
   }
