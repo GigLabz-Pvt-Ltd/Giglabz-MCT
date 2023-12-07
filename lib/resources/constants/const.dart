@@ -8,7 +8,7 @@ List<FlagsAndCode> countries = [
   FlagsAndCode(svg: "gb", code: "+33"),
 ];
 
-List<String> countriesStings = ["Select Country", "Australia", "Canada", "England", "India", "USA"];
+List<String> countriesStings = ["Select Country", "Australia"];
 List<String> goalRecurring = ["Daily", "Weekly", "Monthly", "Yearly"];
 List<String> progressPercent = ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
 List<String> yesNo = ["Yes", "No"];
