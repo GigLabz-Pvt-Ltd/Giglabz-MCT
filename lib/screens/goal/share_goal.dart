@@ -984,7 +984,9 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     context: context,
                     builder: (BuildContext context) {
                       return addPeopleDialog(index.toString());
-                    });
+                    }).then((value) => { 
+                      isBeingEdited = false
+                       });
               },
               child: SvgPicture.asset("lib/resources/images/edit_people.svg")),
           Container(
