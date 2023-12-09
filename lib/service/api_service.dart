@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
@@ -23,7 +22,6 @@ import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/register_response.dart';
 import '../models/login_response.dart';
-import 'package:path/path.dart';
 
 var BASE_URL = "http://dev.trackability.net.au:8081";
 var BASE_URL_8080 = "http://dev.trackability.net.au:8080";
@@ -255,7 +253,7 @@ class ApiService {
 
   Future<CreateGoalResponse> createMilestone(
       CreateMilestone milestoneBody) async {
-    var a = milestoneBody;
+        var a = milestoneBody;
     final response =
         await post(Uri.parse("$BASE_URL_8082/api/goals/outcomes/add/outcome"),
             headers: <String, String>{
@@ -266,36 +264,15 @@ class ApiService {
     return activity;
   }
 
-  Future<CreateGoalResponse> shareGoal(ShareGoal shareGoal) async {
-    final response = await post(Uri.parse("$BASE_URL_8082/api/sharegoals/save"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: shareGoalApiToJson(shareGoal));
+    Future<CreateGoalResponse> shareGoal(
+      ShareGoal shareGoal) async {
+    final response =
+        await post(Uri.parse("$BASE_URL_8082/api/sharegoals/save"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: shareGoalApiToJson(shareGoal));
     final activity = createGoalResponseApiFromJson(response.body);
     return activity;
-  }
-
-  Future uploadImage(File? image, String? email) async {
-    var stream = ByteStream(image!.openRead());
-    stream.cast();
-    print(basename(image.path));
-    var length = await image.length();
-    var uri = Uri.parse("$BASE_URL_8080/api/userprofile/upload/$email");
-    var request = MultipartRequest("POST", uri);
-    var multipart =
-        MultipartFile('file', stream, length, filename: basename(image.path));
-
-    request.files.add(multipart);
-
-    var response = await request.send();
-
-    if (response.statusCode == 200) {
-      print("Success");
-      return "Success";
-    } else {
-      print("Failure");
-      return "Failure";
-    }
   }
 }
