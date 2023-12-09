@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
@@ -52,7 +54,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   DateTime? selectedDob = null;
   DateTime? ndisStart = null;
   DateTime? ndisEnd = null;
-  var ndis, imgResponse, ndisAgreement, ndisTc;
+  var ndis, ndisAgreement, ndisTc;
+  Response? imgResponse;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
@@ -66,10 +69,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   List<String> pincodes = [];
   List<String> interests = ["Health", "Sports", "Education", "Engineering"];
   int selectedInterestIndex = 0;
-
   bool ndisFilled = false;
   var selectedInterest = 0;
-
+  File? image;
+  var _picker = ImagePicker();
   List<int>? toggleValues = [];
 
   @override
@@ -110,16 +113,21 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             Positioned(
                               top: 63,
                               left: 63,
-                              child: Container(
-                                height: 37,
-                                width: 37,
-                                padding: const EdgeInsets.all(10),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: cameraBg,
+                              child: GestureDetector(
+                                onTap: () {
+                                  selectImage();
+                                },
+                                child: Container(
+                                  height: 37,
+                                  width: 37,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: cameraBg,
+                                  ),
+                                  child: SvgPicture.asset(
+                                      "lib/resources/images/camera.svg"),
                                 ),
-                                child: SvgPicture.asset(
-                                    "lib/resources/images/camera.svg"),
                               ),
                             ),
                           ]),
@@ -1821,16 +1829,43 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       toggleValues?.add(element.answer);
     });
     imgResponse = await get(Uri.parse(widget.user.participant.profilePic!));
+    update();
     providers?.providerNames.forEach((element) {
       listChecked.add(false);
     });
   }
 
   getImage() {
-    if (widget.user.participant.profilePic != null && imgResponse == 200) {
+    if (widget.user.participant.profilePic != null &&
+        imgResponse?.statusCode == 200) {
       return Image.network(widget.user.participant.profilePic!);
     } else {
       return Image.asset("lib/resources/images/place_holder.png");
+    }
+  }
+
+  Future selectImage() async {
+    try {
+      var pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          isLoading = true;
+        });
+        var res = await ApiService()
+            .uploadImage(File(pickedFile.path), widget.user.participant.email);
+
+        if (res == "Success") {
+          PaintingBinding.instance.imageCache.clear();
+          Future.delayed(const Duration(milliseconds: 5000), () {
+            setState(() {
+              isLoading = false;
+            });
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Image format not supported")));
     }
   }
 

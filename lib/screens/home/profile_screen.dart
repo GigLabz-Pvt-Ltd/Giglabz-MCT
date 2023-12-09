@@ -94,7 +94,10 @@ class _ProfileScreenState extends State<ProfileScreen>
               body: TabBarView(
                 controller: _tabCont,
                 children: [
-                  ProfileSettingWidget(user: profile!, ndisQues: ndis!,),
+                  ProfileSettingWidget(
+                    user: profile!,
+                    ndisQues: ndis!,
+                  ),
                   Center(child: Text("Coming Soon...")),
                   Center(child: Text("Coming Soon...")),
                   Center(child: Text("Coming Soon...")),
@@ -139,7 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
     if (userMap != null && profile == null) {
-      var mProfile = await ApiService().getProfile(userMap?["user_name"], userMap?["role_id"]);
+      var mProfile = await ApiService()
+          .getProfile(userMap?["user_name"], userMap?["role_id"]);
       var mNdis = await ApiService().getNdisQues(userMap?["user_name"]);
       setState(() {
         profile = mProfile;
