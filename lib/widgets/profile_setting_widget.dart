@@ -1838,7 +1838,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   getImage() {
     if (widget.user.participant.profilePic != null &&
         imgResponse?.statusCode == 200) {
-      return Image.network(widget.user.participant.profilePic!);
+      return Image.network(widget.user.participant.profilePic!, fit: BoxFit.fill,);
     } else {
       return Image.asset("lib/resources/images/place_holder.png");
     }
