@@ -177,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Text(
                             selectedRole != -1
                                 ? roles![selectedRole].name
-                                : "Select",
+                                : "Select *",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 14,
@@ -426,11 +426,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       return DropdownMenuItem<FlagsAndCode>(
                                         value: dropDownString,
                                         child: Row(children: [
-                                          SvgPicture.asset(
+                                          Image.asset(
                                             "lib/resources/images/" +
                                                 dropDownString.svg! +
-                                                ".svg",
-                                            width: 20,
+                                                ".png",
+                                            width: 30,
                                             height: 20,
                                             fit: BoxFit.cover,
                                           ),
