@@ -264,8 +264,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               dashboard != null &&
                                       dashboard!.dashboardCount.isNotEmpty
-                                  ? dashboard!.dashboardCount[0].TotalGoals
-                                      .toString()
+                                  ? dashboard!.dashboardCount[0].DraftPercentage
+                                          .toString() +
+                                      "%"
                                   : "",
                               style: TextStyle(
                                   color: Colors.white,
@@ -274,14 +275,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ]),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: LinearProgressIndicator(
                         backgroundColor: Colors.white,
-                        valueColor: AlwaysStoppedAnimation<Color>(
+                        valueColor: const AlwaysStoppedAnimation<Color>(
                           Colors.amber,
                         ),
-                        value: 0.8,
+                        value: dashboard != null &&
+                                dashboard!.dashboardCount.isNotEmpty
+                            ? dashboard!.dashboardCount[0].DraftPercentage / 100
+                            : 0.0,
                         minHeight: 6,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
@@ -376,7 +380,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Color(0xff00C3A5),
                 strokeWidth: 6,
                 value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
-                    ? dashboard!.dashboardCount[0].DraftPercentage / 100
+                    ? dashboard!.dashboardCount[0].CompletedPercentage / 100
+                    : 0.0,
+                backgroundColor: Colors.white, //<-- SEE HERE
+                strokeCap: StrokeCap.round,
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 65,
+              height: 65,
+              child: CircularProgressIndicator(
+                color: Colors.amber,
+                strokeWidth: 6,
+                value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
+                    ? dashboard!.dashboardCount[0].InprogressPercentage / 100
                     : 0.0,
                 backgroundColor: Colors.white, //<-- SEE HERE
                 strokeCap: StrokeCap.round,
@@ -386,7 +405,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Center(
               child: Text(
             dashboard != null && dashboard!.dashboardCount.isNotEmpty
-                ? dashboard!.dashboardCount[0].DraftPercentage.toString()
+                ? (dashboard!.dashboardCount[0].DraftCount +
+                        dashboard!.dashboardCount[0].TotalGoals)
+                    .toString()
                 : "",
             style: TextStyle(
                 color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
@@ -1091,9 +1112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           dashboard = mDashboard;
           goalCount = mDashboard.goalList.length;
-          name = mProfile.participant.firstName! +
-              " " +
-              mProfile.participant.lastName!;
+          name = "Hey, " + mProfile.participant.firstName! + " 👋";
         });
       });
     } else {
@@ -1115,9 +1134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       dashboard = mDashboard;
       goalCount = mDashboard.goalList.length;
-      name = mProfile.participant.firstName! +
-          " " +
-          mProfile.participant.lastName!;
+      name = "Hey, " + mProfile.participant.firstName! + " 👋";
     });
   }
 }
