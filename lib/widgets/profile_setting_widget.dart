@@ -1298,21 +1298,30 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          "Your NDIS Plan Expiry",
+                          "Your NDIS Plan Expiry ",
                           textAlign: TextAlign.left,
                           style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: secondaryColor),
                         ),
+                        if(ndisStart == null || ndisEnd == null)
                         Container(
                           height: 2,
                           width: 60,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           color: dividerGrey,
                         ),
+                          Text(
+                          ndisEnd!.difference(ndisStart!).inDays.toString(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
                         Text(
-                          "Days",
+                          " Days",
                           textAlign: TextAlign.left,
                           style: GoogleFonts.poppins(
                               fontSize: 14,
