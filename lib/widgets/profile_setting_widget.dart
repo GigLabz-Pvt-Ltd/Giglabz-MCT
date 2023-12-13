@@ -1224,9 +1224,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      showProviderOptions = !showProviderOptions;
-                    });
+                    // setState(() {
+                    //   showProviderOptions = !showProviderOptions;
+                    // });
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
