@@ -30,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var selectedCountry = countries[0];
   var selectedRole = -1;
   List<Roles>? roles;
+  var otpFull = false;
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -655,6 +656,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           selectedRole + 1);
                       if (response.responseStatus != null) {
                         if (response.responseStatus == 200) {
+                          otpFull = false;
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -808,297 +810,332 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget okDialog(String fromDialog) {
-    return Dialog(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(25, 12, 12, 25),
-        decoration: const BoxDecoration(
-            color: scaffoldGrey,
-            borderRadius: BorderRadius.all(Radius.circular(3.0))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-                alignment: Alignment.centerRight,
-                child: SvgPicture.asset(
-                    "lib/resources/images/close_verify_otp.svg")),
-            Padding(
-              padding: EdgeInsets.only(right: 13),
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '',
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                    ),
-                    TextSpan(
-                      text: 'Verify Email OTP',
-                      style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: secondaryColor),
-                    ),
-                    TextSpan(
-                      text: '',
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                    ),
-                  ],
+    return StatefulBuilder(builder: (context, StateSetter setState) {
+      return Dialog(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(25, 12, 12, 25),
+          decoration: const BoxDecoration(
+              color: scaffoldGrey,
+              borderRadius: BorderRadius.all(Radius.circular(3.0))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: SvgPicture.asset(
+                      "lib/resources/images/close_verify_otp.svg")),
+              Padding(
+                padding: EdgeInsets.only(right: 13),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                      ),
+                      TextSpan(
+                        text: 'Verify Email OTP',
+                        style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: secondaryColor),
+                      ),
+                      TextSpan(
+                        text: '',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 14, right: 13),
-              child: Text(
-                "Please enter the OTP sent to",
-                style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: secondaryColor),
-              ),
-            ),
-            Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 14, right: 13),
                 child: Text(
-                  _emailController.text,
+                  "Please enter the OTP sent to",
                   style: GoogleFonts.poppins(
                       fontSize: 15,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                       color: secondaryColor),
-                )),
-            Container(
-              height: 44,
-              padding: EdgeInsets.only(right: 13),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _1otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode1,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            fNode2.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _2otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode2,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            fNode3.requestFocus();
-                          }
-                          if (value.length == 0) {
-                            fNode1.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _3otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode3,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            fNode4.requestFocus();
-                          }
-                          if (value.length == 0) {
-                            fNode2.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _4otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode4,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            fNode5.requestFocus();
-                          }
-                          if (value.length == 0) {
-                            fNode3.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _5otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode5,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            fNode6.requestFocus();
-                          }
-                          if (value.length == 0) {
-                            fNode4.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 44,
-                      width: 28,
-                      margin: const EdgeInsets.only(top: 22),
-                      child: TextField(
-                        controller: _6otpController,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: iconBlue),
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          counterText: "",
-                        ),
-                        focusNode: fNode6,
-                        onChanged: (value) {
-                          if (value.length == 0) {
-                            fNode5.requestFocus();
-                          }
-                        },
-                      ),
-                    ),
-                  ]),
-            ),
-            GestureDetector(
-              onTap: () async {
-                var code = _1otpController.text +
-                    _2otpController.text +
-                    _3otpController.text +
-                    _4otpController.text +
-                    _5otpController.text +
-                    _6otpController.text;
-                var res = await ApiService().emailVerify(
-                    _emailController.text, code, _emailController.text);
-                if (res.responseStatus == 200) {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const LoginScreen()),
-                      (Route<dynamic> route) => false);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Registration successfull...")));
-                }else{
-                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Registration not successfull...")));
-                }
-              },
-              child: Container(
-                  height: 40,
-                  margin: const EdgeInsets.only(top: 24, right: 13),
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Enter OTP",
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    ),
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 14, right: 13),
+                  child: Text(
+                    _emailController.text,
+                    style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: secondaryColor),
                   )),
-            ),
-          ],
+              Container(
+                height: 44,
+                padding: EdgeInsets.only(right: 13),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _1otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode1,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+                            if (value.length == 1) {
+                              fNode2.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _2otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode2,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+
+                            if (value.length == 1) {
+                              fNode3.requestFocus();
+                            }
+                            if (value.length == 0) {
+                              fNode1.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _3otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode3,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+
+                            if (value.length == 1) {
+                              fNode4.requestFocus();
+                            }
+                            if (value.length == 0) {
+                              fNode2.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _4otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode4,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+
+                            if (value.length == 1) {
+                              fNode5.requestFocus();
+                            }
+                            if (value.length == 0) {
+                              fNode3.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _5otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode5,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+                            if (value.length == 1) {
+                              fNode6.requestFocus();
+                            }
+                            if (value.length == 0) {
+                              fNode4.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        height: 44,
+                        width: 28,
+                        margin: const EdgeInsets.only(top: 22),
+                        child: TextField(
+                          controller: _6otpController,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: iconBlue),
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            counterText: "",
+                          ),
+                          focusNode: fNode6,
+                          onChanged: (value) {
+                            updateOtpBtn(setState);
+                            if (value.length == 0) {
+                              fNode5.requestFocus();
+                            }
+                          },
+                        ),
+                      ),
+                    ]),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  if (!otpFull) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Enter OTP...")));
+                    return;
+                  }
+                  var code = _1otpController.text +
+                      _2otpController.text +
+                      _3otpController.text +
+                      _4otpController.text +
+                      _5otpController.text +
+                      _6otpController.text;
+                  var res = await ApiService().emailVerify(
+                      _emailController.text, code, _emailController.text);
+                  if (res.responseStatus == 200) {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const LoginScreen()),
+                        (Route<dynamic> route) => false);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Registration successfull...")));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Registration not successfull...")));
+                  }
+                },
+                child: Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 24, right: 13),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: !otpFull
+                          ? iconBlue.withOpacity(0.5)
+                          : iconBlue.withOpacity(1),
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Enter OTP",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
+  }
+
+  void updateOtpBtn(Function set) {
+    if (_1otpController.text.isEmpty ||
+        _2otpController.text.isEmpty ||
+        _3otpController.text.isEmpty ||
+        _4otpController.text.isEmpty ||
+        _5otpController.text.isEmpty ||
+        _6otpController.text.isEmpty) {
+      set(() {
+        otpFull = false;
+      });
+    } else {
+      set(() {
+        otpFull = true;
+      });
+    }
   }
 }
