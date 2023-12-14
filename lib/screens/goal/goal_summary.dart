@@ -56,6 +56,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   final _emailController = TextEditingController();
   final _customAreaController = TextEditingController();
   final _descriptionController = TextEditingController();
+  bool isParticipant = false;
 
   @override
   Widget build(BuildContext context) {
@@ -444,257 +445,261 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 ),
               )
             ]),
-            Row(children: [
-              Radio(
-                fillColor: MaterialStateColor.resolveWith(
-                  (Set<MaterialState> states) {
-                    if (goalFor == "Someone Else") {
-                      return iconBlue;
-                    }
-                    return borderGrey;
+            if (isParticipant)
+              Row(children: [
+                Radio(
+                  fillColor: MaterialStateColor.resolveWith(
+                    (Set<MaterialState> states) {
+                      if (goalFor == "Someone Else") {
+                        return iconBlue;
+                      }
+                      return borderGrey;
+                    },
+                  ),
+                  value: "Someone Else",
+                  focusColor: grey,
+                  groupValue: goalFor,
+                  onChanged: (value) {
+                    setState(() {
+                      goalFor = value;
+                      print("Button value: $value");
+                    });
                   },
                 ),
-                value: "Someone Else",
-                focusColor: grey,
-                groupValue: goalFor,
-                onChanged: (value) {
-                  setState(() {
-                    goalFor = value;
-                    print("Button value: $value");
-                  });
-                },
-              ),
-              Text(
-                "Someone Else",
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ]),
-            Row(children: [
-              Radio(
-                fillColor: MaterialStateColor.resolveWith(
-                  (Set<MaterialState> states) {
-                    if (goalFor == "For Group") {
-                      return iconBlue;
-                    }
-                    return borderGrey;
+                Text(
+                  "Someone Else",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ]),
+            if (isParticipant)
+              Row(children: [
+                Radio(
+                  fillColor: MaterialStateColor.resolveWith(
+                    (Set<MaterialState> states) {
+                      if (goalFor == "For Group") {
+                        return iconBlue;
+                      }
+                      return borderGrey;
+                    },
+                  ),
+                  value: 3,
+                  focusColor: grey,
+                  groupValue: "For Group",
+                  onChanged: (value) {
+                    setState(() {
+                      goalFor = value;
+                      print("Button value: $value");
+                    });
                   },
                 ),
-                value: 3,
-                focusColor: grey,
-                groupValue: "For Group",
-                onChanged: (value) {
-                  setState(() {
-                    goalFor = value;
-                    print("Button value: $value");
-                  });
-                },
-              ),
-              Text(
-                "For Group",
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ]),
+                Text(
+                  "For Group",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ]),
           ],
         ),
-        Container(
-          height: 40,
-          margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-          child: Row(children: [
-            Expanded(
-              child: Container(
-                height: 40,
-                padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
-                margin: EdgeInsets.only(right: 6),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(3)),
-                  border: Border.all(color: outlineGrey),
-                ),
-                child: TextField(
-                  controller: _nameController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: secondaryColor),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Name',
-                    hintStyle: GoogleFonts.poppins(
-                      color: secondaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+        if (isParticipant)
+          Container(
+            height: 40,
+            margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+            child: Row(children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
+                  margin: EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _nameController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Name',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                height: 40,
-                padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
-                margin: EdgeInsets.only(left: 6),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(3)),
-                  border: Border.all(color: outlineGrey),
-                ),
-                child: TextField(
-                  controller: _emailController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: secondaryColor),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Email',
-                    hintStyle: GoogleFonts.poppins(
-                      color: secondaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
+                  margin: EdgeInsets.only(left: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _emailController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Email',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: SvgPicture.asset(
-                    "lib/resources/images/create_goal_add.svg"))
-          ]),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 16, left: 20, right: 20),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Wrap(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedName = 0;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10, bottom: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: selectedName == 0
-                          ? interestSelected
-                          : interestNotSelected,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
+              Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: SvgPicture.asset(
+                      "lib/resources/images/create_goal_add.svg"))
+            ]),
+          ),
+        if (isParticipant)
+          Container(
+            margin: EdgeInsets.only(top: 16, left: 20, right: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Wrap(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedName = 0;
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, bottom: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: selectedName == 0
+                            ? interestSelected
+                            : interestNotSelected,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(
+                          "John",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: selectedName == 0
+                                  ? Colors.white
+                                  : secondaryColor),
+                        ),
+                        Container(
+                          height: 24,
+                          width: 12,
+                        ),
+                        selectedName == 0
+                            ? SvgPicture.asset(
+                                "lib/resources/images/interest_remove_selected.svg")
+                            : SvgPicture.asset(
+                                "lib/resources/images/interest_remove.svg")
+                      ]),
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(
-                        "John",
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: selectedName == 0
-                                ? Colors.white
-                                : secondaryColor),
-                      ),
-                      Container(
-                        height: 24,
-                        width: 12,
-                      ),
-                      selectedName == 0
-                          ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg")
-                          : SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
-                    ]),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedName = 1;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10, bottom: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: selectedName == 1
-                          ? interestSelected
-                          : interestNotSelected,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedName = 1;
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, bottom: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: selectedName == 1
+                            ? interestSelected
+                            : interestNotSelected,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(
+                          "Williams",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: selectedName == 1
+                                  ? Colors.white
+                                  : secondaryColor),
+                        ),
+                        Container(
+                          height: 24,
+                          width: 12,
+                        ),
+                        selectedName == 1
+                            ? SvgPicture.asset(
+                                "lib/resources/images/interest_remove_selected.svg")
+                            : SvgPicture.asset(
+                                "lib/resources/images/interest_remove.svg")
+                      ]),
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(
-                        "Williams",
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: selectedName == 1
-                                ? Colors.white
-                                : secondaryColor),
-                      ),
-                      Container(
-                        height: 24,
-                        width: 12,
-                      ),
-                      selectedName == 1
-                          ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg")
-                          : SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
-                    ]),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedName = 2;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10, bottom: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: selectedName == 2
-                          ? interestSelected
-                          : interestNotSelected,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedName = 2;
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, bottom: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: selectedName == 2
+                            ? interestSelected
+                            : interestNotSelected,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(
+                          "James",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: selectedName == 2
+                                  ? Colors.white
+                                  : secondaryColor),
+                        ),
+                        Container(
+                          height: 24,
+                          width: 12,
+                        ),
+                        selectedName == 2
+                            ? SvgPicture.asset(
+                                "lib/resources/images/interest_remove_selected.svg")
+                            : SvgPicture.asset(
+                                "lib/resources/images/interest_remove.svg")
+                      ]),
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(
-                        "James",
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: selectedName == 2
-                                ? Colors.white
-                                : secondaryColor),
-                      ),
-                      Container(
-                        height: 24,
-                        width: 12,
-                      ),
-                      selectedName == 2
-                          ? SvgPicture.asset(
-                              "lib/resources/images/interest_remove_selected.svg")
-                          : SvgPicture.asset(
-                              "lib/resources/images/interest_remove.svg")
-                    ]),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Divider(
@@ -1097,81 +1102,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           margin: EdgeInsets.only(left: 20, right: 20, top: 8),
           child: aboutMeWidget(),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 8, left: 20, right: 20),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Share your Goal to",
-              style: GoogleFonts.poppins(
-                color: blueGrey,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        ),
-        Row(
-          children: [
-            Row(children: [
-              Radio(
-                fillColor: MaterialStateColor.resolveWith(
-                  (Set<MaterialState> states) {
-                    if (shareGoalTo == "family") {
-                      return iconBlue;
-                    }
-                    return borderGrey;
-                  },
-                ),
-                value: "family",
-                groupValue: shareGoalTo,
-                onChanged: (value) {
-                  setState(() {
-                    shareGoalTo = value;
-                    print("Button value: $value");
-                  });
-                },
-              ),
-              Text(
-                "Family friends/Colleagues",
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ]),
-            Row(children: [
-              Radio(
-                fillColor: MaterialStateColor.resolveWith(
-                  (Set<MaterialState> states) {
-                    if (shareGoalTo == "reviewer") {
-                      return iconBlue;
-                    }
-                    return borderGrey;
-                  },
-                ),
-                value: "reviewer",
-                focusColor: grey,
-                groupValue: shareGoalTo,
-                onChanged: (value) {
-                  setState(() {
-                    shareGoalTo = value;
-                    print("Button value: $value");
-                  });
-                },
-              ),
-              Text(
-                "Reviewer",
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ]),
-          ],
-        ),
         Align(
           alignment: Alignment.centerRight,
           child: GestureDetector(
@@ -1410,6 +1340,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
     if (userMap["role_id"] == 1) {
+      isParticipant = true;
       areaResponse = await ApiService().getAchieverGoalAreas();
 
       setState(() {
