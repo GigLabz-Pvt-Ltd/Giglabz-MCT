@@ -445,7 +445,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 ),
               )
             ]),
-            if (isParticipant)
+            if (!isParticipant)
               Row(children: [
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
@@ -475,7 +475,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                 )
               ]),
-            if (isParticipant)
+            if (!isParticipant)
               Row(children: [
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
@@ -507,7 +507,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ]),
           ],
         ),
-        if (isParticipant)
+        if (!isParticipant)
           Container(
             height: 40,
             margin: EdgeInsets.only(top: 8, left: 20, right: 20),
@@ -572,7 +572,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                       "lib/resources/images/create_goal_add.svg"))
             ]),
           ),
-        if (isParticipant)
+        if (!isParticipant)
           Container(
             margin: EdgeInsets.only(top: 16, left: 20, right: 20),
             child: Align(
@@ -1340,10 +1340,10 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
     if (userMap["role_id"] == 1) {
-      isParticipant = true;
       areaResponse = await ApiService().getAchieverGoalAreas();
 
       setState(() {
+        isParticipant = true;
         areaResponse?.achiever.forEach((element) {
           goalTypeList.add(element.type);
         });
