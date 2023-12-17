@@ -103,7 +103,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         body: TabBarView(
           controller: _tabCont,
           children: [
-            GoalSummaryWidget(goalId: widget.goalId),
+            GoalSummaryWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
             GoalOutComesWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
             ShareGoalWidget(goalId: widget.goalId),
             Center(child: Text("Coming Soon...")),

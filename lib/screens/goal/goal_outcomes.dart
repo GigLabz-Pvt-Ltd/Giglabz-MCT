@@ -343,6 +343,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  setState(() {
+                        widget.updateTab(2);
+                      });
                 },
                 child: Container(
                     height: 40,

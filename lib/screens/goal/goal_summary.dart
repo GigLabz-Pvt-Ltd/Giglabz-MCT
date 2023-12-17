@@ -16,9 +16,11 @@ class GoalSummaryWidget extends StatefulWidget {
   GoalSummaryWidget({
     Key? key,
     required int this.goalId,
+    required Function this.updateTab,
   }) : super(key: key);
 
   int goalId;
+  Function updateTab;
 
   @override
   State<GoalSummaryWidget> createState() => _GoalSummaryWidgetState();
@@ -1308,6 +1310,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                   setState(() {
+                        widget.updateTab(1);
+                      });
                 },
                 child: Container(
                     height: 40,
