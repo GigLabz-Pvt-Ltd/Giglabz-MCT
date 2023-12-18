@@ -11,6 +11,7 @@ import 'package:mycareteam/screens/entry/login_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -1082,17 +1083,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   var res = await ApiService().emailVerify(
                       _emailController.text, code, _emailController.text);
                   if (res.responseStatus == 200) {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    bool result = await prefs.setString('isFirstTime', "true");
+
                     Navigator.pop(context);
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 const LoginScreen()),
                         (Route<dynamic> route) => false);
+
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Registration successfull...")));
+                        SnackBar(content: Text("Registration successful...")));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Registration not successfull...")));
+                        content: Text("Registration not successful...")));
                   }
                 },
                 child: Container(

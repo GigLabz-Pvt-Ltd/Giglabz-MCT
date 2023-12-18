@@ -8,6 +8,7 @@ import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
+import 'package:mycareteam/screens/home/profile_screen.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -452,14 +453,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             SnackBar(content: Text("Enter User Name")));
                         return;
                       }
-                       final bool emailValid = RegExp(
+                      final bool emailValid = RegExp(
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(_userNameController.text);
-                          if(!emailValid){
-                            ScaffoldMessenger.of(context).showSnackBar(
+                      if (!emailValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Invalid User Name")));
                         return;
-                          }
+                      }
                       if (_passwordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter Password")));
@@ -480,11 +481,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           };
                           bool result =
                               await prefs.setString('user', jsonEncode(user));
+                          String? isFirstTime = prefs.getString('isFirstTime');
 
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const HomeScreen()));
+                          if (isFirstTime == "true") {
+                            bool result =
+                                await prefs.setString('isFirstTime', "false");
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const ProfileScreen()));
+                          } else {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const HomeScreen()));
+                          }
                         }
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
