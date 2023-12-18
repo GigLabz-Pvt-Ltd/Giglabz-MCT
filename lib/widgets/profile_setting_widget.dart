@@ -1222,20 +1222,20 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         suffixIcon: "calendar"),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   showProviderOptions = !showProviderOptions;
-                    // });
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: CalendarOrDropDown(
-                        label: "Provider",
-                        hint: "Select Provider",
-                        suffixIcon: "dropdownArrow"),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     setState(() {
+                //       showProviderOptions = !showProviderOptions;
+                //     });
+                //   },
+                //   child: const Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 20),
+                //     child: CalendarOrDropDown(
+                //         label: "Provider",
+                //         hint: "Select Provider",
+                //         suffixIcon: "dropdownArrow"),
+                //   ),
+                // ),
                 if (showProviderOptions)
                   Container(
                     height: 150,
