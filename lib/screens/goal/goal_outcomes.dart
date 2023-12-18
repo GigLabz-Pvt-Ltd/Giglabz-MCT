@@ -201,6 +201,12 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
+                      _titleController.text = "";
+                      _descriptionController.text = "";
+                      selectedStartDate = null;
+                      selectedEndDate = null;
+                      selectedCelebration = "Yes";
+                      selectedPercent = "10%";
                       return addMilestoneDialog("");
                     });
               },
@@ -344,8 +350,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
-                        widget.updateTab(2);
-                      });
+                    widget.updateTab(2);
+                  });
                 },
                 child: Container(
                     height: 40,
@@ -440,8 +446,13 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               fontWeight: FontWeight.w500,
                               color: blueGrey),
                         ),
-                        SvgPicture.asset(
-                            "lib/resources/images/close_verify_otp.svg"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: SvgPicture.asset(
+                              "lib/resources/images/close_verify_otp.svg"),
+                        ),
                       ]),
                 ),
                 Divider(
@@ -841,7 +852,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               ),
             ),
             Text(
-              milestone?[index].celebrations ?? "SomeText",
+              milestone?[index].description ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 12,
