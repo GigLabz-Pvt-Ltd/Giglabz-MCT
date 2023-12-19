@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/entry/forgot_password_otp_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -113,22 +114,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  margin: const EdgeInsets.only(top: 32, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Submit",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const ForgotPasswordOtpScreen()));
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    margin: const EdgeInsets.only(top: 32, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Submit",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
