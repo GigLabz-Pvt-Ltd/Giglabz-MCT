@@ -1305,21 +1305,22 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               fontWeight: FontWeight.w400,
                               color: secondaryColor),
                         ),
-                        if(ndisStart == null || ndisEnd == null)
-                        Container(
-                          height: 2,
-                          width: 60,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          color: dividerGrey,
-                        ),
+                        if (ndisStart == null || ndisEnd == null)
+                          Container(
+                            height: 2,
+                            width: 24,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: dividerGrey,
+                          ),
+                        if (ndisStart != null && ndisEnd != null)
                           Text(
-                          ndisEnd!.difference(ndisStart!).inDays.toString(),
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: secondaryColor),
-                        ),
+                            ndisEnd!.difference(ndisStart!).inDays.toString(),
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          ),
                         Text(
                           " Days",
                           textAlign: TextAlign.left,
@@ -1847,7 +1848,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   getImage() {
     if (widget.user.participant.profilePic != null &&
         imgResponse?.statusCode == 200) {
-      return Image.network(widget.user.participant.profilePic!, fit: BoxFit.fill,);
+      return Image.network(
+        widget.user.participant.profilePic!,
+        fit: BoxFit.fill,
+      );
     } else {
       return Image.asset("lib/resources/images/place_holder.png");
     }
