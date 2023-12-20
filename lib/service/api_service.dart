@@ -5,6 +5,7 @@ import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/create_milestone.dart';
 import 'package:mycareteam/models/email_verify_response.dart';
+import 'package:mycareteam/models/forgot_password_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
@@ -297,5 +298,32 @@ class ApiService {
       print("Failure");
       return "Failure";
     }
+  }
+
+  Future<ForgotPasswordResponse> forgotPassword(String email) async {
+    final response = await post(Uri.parse("$BASE_URL/api/forgotpw"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "username": email,
+        }));
+    final activity = forgotPasswordResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<ForgotPasswordResponse> resetPassword(
+      String email, String password, String code) async {
+    final response = await post(Uri.parse("$BASE_URL/api/confirmfp"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "username": email,
+          "password": password,
+          "confirmationCode": code,
+        }));
+    final activity = forgotPasswordResponseApiFromJson(response.body);
+    return activity;
   }
 }

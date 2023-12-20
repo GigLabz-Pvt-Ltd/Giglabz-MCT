@@ -7,8 +7,9 @@ import 'package:mycareteam/screens/entry/forgot_password_reset_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 
 class ForgotPasswordOtpScreen extends StatefulWidget {
-  const ForgotPasswordOtpScreen({Key? key}) : super(key: key);
+   ForgotPasswordOtpScreen({Key? key, required this.email}) : super(key: key);
 
+String email;
   @override
   State<ForgotPasswordOtpScreen> createState() =>
       _ForgotPasswordOtpScreenState();
@@ -343,9 +344,20 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
+                    if (!otpFull) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Enter OTP...")));
+                      return;
+                    }
+                    var codeEntered = _1otpController.text +
+                      _2otpController.text +
+                      _3otpController.text +
+                      _4otpController.text +
+                      _5otpController.text +
+                      _6otpController.text;
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            const ForgotPasswordResetScreen()));
+                             ForgotPasswordResetScreen(email : widget.email, code: codeEntered)));
                   },
                   child: Container(
                     width: double.infinity,

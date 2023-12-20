@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/entry/forgot_password_otp_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
+import 'package:mycareteam/service/api_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController _emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextField(
+                      controller: _emailController,
                       style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -115,10 +119,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const ForgotPasswordOtpScreen()));
+                  onTap: () async {
+                    if (_emailController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Email can't be empty")));
+                      return;
+                    }
+                    final bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(_emailController.text);
+                    if (!emailValid) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Invalid Email")));
+                      return;
+                    }
+                    var res = await ApiService()
+                        .forgotPassword(_emailController.text);
+                    if (res.responseStatus == 200) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ForgotPasswordOtpScreen(
+                                  email: _emailController.text)));
+                    }
                   },
                   child: Container(
                     width: double.infinity,
