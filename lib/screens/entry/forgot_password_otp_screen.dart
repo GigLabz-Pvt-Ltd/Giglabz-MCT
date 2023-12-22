@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,11 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/entry/forgot_password_reset_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
+import 'package:mycareteam/service/api_service.dart';
 
 class ForgotPasswordOtpScreen extends StatefulWidget {
-   ForgotPasswordOtpScreen({Key? key, required this.email}) : super(key: key);
+  ForgotPasswordOtpScreen({Key? key, required this.email}) : super(key: key);
 
-String email;
+  String email;
   @override
   State<ForgotPasswordOtpScreen> createState() =>
       _ForgotPasswordOtpScreenState();
@@ -17,6 +20,8 @@ String email;
 
 class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
   var otpFull = false;
+  late Timer _timer;
+  int _start = 120;
 
   FocusNode fNode1 = FocusNode();
   FocusNode fNode2 = FocusNode();
@@ -31,6 +36,12 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
   final TextEditingController _4otpController = TextEditingController();
   final TextEditingController _5otpController = TextEditingController();
   final TextEditingController _6otpController = TextEditingController();
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +326,7 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                   margin: const EdgeInsets.only(top: 28),
                   child: Row(children: [
                     Text(
-                      "1.20",
+                      _start.toString(),
                       style: GoogleFonts.poppins(
                         color: blueGrey,
                         fontSize: 24,
@@ -331,13 +342,28 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                       ),
                     ),
                     Spacer(),
-                    Text(
-                      "Resend Otp",
-                      style: GoogleFonts.poppins(
-                        decoration: TextDecoration.underline,
-                        color: blueGrey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                    GestureDetector(
+                      onTap: () async {
+                        if (!_timer.isActive) {
+                          var res =
+                              await ApiService().forgotPassword(widget.email);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(res.responseMessage)));
+
+                          startTimer();
+                        }
+                      },
+                      child: Text(
+                        "Resend Otp",
+                        style: GoogleFonts.poppins(
+                          decoration: TextDecoration.underline,
+                          color: _timer.isActive
+                              ? blueGrey.withOpacity(0.4)
+                              : blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ]),
@@ -350,14 +376,15 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                       return;
                     }
                     var codeEntered = _1otpController.text +
-                      _2otpController.text +
-                      _3otpController.text +
-                      _4otpController.text +
-                      _5otpController.text +
-                      _6otpController.text;
+                        _2otpController.text +
+                        _3otpController.text +
+                        _4otpController.text +
+                        _5otpController.text +
+                        _6otpController.text;
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (BuildContext context) =>
-                             ForgotPasswordResetScreen(email : widget.email, code: codeEntered)));
+                            ForgotPasswordResetScreen(
+                                email: widget.email, code: codeEntered)));
                   },
                   child: Container(
                     width: double.infinity,
@@ -436,5 +463,24 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
         otpFull = true;
       });
     }
+  }
+
+  void startTimer() {
+    _start = 120;
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 }
