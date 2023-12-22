@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/profile_setting_widget.dart';
@@ -63,8 +64,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                     elevation: 1,
                     titleSpacing: 0,
                     leading: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
+                      onTap: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String? isFirstTime = prefs.getString('isFirstTime');
+
+                        if (isFirstTime == "true") {
+                          bool result =
+                              await prefs.setString('isFirstTime', "false");
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const HomeScreen()),
+                              (Route route) => false);
+                        } else {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Icon(
                         Icons.arrow_back_ios_new,

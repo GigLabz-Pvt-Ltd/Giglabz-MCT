@@ -481,15 +481,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           };
                           bool result =
                               await prefs.setString('user', jsonEncode(user));
+                          // var s = await prefs.setString("isFirstTime", "true");
                           String? isFirstTime = prefs.getString('isFirstTime');
 
                           if (isFirstTime == "true") {
-                            bool result =
-                                await prefs.setString('isFirstTime', "false");
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        const ProfileScreen()));
+                                        const ProfileScreen()),
+                                (Route route) => false);
                           } else {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
