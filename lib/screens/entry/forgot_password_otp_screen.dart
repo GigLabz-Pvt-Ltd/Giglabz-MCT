@@ -381,7 +381,7 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                         _4otpController.text +
                         _5otpController.text +
                         _6otpController.text;
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) =>
                             ForgotPasswordResetScreen(
                                 email: widget.email, code: codeEntered)));
