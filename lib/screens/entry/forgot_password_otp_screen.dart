@@ -90,7 +90,7 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                     Container(
                       margin: const EdgeInsets.only(top: 28),
                       child: Text(
-                        "A Four Digit code has been sent to your associated email address",
+                        "A six Digit code has been sent to your associated email address",
                         style: GoogleFonts.poppins(
                           color: blueGrey,
                           fontSize: 12,
