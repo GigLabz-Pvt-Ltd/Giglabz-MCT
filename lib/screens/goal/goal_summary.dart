@@ -1314,7 +1314,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
-                    widget.updateTab(1);
+                    widget.updateTab(1, selectedStartDate, selectedEndDate);
                   });
                 },
                 child: Container(

@@ -37,6 +37,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
 
   late final TabController _tabCont;
   var currentTab = 0;
+  var goalStartDate, goalEndDate;
 
   @override
   void initState() {
@@ -80,7 +81,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: () {
-                    updateSelectedTab(3);
+                    updateSelectedTab(3, null, null);
                   },
                   child: Text(
                     "Create Goal",
@@ -103,8 +104,13 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         body: TabBarView(
           controller: _tabCont,
           children: [
-            GoalSummaryWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
-            GoalOutComesWidget(goalId: widget.goalId, updateTab: updateSelectedTab),
+            GoalSummaryWidget(
+                goalId: widget.goalId, updateTab: updateSelectedTab),
+            GoalOutComesWidget(
+                goalId: widget.goalId,
+                updateTab: updateSelectedTab,
+                goalStart: goalStartDate,
+                goalEnd: goalEndDate),
             ShareGoalWidget(goalId: widget.goalId),
             Center(child: Text("Coming Soon...")),
           ],
@@ -113,7 +119,11 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
     );
   }
 
-  updateSelectedTab(int index){
+  updateSelectedTab(int index, DateTime? goalStartDate, DateTime? goalEndDate) {
+    setState(() {
+      this.goalStartDate = goalStartDate;
+      this.goalEndDate = goalEndDate;
+    });
     _tabCont.animateTo(index);
   }
 

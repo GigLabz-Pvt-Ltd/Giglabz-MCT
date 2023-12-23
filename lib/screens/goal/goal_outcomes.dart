@@ -17,10 +17,13 @@ class GoalOutComesWidget extends StatefulWidget {
     Key? key,
     required int this.goalId,
     required Function this.updateTab,
+    DateTime? this.goalStart,
+    DateTime? this.goalEnd,
   }) : super(key: key);
 
   int goalId;
   Function updateTab;
+  DateTime? goalStart, goalEnd;
   @override
   State<GoalOutComesWidget> createState() => _GoalSummaryWidgetState();
 }
@@ -275,8 +278,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      firstDate: widget.goalStart!,
+      lastDate: widget.goalEnd!,
     );
     if (picked != null && picked != selectedDob)
       setInnerState(() {
@@ -290,9 +293,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   selectEndDate(BuildContext context, Function setInnerState) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      initialDate: selectedStartDate!, // Refer step 1
+      firstDate: selectedStartDate ?? widget.goalStart! ,
+      lastDate: widget.goalEnd!,
     );
     setInnerState(() {
       // selectedStartDate = picked;
