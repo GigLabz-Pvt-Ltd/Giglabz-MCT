@@ -381,50 +381,51 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: Transform.scale(
-                              scale: 0.8,
-                              child: Checkbox(
-                                value: isRememberMe,
-                                onChanged: (bool? value) =>
-                                    setState(() => isRememberMe = value!),
-                                checkColor: Colors.white,
-                                fillColor:
-                                    MaterialStateProperty.resolveWith((states) {
-                                  if (!states
-                                      .contains(MaterialState.selected)) {
-                                    return Colors.transparent;
-                                  }
-                                  return primaryColor;
-                                }),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(2.0),
-                                ),
-                                side: MaterialStateBorderSide.resolveWith(
-                                  (states) => BorderSide(
-                                      width: 1.0,
-                                      color: isRememberMe
-                                          ? primaryColor
-                                          : secondaryColor),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Remember me",
-                            style: GoogleFonts.poppins(
-                              color: secondaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     SizedBox(
+                      //       height: 24,
+                      //       width: 24,
+                      //       child: Transform.scale(
+                      //         scale: 0.8,
+                      //         child: Checkbox(
+                      //           value: isRememberMe,
+                      //           onChanged: (bool? value) =>
+                      //               setState(() => isRememberMe = value!),
+                      //           checkColor: Colors.white,
+                      //           fillColor:
+                      //               MaterialStateProperty.resolveWith((states) {
+                      //             if (!states
+                      //                 .contains(MaterialState.selected)) {
+                      //               return Colors.transparent;
+                      //             }
+                      //             return primaryColor;
+                      //           }),
+                      //           shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(2.0),
+                      //           ),
+                      //           side: MaterialStateBorderSide.resolveWith(
+                      //             (states) => BorderSide(
+                      //                 width: 1.0,
+                      //                 color: isRememberMe
+                      //                     ? primaryColor
+                      //                     : secondaryColor),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       "Remember me",
+                      //       style: GoogleFonts.poppins(
+                      //         color: secondaryColor,
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w400,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      Spacer(),
                       GestureDetector(
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
