@@ -253,6 +253,9 @@ class _ForgotPasswordResetScreenState extends State<ForgotPasswordResetScreen> {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) =>
                               const LoginScreen()));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res.responseMessage)));
                     }
                   },
                   child: Container(

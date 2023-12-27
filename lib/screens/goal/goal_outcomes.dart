@@ -277,7 +277,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   selectStartDate(BuildContext context, Function setInnerState) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDob, // Refer step 1
+      initialDate: widget.goalStart!, // Refer step 1
       firstDate: widget.goalStart!,
       lastDate: widget.goalEnd!,
     );
