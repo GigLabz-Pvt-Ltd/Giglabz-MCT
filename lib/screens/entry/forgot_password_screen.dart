@@ -15,6 +15,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
+  var isClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -120,26 +121,39 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (_emailController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Email can't be empty")));
-                      return;
-                    }
-                    final bool emailValid = RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(_emailController.text);
-                    if (!emailValid) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Invalid Email")));
-                      return;
-                    }
-                    var res = await ApiService()
-                        .forgotPassword(_emailController.text);
-                    if (res.responseStatus == 200) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              ForgotPasswordOtpScreen(
-                                  email: _emailController.text)));
+                    if (!isClicked) {
+                      print("object");
+                      setState(() {
+                        isClicked = true;
+                      });
+                      if (_emailController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Email can't be empty")));
+                        return;
+                      }
+                      final bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(_emailController.text);
+                      if (!emailValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Invalid Email")));
+                        return;
+                      }
+                      var res = await ApiService()
+                          .forgotPassword(_emailController.text);
+                      if (res.responseStatus == 200) {
+                        setState(() {
+                          isClicked = false;
+                        });
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ForgotPasswordOtpScreen(
+                                    email: _emailController.text)));
+                      } else {
+                        setState(() {
+                          isClicked = false;
+                        });
+                      }
                     }
                   },
                   child: Container(
