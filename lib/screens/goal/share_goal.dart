@@ -283,14 +283,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
                 if (response.responseStatus == 200) {
                   print(response.responseMessage);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return okDialog("");
-                        });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(response.responseMessage)));
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return okDialog("");
+                      });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(response.responseMessage)));
                 }
               },
               child: Container(
@@ -984,9 +984,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     context: context,
                     builder: (BuildContext context) {
                       return addPeopleDialog(index.toString());
-                    }).then((value) => { 
-                      isBeingEdited = false
-                       });
+                    }).then((value) => {isBeingEdited = false});
               },
               child: SvgPicture.asset("lib/resources/images/edit_people.svg")),
           Container(
@@ -1837,12 +1835,34 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               flex: 1,
               child: Container(),
             ),
-            Text(
-              parametersToReview[index].frequency,
-              style: GoogleFonts.poppins(
-                color: iconBlue,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                alignment: Alignment.center,
+                icon: Visibility(
+                    visible: false, child: Icon(Icons.arrow_drop_down)),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    parametersToReview[index].frequency = newValue!;
+                  });
+                },
+                value: parametersToReview[index].frequency,
+                items: goalRecurring.map((String dropDownString) {
+                  return DropdownMenuItem<String>(
+                    value: dropDownString,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        dropDownString,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: iconBlue,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
             Container(

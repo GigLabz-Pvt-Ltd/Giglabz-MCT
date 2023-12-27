@@ -130,10 +130,10 @@ class ParametersToReview {
     required this.frequency,
     required this.proofOfProgress,
   });
-  late final int id;
-  late final String parameter;
-  late final String frequency;
-  late final String proofOfProgress;
+  late int id;
+  late String parameter;
+  late String frequency;
+  late String proofOfProgress;
   
   ParametersToReview.fromJson(Map<String, dynamic> json){
     id = json['id'];
