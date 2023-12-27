@@ -59,7 +59,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   final _customAreaController = TextEditingController();
   final _descriptionController = TextEditingController();
   bool isParticipant = false;
-
+  List<ForSomeoneElse> someoneElse = [];
+  var selectedSomeoneIndex = 0;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -509,7 +510,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ]),
           ],
         ),
-        if (!isParticipant)
+        if (!isParticipant && goalFor != "Self")
           Container(
             height: 40,
             margin: EdgeInsets.only(top: 8, left: 20, right: 20),
@@ -568,140 +569,149 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                 ),
               ),
-              Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: SvgPicture.asset(
-                      "lib/resources/images/create_goal_add.svg"))
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    someoneElse.add(ForSomeoneElse(
+                        name: _nameController.text,
+                        email: _emailController.text));
+                  });
+                },
+                child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: SvgPicture.asset(
+                        "lib/resources/images/create_goal_add.svg")),
+              )
             ]),
           ),
-        if (!isParticipant)
-          Container(
-            margin: EdgeInsets.only(top: 16, left: 20, right: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Wrap(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedName = 0;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10, bottom: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: selectedName == 0
-                            ? interestSelected
-                            : interestNotSelected,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(
-                          "John",
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: selectedName == 0
-                                  ? Colors.white
-                                  : secondaryColor),
-                        ),
-                        Container(
-                          height: 24,
-                          width: 12,
-                        ),
-                        selectedName == 0
-                            ? SvgPicture.asset(
-                                "lib/resources/images/interest_remove_selected.svg")
-                            : SvgPicture.asset(
-                                "lib/resources/images/interest_remove.svg")
-                      ]),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedName = 1;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10, bottom: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: selectedName == 1
-                            ? interestSelected
-                            : interestNotSelected,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(
-                          "Williams",
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: selectedName == 1
-                                  ? Colors.white
-                                  : secondaryColor),
-                        ),
-                        Container(
-                          height: 24,
-                          width: 12,
-                        ),
-                        selectedName == 1
-                            ? SvgPicture.asset(
-                                "lib/resources/images/interest_remove_selected.svg")
-                            : SvgPicture.asset(
-                                "lib/resources/images/interest_remove.svg")
-                      ]),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedName = 2;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10, bottom: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: selectedName == 2
-                            ? interestSelected
-                            : interestNotSelected,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(
-                          "James",
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: selectedName == 2
-                                  ? Colors.white
-                                  : secondaryColor),
-                        ),
-                        Container(
-                          height: 24,
-                          width: 12,
-                        ),
-                        selectedName == 2
-                            ? SvgPicture.asset(
-                                "lib/resources/images/interest_remove_selected.svg")
-                            : SvgPicture.asset(
-                                "lib/resources/images/interest_remove.svg")
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        if (!isParticipant && goalFor != "Self") selectInterestsLayout(),
+        // Container(
+        //   margin: EdgeInsets.only(top: 16, left: 20, right: 20),
+        //   child: Align(
+        //     alignment: Alignment.centerLeft,
+        //     child: Wrap(
+        //       children: [
+        //         GestureDetector(
+        //           onTap: () {
+        //             setState(() {
+        //               selectedName = 0;
+        //             });
+        //           },
+        //           child: Container(
+        //             margin: EdgeInsets.only(right: 10, bottom: 10),
+        //             padding: EdgeInsets.symmetric(horizontal: 8),
+        //             decoration: BoxDecoration(
+        //               color: selectedName == 0
+        //                   ? interestSelected
+        //                   : interestNotSelected,
+        //               borderRadius: const BorderRadius.all(
+        //                 Radius.circular(20),
+        //               ),
+        //             ),
+        //             child: Row(mainAxisSize: MainAxisSize.min, children: [
+        //               Text(
+        //                 "John",
+        //                 style: GoogleFonts.poppins(
+        //                     fontSize: 12,
+        //                     fontWeight: FontWeight.w400,
+        //                     color: selectedName == 0
+        //                         ? Colors.white
+        //                         : secondaryColor),
+        //               ),
+        //               Container(
+        //                 height: 24,
+        //                 width: 12,
+        //               ),
+        //               selectedName == 0
+        //                   ? SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove_selected.svg")
+        //                   : SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove.svg")
+        //             ]),
+        //           ),
+        //         ),
+        //         GestureDetector(
+        //           onTap: () {
+        //             setState(() {
+        //               selectedName = 1;
+        //             });
+        //           },
+        //           child: Container(
+        //             margin: EdgeInsets.only(right: 10, bottom: 10),
+        //             padding: EdgeInsets.symmetric(horizontal: 8),
+        //             decoration: BoxDecoration(
+        //               color: selectedName == 1
+        //                   ? interestSelected
+        //                   : interestNotSelected,
+        //               borderRadius: const BorderRadius.all(
+        //                 Radius.circular(20),
+        //               ),
+        //             ),
+        //             child: Row(mainAxisSize: MainAxisSize.min, children: [
+        //               Text(
+        //                 "Williams",
+        //                 style: GoogleFonts.poppins(
+        //                     fontSize: 12,
+        //                     fontWeight: FontWeight.w400,
+        //                     color: selectedName == 1
+        //                         ? Colors.white
+        //                         : secondaryColor),
+        //               ),
+        //               Container(
+        //                 height: 24,
+        //                 width: 12,
+        //               ),
+        //               selectedName == 1
+        //                   ? SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove_selected.svg")
+        //                   : SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove.svg")
+        //             ]),
+        //           ),
+        //         ),
+        //         GestureDetector(
+        //           onTap: () {
+        //             setState(() {
+        //               selectedName = 2;
+        //             });
+        //           },
+        //           child: Container(
+        //             margin: EdgeInsets.only(right: 10, bottom: 10),
+        //             padding: EdgeInsets.symmetric(horizontal: 8),
+        //             decoration: BoxDecoration(
+        //               color: selectedName == 2
+        //                   ? interestSelected
+        //                   : interestNotSelected,
+        //               borderRadius: const BorderRadius.all(
+        //                 Radius.circular(20),
+        //               ),
+        //             ),
+        //             child: Row(mainAxisSize: MainAxisSize.min, children: [
+        //               Text(
+        //                 "James",
+        //                 style: GoogleFonts.poppins(
+        //                     fontSize: 12,
+        //                     fontWeight: FontWeight.w400,
+        //                     color: selectedName == 2
+        //                         ? Colors.white
+        //                         : secondaryColor),
+        //               ),
+        //               Container(
+        //                 height: 24,
+        //                 width: 12,
+        //               ),
+        //               selectedName == 2
+        //                   ? SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove_selected.svg")
+        //                   : SvgPicture.asset(
+        //                       "lib/resources/images/interest_remove.svg")
+        //             ]),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Divider(
@@ -1111,9 +1121,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           alignment: Alignment.centerRight,
           child: GestureDetector(
             onTap: () async {
-              List<ForSomeoneElse> someoneElse = [];
-              someoneElse.add(ForSomeoneElse(
-                  name: _nameController.text, email: _emailController.text));
               if (_titleController.text == "") {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
@@ -1424,7 +1431,80 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     });
   }
 
+  selectInterestsLayout() {
+    return Container(
+      width: double.infinity,
+      // margin: const EdgeInsets.only(top: 20, left: 0, right: 0),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+      // decoration: BoxDecoration(
+      //   border: Border.all(width: 1, color: outlineGrey),
+      //   borderRadius: const BorderRadius.all(
+      //     Radius.circular(3),
+      //   ),
+      // ),
+      child: Wrap(children: interestItems()),
+    );
+  }
+
+  List<Widget> interestItems() {
+    List<Widget> items = [];
+    someoneElse.asMap().forEach((index, element) {
+      items.add(Container(
+        margin: EdgeInsets.only(right: 10, bottom: 10),
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: selectedSomeoneIndex == index
+              ? interestSelected
+              : interestNotSelected,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedSomeoneIndex = index;
+              });
+            },
+            child: Text(
+              element.name,
+              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: selectedSomeoneIndex == index
+                      ? Colors.white
+                      : secondaryColor),
+            ),
+          ),
+          Container(
+            height: 24,
+            width: 12,
+          ),
+          selectedSomeoneIndex == index
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      someoneElse.removeAt(index);
+                    });
+                  },
+                  child: SvgPicture.asset(
+                      "lib/resources/images/interest_remove_selected.svg"),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      someoneElse.removeAt(index);
+                    });
+                  },
+                  child: SvgPicture.asset(
+                      "lib/resources/images/interest_remove.svg"))
+        ]),
+      ));
+    });
+    return items;
+  }
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
