@@ -287,6 +287,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
       });
     setState(() {
       selectedStartDate = picked;
+      selectedEndDate = null;
     });
   }
 
@@ -294,7 +295,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedStartDate!, // Refer step 1
-      firstDate: selectedStartDate ?? widget.goalStart! ,
+      firstDate: selectedStartDate ?? widget.goalStart!,
       lastDate: widget.goalEnd!,
     );
     setInnerState(() {
@@ -563,12 +564,11 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        if(widget.goalStart != null){
-                        selectStartDate(context, setState);
-                        }
-                        else{
-                            ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Save goal summary")));
+                        if (widget.goalStart != null) {
+                          selectStartDate(context, setState);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Save goal summary")));
                         }
                       },
                       child: Container(
@@ -614,11 +614,11 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        if(selectedStartDate != null){
-                        selectEndDate(context, setState);
-                        }else {
-                            ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Select start date")));
+                        if (selectedStartDate != null) {
+                          selectEndDate(context, setState);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Select start date")));
                         }
                       },
                       child: Container(

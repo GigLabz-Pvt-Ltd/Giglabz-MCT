@@ -1129,7 +1129,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
                 return;
               }
-              if (selectedStartDate == null &&
+              if (selectedStartDate == null ||
                   selectedEndDate == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Enter start Date and End Date")));
@@ -1223,6 +1223,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     if (picked != null && picked != selectedDob)
       setState(() {
         selectedStartDate = picked;
+        selectedEndDate = null;
       });
   }
 
