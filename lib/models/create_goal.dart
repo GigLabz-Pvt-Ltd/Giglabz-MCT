@@ -12,9 +12,9 @@ class CreateGoal {
     this.areaCustom,
     required this.goalFor,
     this.forSomeoneElse,
-    required this.recurring,
-    required this.startDate,
-    required this.targetDate,
+    this.recurring,
+    this.startDate,
+    this.targetDate,
     required this.description,
   });
   late final String title;
@@ -23,9 +23,9 @@ class CreateGoal {
   late final String? areaCustom;
   late final String goalFor;
   late final List<ForSomeoneElse>? forSomeoneElse;
-  late final String recurring;
-  late final String startDate;
-  late final String targetDate;
+  late final String? recurring;
+  late final String? startDate;
+  late final String? targetDate;
   late final String description;
 
   CreateGoal.fromJson(Map<String, dynamic> json) {

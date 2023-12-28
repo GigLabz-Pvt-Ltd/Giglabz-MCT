@@ -839,7 +839,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
             ]),
           ),
-        if (goalType == "Recurring")
           Row(children: [
             Expanded(
               child: GestureDetector(
@@ -887,7 +886,12 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
             Expanded(
               child: GestureDetector(
                 onTap: () {
+                  if(selectedStartDate != null){
                   selectEndDate(context);
+                  }else{
+                      ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Select start date")));
+                  }
                 },
                 child: Container(
                   height: 50,
@@ -928,7 +932,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
             ),
           ]),
-        if (goalType == "Recurring")
           Container(
             height: 50,
             margin: EdgeInsets.only(left: 20, right: 20, top: 12),
@@ -1126,7 +1129,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
                 return;
               }
-              if (selectedStartDate == null && selectedEndDate == null) {
+              if (selectedStartDate == null &&
+                  selectedEndDate == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Enter start Date and End Date")));
                 return;
@@ -1144,15 +1148,18 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                       : null,
                   areaCustom: goalArea == 2 ? _customAreaController.text : null,
                   goalFor: goalFor.toString(),
-                  forSomeoneElse:
-                      goalFor == "Someone Else" ? someoneElse : null,
-                  recurring: selectedRecurring,
+                  forSomeoneElse: someoneElse,
+                  recurring: goalType == "Recurring" ? selectedRecurring : null,
                   startDate:
                       "${selectedStartDate!.day}/${selectedStartDate!.month}/${selectedStartDate!.year}",
                   targetDate:
                       "${selectedEndDate!.day}/${selectedEndDate!.month}/${selectedEndDate!.year}",
                   description: _descriptionController.text);
 
+              print("goal : " +
+                  createGoalApiToJson(goal) +
+                  "id : " +
+                  widget.goalId.toString());
               CreateGoalResponse response =
                   await ApiService().createGoal(widget.goalId, goal);
 
@@ -1222,8 +1229,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   selectEndDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(1900),
+      initialDate: selectedStartDate!, // Refer step 1
+      firstDate: selectedStartDate!,
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDob)

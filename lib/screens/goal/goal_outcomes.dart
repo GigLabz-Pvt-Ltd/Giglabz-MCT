@@ -563,7 +563,13 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
+                        if(widget.goalStart != null){
                         selectStartDate(context, setState);
+                        }
+                        else{
+                            ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Save goal summary")));
+                        }
                       },
                       child: Container(
                         height: 50,
@@ -608,7 +614,12 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
+                        if(selectedStartDate != null){
                         selectEndDate(context, setState);
+                        }else {
+                            ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Select start date")));
+                        }
                       },
                       child: Container(
                         height: 50,
