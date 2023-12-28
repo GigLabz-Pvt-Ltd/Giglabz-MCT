@@ -362,6 +362,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);                  
                 },
                 child: Container(
                     height: 40,
