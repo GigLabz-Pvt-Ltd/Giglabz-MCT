@@ -186,9 +186,9 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
           GestureDetector(
             onTap: () {
               if (selectedOption == 0) {
-                if (people.length >= 4) {
+                if (people.length >= 3) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("4 People is maximum")));
+                      SnackBar(content: Text("3 People is maximum")));
                   return;
                 }
                 resetPeopleFields();
@@ -215,9 +215,9 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                 padding: EdgeInsets.only(top: 14, right: 20),
                 child: Row(
                   children: [
-                    if (selectedOption == 0 && people.length < 4)
+                    if (selectedOption == 0 && people.length < 3)
                       SvgPicture.asset("lib/resources/images/add_people.svg"),
-                    if (selectedOption == 0 && people.length == 4)
+                    if (selectedOption == 0 && people.length == 3)
                       SvgPicture.asset(
                           "lib/resources/images/add_people_disabled.svg"),
                     if (selectedOption == 1 && reviewer.isEmpty)
