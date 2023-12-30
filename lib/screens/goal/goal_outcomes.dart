@@ -166,7 +166,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         selectedOption = int.parse(value.toString());
                         print("Button value: $value");
                         milestone.clear();
-                        widget.updateTab(2);
+                        widget.updateTab(2, null, null);
                       });
                     },
                   ),
@@ -354,7 +354,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
-                    widget.updateTab(2);
+                    widget.updateTab(2, null, null);
                   });
                 },
                 child: Container(
