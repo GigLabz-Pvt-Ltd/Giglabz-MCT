@@ -91,7 +91,7 @@ class Participant {
   late final List<Providers>? providers;
   late final String? roleName;
   late final String? lastLoggedin;
-  late final List<dynamic>? interests;
+  late final List<Interests>? interests;
   late final String? ndisStartDate;
   late final String? ndisEndDate;
   late final int? ndisAgreement;
@@ -120,7 +120,7 @@ class Participant {
     providers = json['providers'] != null ? List?.from(json?['providers']).map((e)=>Providers?.fromJson(e)).toList() : null;
     roleName = json['roleName'];
     lastLoggedin = json['lastLoggedin'];
-    interests = List.castFrom<dynamic, dynamic>(json['interests']);
+    interests = List.from(json['interests']).map((e)=>Interests.fromJson(e)).toList();
     ndisStartDate = json['ndisStartDate'];
     ndisEndDate = json['ndisEndDate'];
     ndisAgreement = json['ndisAgreement'];
@@ -151,7 +151,7 @@ class Participant {
     _data['providers'] = providers?.map((e)=>e?.toJson()).toList();
     _data['roleName'] = roleName;
     _data['lastLoggedin'] = lastLoggedin;
-    _data['interests'] = interests;
+    _data['interests'] = interests?.map((e)=>e.toJson()).toList();
     _data['ndisStartDate'] = ndisStartDate;
     _data['ndisEndDate'] = ndisEndDate;
     _data['ndisAgreement'] = ndisAgreement;
@@ -178,6 +178,27 @@ class Providers {
     final _data = <String, dynamic>{};
     _data['providerName'] = providerName;
     _data['providerId'] = providerId;
+    return _data;
+  }
+}
+
+class Interests {
+  Interests({
+    required this.id,
+    required this.name,
+  });
+  late final int id;
+  late final String name;
+  
+  Interests.fromJson(Map<String, dynamic> json){
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['name'] = name;
     return _data;
   }
 }

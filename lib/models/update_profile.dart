@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:mycareteam/models/get_profile_response.dart';
+
 UpdateProfile getUpdateProfileApiFromJson(String str) => UpdateProfile.fromJson(json.decode(str));
 String getUpdateProfileApiToJson(UpdateProfile data) => json.encode(data.toJson());
 
@@ -42,7 +44,7 @@ class UpdateParticipant {
     this.ndisStartDate,
     this.ndisEndDate,
     required this.providers,
-    required this.interests,
+    this.interests,
   });
   late final String firstName;
   late final String lastName;
@@ -60,7 +62,7 @@ class UpdateParticipant {
   late final String? ndisStartDate;
   late final String? ndisEndDate;
   late final List<int> providers;
-  late final List<dynamic> interests;
+  late final List<Interests>? interests;
   
   UpdateParticipant.fromJson(Map<String, dynamic> json){
     firstName = json['firstName'];
@@ -79,7 +81,7 @@ class UpdateParticipant {
     ndisStartDate = json['ndisStartDate'];
     ndisEndDate = json['ndisEndDate'];
     providers = List.castFrom<dynamic, int>(json['providers']);
-    interests = List.castFrom<dynamic, dynamic>(json['interests']);
+    interests = List.from(json['interests']).map((e)=>Interests.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +102,7 @@ class UpdateParticipant {
     _data['ndisStartDate'] = ndisStartDate;
     _data['ndisEndDate'] = ndisEndDate;
     _data['providers'] = providers;
-    _data['interests'] = interests;
+    _data['interests'] = interests?.map((e)=>e.toJson()).toList();
     return _data;
   }
 }

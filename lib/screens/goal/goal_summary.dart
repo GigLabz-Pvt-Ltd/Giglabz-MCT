@@ -571,11 +571,19 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    someoneElse.add(ForSomeoneElse(
-                        name: _nameController.text,
-                        email: _emailController.text));
-                  });
+                  final bool emailValid = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                      .hasMatch(_emailController.text);
+                  if (emailValid) {
+                    setState(() {
+                      someoneElse.add(ForSomeoneElse(
+                          name: _nameController.text,
+                          email: _emailController.text));
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Email not valid")));
+                  }
                 },
                 child: Padding(
                     padding: EdgeInsets.only(left: 10),
@@ -839,263 +847,263 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
             ]),
           ),
-          Row(children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  selectStartDate(context);
-                },
-                child: Container(
-                  height: 50,
-                  margin: EdgeInsets.only(top: 12, left: 20, right: 6),
-                  padding: EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: Stack(children: [
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: SvgPicture.asset(
-                            "lib/resources/images/calendar.svg")),
-                    Container(
-                        height: 50,
-                        width: double.infinity,
-                        // color: Colors.amber,
-                        padding: const EdgeInsets.only(top: 0, left: 10),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              selectedStartDate != null
-                                  ? selectedStartDate!.day.toString() +
-                                      "/" +
-                                      selectedStartDate!.month.toString() +
-                                      "/" +
-                                      selectedStartDate!.year.toString()
-                                  : "Start Date",
-                              style: GoogleFonts.poppins(
-                                color: secondaryColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ))),
-                  ]),
+        Row(children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                selectStartDate(context);
+              },
+              child: Container(
+                height: 50,
+                margin: EdgeInsets.only(top: 12, left: 20, right: 6),
+                padding: EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
                 ),
+                child: Stack(children: [
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: SvgPicture.asset(
+                          "lib/resources/images/calendar.svg")),
+                  Container(
+                      height: 50,
+                      width: double.infinity,
+                      // color: Colors.amber,
+                      padding: const EdgeInsets.only(top: 0, left: 10),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            selectedStartDate != null
+                                ? selectedStartDate!.day.toString() +
+                                    "/" +
+                                    selectedStartDate!.month.toString() +
+                                    "/" +
+                                    selectedStartDate!.year.toString()
+                                : "Start Date",
+                            style: GoogleFonts.poppins(
+                              color: secondaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ))),
+                ]),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                if (selectedStartDate != null) {
+                  selectEndDate(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Select start date")));
+                }
+              },
+              child: Container(
+                height: 50,
+                margin: EdgeInsets.only(top: 12, left: 6, right: 20),
+                padding: EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
+                ),
+                child: Stack(children: [
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: SvgPicture.asset(
+                          "lib/resources/images/calendar.svg")),
+                  Container(
+                      height: 50,
+                      width: double.infinity,
+                      // color: Colors.amber,
+                      padding: const EdgeInsets.only(top: 0, left: 10),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            selectedEndDate != null
+                                ? selectedEndDate!.day.toString() +
+                                    "/" +
+                                    selectedEndDate!.month.toString() +
+                                    "/" +
+                                    selectedEndDate!.year.toString()
+                                : "End Date",
+                            style: GoogleFonts.poppins(
+                              color: secondaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ))),
+                ]),
+              ),
+            ),
+          ),
+        ]),
+        Container(
+          height: 50,
+          margin: EdgeInsets.only(left: 20, right: 20, top: 12),
+          child: Row(children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(right: 6),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
+                ),
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                startSelectedHours = newValue!;
+                              });
+                            },
+                            value: startSelectedHours,
+                            items: hours.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                startSelectedMinutes = newValue!;
+                              });
+                            },
+                            value: startSelectedMinutes,
+                            items: minutes.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
               ),
             ),
             Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  if(selectedStartDate != null){
-                  selectEndDate(context);
-                  }else{
-                      ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Select start date")));
-                  }
-                },
-                child: Container(
-                  height: 50,
-                  margin: EdgeInsets.only(top: 12, left: 6, right: 20),
-                  padding: EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: Stack(children: [
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: SvgPicture.asset(
-                            "lib/resources/images/calendar.svg")),
-                    Container(
-                        height: 50,
-                        width: double.infinity,
-                        // color: Colors.amber,
-                        padding: const EdgeInsets.only(top: 0, left: 10),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              selectedEndDate != null
-                                  ? selectedEndDate!.day.toString() +
-                                      "/" +
-                                      selectedEndDate!.month.toString() +
-                                      "/" +
-                                      selectedEndDate!.year.toString()
-                                  : "End Date",
-                              style: GoogleFonts.poppins(
-                                color: secondaryColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ))),
-                  ]),
+              child: Container(
+                margin: EdgeInsets.only(left: 6),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  border: Border.all(color: outlineGrey),
                 ),
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                endSelectedHours = newValue!;
+                              });
+                            },
+                            value: endSelectedHours,
+                            items: hours.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.only(left: 6),
+                      child: Row(children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: SvgPicture.asset(
+                                "lib/resources/images/time_dropdown_arrow.svg"),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                endSelectedMinutes = newValue!;
+                              });
+                            },
+                            value: endSelectedMinutes,
+                            items: minutes.map((String dropDownString) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownString,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Text(
+                                    dropDownString,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(color: secondaryColor),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ]),
               ),
             ),
           ]),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(left: 20, right: 20, top: 12),
-            child: Row(children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(right: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: Row(children: [
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 6),
-                        child: Row(children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: SvgPicture.asset(
-                                  "lib/resources/images/time_dropdown_arrow.svg"),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  startSelectedHours = newValue!;
-                                });
-                              },
-                              value: startSelectedHours,
-                              items: hours.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 6),
-                        child: Row(children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: SvgPicture.asset(
-                                  "lib/resources/images/time_dropdown_arrow.svg"),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  startSelectedMinutes = newValue!;
-                                });
-                              },
-                              value: startSelectedMinutes,
-                              items: minutes.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    border: Border.all(color: outlineGrey),
-                  ),
-                  child: Row(children: [
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 6),
-                        child: Row(children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: SvgPicture.asset(
-                                  "lib/resources/images/time_dropdown_arrow.svg"),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  endSelectedHours = newValue!;
-                                });
-                              },
-                              value: endSelectedHours,
-                              items: hours.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 6),
-                        child: Row(children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: SvgPicture.asset(
-                                  "lib/resources/images/time_dropdown_arrow.svg"),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  endSelectedMinutes = newValue!;
-                                });
-                              },
-                              value: endSelectedMinutes,
-                              items: minutes.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ]),
-          ),
+        ),
         Padding(
           padding: EdgeInsets.only(top: 20, bottom: 10),
           child: Divider(
@@ -1129,8 +1137,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
                 return;
               }
-              if (selectedStartDate == null ||
-                  selectedEndDate == null) {
+              if (selectedStartDate == null || selectedEndDate == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Enter start Date and End Date")));
                 return;
@@ -1461,9 +1468,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         margin: EdgeInsets.only(right: 10, bottom: 10),
         padding: EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          color: selectedSomeoneIndex == index
-              ? interestSelected
-              : interestNotSelected,
+          color: interestNotSelected,
           borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
@@ -1480,33 +1485,21 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: selectedSomeoneIndex == index
-                      ? Colors.white
-                      : secondaryColor),
+                  color: secondaryColor),
             ),
           ),
           Container(
             height: 24,
             width: 12,
           ),
-          selectedSomeoneIndex == index
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      someoneElse.removeAt(index);
-                    });
-                  },
-                  child: SvgPicture.asset(
-                      "lib/resources/images/interest_remove_selected.svg"),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      someoneElse.removeAt(index);
-                    });
-                  },
-                  child: SvgPicture.asset(
-                      "lib/resources/images/interest_remove.svg"))
+          GestureDetector(
+              onTap: () {
+                setState(() {
+                  someoneElse.removeAt(index);
+                });
+              },
+              child:
+                  SvgPicture.asset("lib/resources/images/interest_remove.svg"))
         ]),
       ));
     });

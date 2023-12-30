@@ -455,7 +455,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
                       final bool emailValid = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
                           .hasMatch(_userNameController.text);
                       if (!emailValid) {
                         ScaffoldMessenger.of(context).showSnackBar(

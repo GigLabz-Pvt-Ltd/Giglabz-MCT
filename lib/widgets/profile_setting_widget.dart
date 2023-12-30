@@ -67,7 +67,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   GetProvidersResponse? providers;
   List<String>? areas = [];
   List<String> pincodes = [];
-  List<String> interests = ["Health", "Sports", "Education", "Engineering"];
+  List<Interests>? interests = [];
   int selectedInterestIndex = 0;
   bool ndisFilled = false;
   var selectedInterest = 0;
@@ -371,7 +371,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       onTap: () {
                         setState(() {
                           if (_otherInterestController.text != "") {
-                            interests.add(_otherInterestController.text);
+                            interests?.add(Interests(
+                                id: 1, name: _otherInterestController.text));
                           }
                         });
                       },
@@ -986,7 +987,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                       "/" +
                                       ndisEnd!.year.toString(),
                                   providers: [310, 364],
-                                  interests: []);
+                                  interests: interests);
                               UpdateProfile profile =
                                   UpdateProfile(participant: mParticipant);
                               updateProfile(profile);
@@ -1801,6 +1802,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     _lastNameController.text = widget.user.participant.lastName!;
     _phoneNumController.text = widget.user.participant.phone!;
     _emailController.text = widget.user.participant.email!;
+    interests = widget.user.participant.interests;
     if (widget.user.participant.dateOfBirth != null) {
       selectedDob =
           DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
@@ -1937,14 +1939,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
 
   List<Widget> interestItems() {
     List<Widget> items = [];
-    interests.asMap().forEach((index, element) {
+    interests?.asMap().forEach((index, element) {
       items.add(Container(
         margin: EdgeInsets.only(right: 10, bottom: 10),
         padding: EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          color: selectedInterestIndex == index
-              ? interestSelected
-              : interestNotSelected,
+          color: interestNotSelected,
           borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
@@ -1957,37 +1957,25 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               });
             },
             child: Text(
-              element,
+              element.name,
               style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: selectedInterestIndex == index
-                      ? Colors.white
-                      : secondaryColor),
+                  color: secondaryColor),
             ),
           ),
           Container(
             height: 24,
             width: 12,
           ),
-          selectedInterestIndex == index
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      interests.removeAt(index);
-                    });
-                  },
-                  child: SvgPicture.asset(
-                      "lib/resources/images/interest_remove_selected.svg"),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      interests.removeAt(index);
-                    });
-                  },
-                  child: SvgPicture.asset(
-                      "lib/resources/images/interest_remove.svg"))
+          GestureDetector(
+              onTap: () {
+                setState(() {
+                  interests?.removeAt(index);
+                });
+              },
+              child:
+                  SvgPicture.asset("lib/resources/images/interest_remove.svg"))
         ]),
       ));
     });
