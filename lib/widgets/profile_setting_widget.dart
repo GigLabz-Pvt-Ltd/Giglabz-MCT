@@ -373,6 +373,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           if (_otherInterestController.text != "") {
                             interests?.add(Interests(
                                 id: 1, name: _otherInterestController.text));
+                                _otherInterestController.text = "";
                           }
                         });
                       },
