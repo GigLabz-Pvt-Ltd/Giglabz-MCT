@@ -186,6 +186,11 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
           GestureDetector(
             onTap: () {
               if (selectedOption == 0) {
+                if (people.length >= 4) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("4 People is maximum")));
+                  return;
+                }
                 resetPeopleFields();
                 showDialog(
                     context: context,
@@ -194,6 +199,11 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     });
               }
               if (selectedOption == 1) {
+                if(reviewer.isNotEmpty){
+                   ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("1 Reviewer is maximum")));
+                  return;
+                }
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -362,7 +372,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pop(context);                  
+                  Navigator.pop(context);
                 },
                 child: Container(
                     height: 40,
