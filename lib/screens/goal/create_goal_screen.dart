@@ -81,7 +81,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: () {
-                    updateSelectedTab(3, null, null);
+                    // updateSelectedTab(3, null, null);
                   },
                   child: Text(
                     "Create Goal",

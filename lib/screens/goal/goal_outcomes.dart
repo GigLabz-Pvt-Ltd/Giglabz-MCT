@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/create_milestone.dart';
@@ -47,6 +48,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   List<Milestone> milestone = [];
+  bool isBeingEdited = false;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +168,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         selectedOption = int.parse(value.toString());
                         print("Button value: $value");
                         milestone.clear();
-                        widget.updateTab(2, null, null);
+                        widget.updateTab(2, widget.goalStart, widget.goalEnd);
                       });
                     },
                   ),
@@ -210,7 +212,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       selectedEndDate = null;
                       selectedCelebration = "Yes";
                       selectedPercent = "10%";
-                      return addMilestoneDialog("");
+                      return addMilestoneDialog(-1);
                     });
               },
               child: Padding(
@@ -354,7 +356,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
-                    widget.updateTab(2, null, null);
+                    widget.updateTab(2, widget.goalStart, widget.goalEnd);
                   });
                 },
                 child: Container(
@@ -424,7 +426,18 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
     ]);
   }
 
-  StatefulWidget addMilestoneDialog(String fromDialog) {
+  setCurrentMileValues(int index) {
+    _titleController.text = milestone[index].name;
+    _descriptionController.text = milestone[index].description;
+    selectedStartDate =
+        DateFormat("dd/MM/yyyy").parse(milestone[index].startDate);
+    selectedEndDate =
+        DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate);
+    selectedCelebration = milestone[index].celebrations;
+    selectedPercent = milestone[index].progress+"%";
+  }
+
+  StatefulWidget addMilestoneDialog(int indx) {
     return StatefulBuilder(builder: (context, StateSetter setState) {
       return Dialog(
         child: Container(
@@ -803,18 +816,33 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                           SnackBar(content: Text("Select Start and End date")));
                       return;
                     }
-                    milestone.add(Milestone(
-                        name: _titleController.text,
-                        description: _descriptionController.text,
-                        startDate:
-                            "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
-                        targetDate:
-                            "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
-                        celebrations: selectedCelebration,
-                        progress: selectedPercent.substring(
-                            0, selectedPercent.length - 1),
-                        value: false,
-                        action: 1));
+                    if (isBeingEdited) {
+                      milestone[indx] = Milestone(
+                          name: _titleController.text,
+                          description: _descriptionController.text,
+                          startDate:
+                              "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
+                          targetDate:
+                              "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
+                          celebrations: selectedCelebration,
+                          progress: selectedPercent.substring(
+                              0, selectedPercent.length - 1),
+                          value: false,
+                          action: 1);
+                    } else {
+                      milestone.add(Milestone(
+                          name: _titleController.text,
+                          description: _descriptionController.text,
+                          startDate:
+                              "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
+                          targetDate:
+                              "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
+                          celebrations: selectedCelebration,
+                          progress: selectedPercent.substring(
+                              0, selectedPercent.length - 1),
+                          value: false,
+                          action: 1));
+                    }
                     update();
                     Navigator.pop(context);
                   },
@@ -875,6 +903,20 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
             ),
           ]),
           Spacer(),
+          GestureDetector(
+              onTap: () {
+                isBeingEdited = true;
+                setCurrentMileValues(index);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addMilestoneDialog(index);
+                    }).then((value) => {isBeingEdited = false});
+              },
+              child: SvgPicture.asset("lib/resources/images/edit_people.svg")),
+          SizedBox(
+            width: 18,
+          ),
           GestureDetector(
               onTap: () {
                 milestone.removeAt(index);
