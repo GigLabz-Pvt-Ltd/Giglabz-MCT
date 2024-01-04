@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 14,
                               color: Color(0xff638381)),
                         ),
-                      if (goalCount == 0)
+                      if (tcAgreed && goalCount == 0)
                         GestureDetector(
                           onTap: () {
                             getGoalId();
@@ -1091,14 +1091,6 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-
-    if (!tcAgreed) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text("Please complete profile and agree term and conditions")));
-      return;
-    }
-
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
