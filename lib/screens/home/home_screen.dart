@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   int isGoalClicked = -1;
-  var goal_id, name;
+  var goal_id, name, tcAgreed = false;
   DashboardResponse? dashboard;
   int? goalCount;
   List<PopupMenuEntry<dynamic>> menuItems = [
@@ -1092,6 +1092,13 @@ class _HomeScreenState extends State<HomeScreen> {
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
+    if (!tcAgreed) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text("Please complete profile and agree term and conditions")));
+      return;
+    }
+
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
@@ -1113,6 +1120,12 @@ class _HomeScreenState extends State<HomeScreen> {
           dashboard = mDashboard;
           goalCount = mDashboard.goalList.length;
           name = "Hey, " + mProfile.participant.firstName! + " 👋";
+          if (mProfile.participant.ndisAgreement == 1 &&
+              mProfile.participant.ndisTc == 1) {
+            tcAgreed = true;
+          } else {
+            tcAgreed = false;
+          }
         });
       });
     } else {
@@ -1135,6 +1148,12 @@ class _HomeScreenState extends State<HomeScreen> {
       dashboard = mDashboard;
       goalCount = mDashboard.goalList.length;
       name = "Hey, " + mProfile.participant.firstName! + " 👋";
+      if (mProfile.participant.ndisAgreement == 1 &&
+          mProfile.participant.ndisTc == 1) {
+        tcAgreed = true;
+      } else {
+        tcAgreed = false;
+      }
     });
   }
 }
