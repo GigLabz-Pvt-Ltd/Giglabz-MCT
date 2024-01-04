@@ -167,7 +167,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       setState(() {
                         selectedOption = int.parse(value.toString());
                         print("Button value: $value");
-                        milestone.clear();
+                        // milestone.clear();
                         widget.updateTab(2, widget.goalStart, widget.goalEnd);
                       });
                     },
@@ -222,15 +222,16 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               ),
             )
           ]),
-        ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: milestone?.length,
-            itemBuilder: (context, index) {
-              return milestoneTile(index);
-            }),
-        if (milestone.isNotEmpty)
+        if (selectedOption == 1)
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: milestone?.length,
+              itemBuilder: (context, index) {
+                return milestoneTile(index);
+              }),
+        if (selectedOption == 1 && milestone.isNotEmpty)
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -434,7 +435,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
     selectedEndDate =
         DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate);
     selectedCelebration = milestone[index].celebrations;
-    selectedPercent = milestone[index].progress+"%";
+    selectedPercent = milestone[index].progress + "%";
   }
 
   StatefulWidget addMilestoneDialog(int indx) {
