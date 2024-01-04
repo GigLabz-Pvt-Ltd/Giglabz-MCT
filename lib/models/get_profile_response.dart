@@ -1,28 +1,30 @@
 import 'dart:convert';
 
-GetProfileResponse getProfileResponseApiFromJson(String str) => GetProfileResponse.fromJson(json.decode(str));
-String getProfileResponseApiToJson(GetProfileResponse data) => json.encode(data.toJson());
+GetProfileResponse getProfileResponseApiFromJson(String str) =>
+    GetProfileResponse.fromJson(json.decode(str));
+String getProfileResponseApiToJson(GetProfileResponse data) =>
+    json.encode(data.toJson());
 
 class GetProfileResponse {
   GetProfileResponse({
     required this.roleId,
     required this.role,
-     this.provider,
-    required this.participant,
+    this.provider,
+    this.participant,
     required this.responseStatus,
     required this.responseMessage,
   });
   late final int roleId;
   late final String role;
-  late final Null provider;
-  late final Participant participant;
+  late final Provider? provider;
+  late final Participant? participant;
   late final int responseStatus;
   late final String responseMessage;
-  
-  GetProfileResponse.fromJson(Map<String, dynamic> json){
+
+  GetProfileResponse.fromJson(Map<String, dynamic> json) {
     roleId = json['roleId'];
     role = json['role'];
-    provider = null;
+    provider = Provider.fromJson(json['provider']);
     participant = Participant.fromJson(json['participant']);
     responseStatus = json['responseStatus'];
     responseMessage = json['responseMessage'];
@@ -32,8 +34,8 @@ class GetProfileResponse {
     final _data = <String, dynamic>{};
     _data['roleId'] = roleId;
     _data['role'] = role;
-    _data['provider'] = provider;
-    _data['participant'] = participant.toJson();
+    _data['provider'] = provider?.toJson();
+    _data['participant'] = participant?.toJson();
     _data['responseStatus'] = responseStatus;
     _data['responseMessage'] = responseMessage;
     return _data;
@@ -97,35 +99,43 @@ class Participant {
   late final int? ndisAgreement;
   late final int? ndisTc;
   late final int? ServiceAgreement;
-  
-  Participant.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    gender = json['gender'];
-    ndis = json['ndis'];
-    email = json['email'];
-    dateOfBirth = json['dateOfBirth'];
-    countryCode = json['countryCode'];
-    location = json['location'];
-    state = json['state'];
-    areaSuburban = json['areaSuburban'];
-    postalCode = json['postalCode'];
-    phone = json['phone'];
-    address = json['address'];
-    aboutUser = json['aboutUser'];
-    profilePic = json['profilePic'];
-    profileProgress = json['profileProgress'];
-    roleId = json['roleId'];
-    providers = json['providers'] != null ? List?.from(json?['providers']).map((e)=>Providers?.fromJson(e)).toList() : null;
-    roleName = json['roleName'];
-    lastLoggedin = json['lastLoggedin'];
-    interests = List.from(json['interests']).map((e)=>Interests.fromJson(e)).toList();
-    ndisStartDate = json['ndisStartDate'];
-    ndisEndDate = json['ndisEndDate'];
-    ndisAgreement = json['ndisAgreement'];
-    ndisTc = json['ndisTc'];
-    ServiceAgreement = json['ServiceAgreement'];
+
+  Participant.fromJson(Map<String, dynamic>? json) {
+    id = json?['id'];
+    firstName = json?['firstName'];
+    lastName = json?['lastName'];
+    gender = json?['gender'];
+    ndis = json?['ndis'];
+    email = json?['email'];
+    dateOfBirth = json?['dateOfBirth'];
+    countryCode = json?['countryCode'];
+    location = json?['location'];
+    state = json?['state'];
+    areaSuburban = json?['areaSuburban'];
+    postalCode = json?['postalCode'];
+    phone = json?['phone'];
+    address = json?['address'];
+    aboutUser = json?['aboutUser'];
+    profilePic = json?['profilePic'];
+    profileProgress = json?['profileProgress'];
+    roleId = json?['roleId'];
+    providers = json?['providers'] != null
+        ? List?.from(json?['providers'])
+            .map((e) => Providers?.fromJson(e))
+            .toList()
+        : null;
+    roleName = json?['roleName'];
+    lastLoggedin = json?['lastLoggedin'];
+    if (json?["interests"] != null) {
+      interests = List.from(json?['interests'])
+          .map((e) => Interests.fromJson(e))
+          .toList();
+    }
+    ndisStartDate = json?['ndisStartDate'];
+    ndisEndDate = json?['ndisEndDate'];
+    ndisAgreement = json?['ndisAgreement'];
+    ndisTc = json?['ndisTc'];
+    ServiceAgreement = json?['ServiceAgreement'];
   }
 
   Map<String, dynamic> toJson() {
@@ -148,10 +158,10 @@ class Participant {
     _data['profilePic'] = profilePic;
     _data['profileProgress'] = profileProgress;
     _data['roleId'] = roleId;
-    _data['providers'] = providers?.map((e)=>e?.toJson()).toList();
+    _data['providers'] = providers?.map((e) => e?.toJson()).toList();
     _data['roleName'] = roleName;
     _data['lastLoggedin'] = lastLoggedin;
-    _data['interests'] = interests?.map((e)=>e.toJson()).toList();
+    _data['interests'] = interests?.map((e) => e.toJson()).toList();
     _data['ndisStartDate'] = ndisStartDate;
     _data['ndisEndDate'] = ndisEndDate;
     _data['ndisAgreement'] = ndisAgreement;
@@ -168,8 +178,8 @@ class Providers {
   });
   late final String? providerName;
   late final int? providerId;
-  
-  Providers.fromJson(Map<String, dynamic> json){
+
+  Providers.fromJson(Map<String, dynamic> json) {
     providerName = json['providerName'];
     providerId = json['providerId'];
   }
@@ -189,8 +199,8 @@ class Interests {
   });
   late final int id;
   late final String name;
-  
-  Interests.fromJson(Map<String, dynamic> json){
+
+  Interests.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
@@ -199,6 +209,103 @@ class Interests {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['name'] = name;
+    return _data;
+  }
+}
+
+class Provider {
+  Provider({
+    required this.id,
+    this.firstName,
+    this.profilePic,
+    this.phone,
+    this.location,
+    this.email,
+    this.country,
+    this.countryCode,
+    this.postalCode,
+    required this.roleId,
+    required this.userId,
+    this.state,
+    this.address,
+    this.areaSuburban,
+    this.aboutUser,
+    this.interests,
+    this.profileProgress,
+    this.roleName,
+    this.lastLoggedin,
+    required this.ndisTc,
+  });
+  late final int? id;
+  late final String? firstName;
+  late final String? profilePic;
+  late final String? phone;
+  late final String? location;
+  late final String? email;
+  late final String? country;
+  late final String? countryCode;
+  late final String? postalCode;
+  late final int? roleId;
+  late final int? userId;
+  late final String? state;
+  late final String? address;
+  late final String? areaSuburban;
+  late final String? aboutUser;
+  late final List<Interests>? interests;
+  late final int? profileProgress;
+  late final String? roleName;
+  late final String? lastLoggedin;
+  late final int? ndisTc;
+
+  Provider.fromJson(Map<String, dynamic>? json) {
+    id = json?['id'];
+    firstName = json?['firstName'];
+    profilePic = json?['profilePic'];
+    phone = json?['phone'];
+    location = json?['location'];
+    email = json?['email'];
+    country = json?['country'];
+    countryCode = json?['countryCode'];
+    postalCode = json?['postalCode'];
+    roleId = json?['roleId'];
+    userId = json?['userId'];
+    state = json?['state'];
+    address = json?['address'];
+    areaSuburban = json?['areaSuburban'];
+    aboutUser = json?['aboutUser'];
+    if (json?["interests"] != null) {
+      interests = List.from(json?['interests'])
+          .map((e) => Interests.fromJson(e))
+          .toList();
+    }
+    profileProgress = json?['profileProgress'];
+    roleName = json?['roleName'];
+    lastLoggedin = json?['lastLoggedin'];
+    ndisTc = json?['ndisTc'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['firstName'] = firstName;
+    _data['profilePic'] = profilePic;
+    _data['phone'] = phone;
+    _data['location'] = location;
+    _data['email'] = email;
+    _data['country'] = country;
+    _data['countryCode'] = countryCode;
+    _data['postalCode'] = postalCode;
+    _data['roleId'] = roleId;
+    _data['userId'] = userId;
+    _data['state'] = state;
+    _data['address'] = address;
+    _data['areaSuburban'] = areaSuburban;
+    _data['aboutUser'] = aboutUser;
+    _data['interests'] = interests?.map((e) => e.toJson()).toList();
+    _data['profileProgress'] = profileProgress;
+    _data['roleName'] = roleName;
+    _data['lastLoggedin'] = lastLoggedin;
+    _data['ndisTc'] = ndisTc;
     return _data;
   }
 }

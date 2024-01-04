@@ -1119,12 +1119,21 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           dashboard = mDashboard;
           goalCount = mDashboard.goalList.length;
-          name = "Hey, " + mProfile.participant.firstName! + " 👋";
-          if (mProfile.participant.ndisAgreement == 1 &&
-              mProfile.participant.ndisTc == 1) {
-            tcAgreed = true;
+          if (userMap["role_id"] == 4) {
+            name = "Hey, ${mProfile.provider!.firstName} 👋";
+            if (mProfile.provider?.ndisTc == 1) {
+              tcAgreed = true;
+            } else {
+              tcAgreed = false;
+            }
           } else {
-            tcAgreed = false;
+            name = "Hey, ${mProfile.participant!.firstName} 👋";
+            if (mProfile.participant?.ndisAgreement == 1 &&
+                mProfile.participant?.ndisTc == 1) {
+              tcAgreed = true;
+            } else {
+              tcAgreed = false;
+            }
           }
         });
       });
@@ -1147,12 +1156,21 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       dashboard = mDashboard;
       goalCount = mDashboard.goalList.length;
-      name = "Hey, " + mProfile.participant.firstName! + " 👋";
-      if (mProfile.participant.ndisAgreement == 1 &&
-          mProfile.participant.ndisTc == 1) {
-        tcAgreed = true;
+      if (userMap["role_id"] == 4) {
+        name = "Hey, ${mProfile.provider!.firstName} 👋";
+        if (mProfile.provider?.ndisTc == 1) {
+          tcAgreed = true;
+        } else {
+          tcAgreed = false;
+        }
       } else {
-        tcAgreed = false;
+        name = "Hey, ${mProfile.participant!.firstName} 👋";
+        if (mProfile.participant?.ndisAgreement == 1 &&
+            mProfile.participant?.ndisTc == 1) {
+          tcAgreed = true;
+        } else {
+          tcAgreed = false;
+        }
       }
     });
   }

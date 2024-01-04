@@ -136,16 +136,26 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.user.participant.firstName! +
-                                      " " +
-                                      widget.user.participant.lastName!,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: secondaryColor),
-                                ),
+                                userMap?["role_id"] == 4
+                                    ? Text(
+                                        widget.user.provider!.firstName!,
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: secondaryColor),
+                                      )
+                                    : Text(
+                                        widget.user.participant?.firstName !=
+                                                null
+                                            ? "${widget.user.participant?.firstName!} ${widget.user.participant!.lastName!}"
+                                            : "",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: secondaryColor),
+                                      ),
                                 Text(
                                   widget.user.role.toCapitalized(),
                                   textAlign: TextAlign.left,
@@ -373,7 +383,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           if (_otherInterestController.text != "") {
                             interests?.add(Interests(
                                 id: 1, name: _otherInterestController.text));
-                                _otherInterestController.text = "";
+                            _otherInterestController.text = "";
                           }
                         });
                       },
@@ -1572,9 +1582,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                 answer: toggleValues![index]));
                             index++;
                           });
-                          var ndisAnswers = NdisAnswers(
-                              email: widget.user.participant.email!,
-                              answers: ans);
+                          var ndisAnswers;
+                          if (userMap?["role_id"] == 4) {
+                            ndisAnswers = NdisAnswers(
+                                email: widget.user.provider!.email!,
+                                answers: ans);
+                          } else {
+                            ndisAnswers = NdisAnswers(
+                                email: widget.user.participant!.email!,
+                                answers: ans);
+                          }
                           await ApiService().postNdisAnswers(ndisAnswers);
                           updateNdisValues();
                           Navigator.pop(context);
@@ -1710,8 +1727,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      NdisResponse respon = await ApiService()
-                          .postNdisTc(widget.user.participant.email!, 1);
+                      if (userMap?["role_id"] == 4) {
+                        NdisResponse respon = await ApiService()
+                            .postNdisTc(widget.user.provider!.email!, 1);
+                      } else {
+                        NdisResponse respon = await ApiService()
+                            .postNdisTc(widget.user.participant!.email!, 1);
+                      }
                       updateNdisValues();
                       Navigator.pop(context);
                     },
@@ -1799,64 +1821,116 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   }
 
   void init() async {
-    _firstNameController.text = widget.user.participant.firstName!;
-    _lastNameController.text = widget.user.participant.lastName!;
-    _phoneNumController.text = widget.user.participant.phone!;
-    _emailController.text = widget.user.participant.email!;
-    interests = widget.user.participant.interests;
-    if (widget.user.participant.dateOfBirth != null) {
-      selectedDob =
-          DateFormat("dd/MM/yyyy").parse(widget.user.participant.dateOfBirth!);
-    }
-    selectedGender = widget.user.participant.gender ?? "Other";
-    selectedCountry = widget.user.participant.location ?? "Select Country";
-    if (selectedCountry != "Select Country") {
-      getStates();
-    }
-    selectedState = widget.user.participant.state;
-    if (selectedCountry != "Select Country") {
-      getAreas();
-    }
-    selectedArea = widget.user.participant.areaSuburban;
-    selectedArea = selectedArea?.toTitleCase();
-    _postalController.text = widget.user.participant.postalCode ?? "";
-    ndis = widget.user.participant.ndis;
-    if (widget.user.participant.ndisStartDate != null) {
-      ndisStart = DateFormat("dd/MM/yyyy")
-          .parse(widget.user.participant.ndisStartDate!);
-    }
-    if (widget.user.participant.ndisEndDate != null) {
-      ndisEnd =
-          DateFormat("dd/MM/yyyy").parse(widget.user.participant.ndisEndDate!);
-    }
-    _areaController.text = widget.user.participant.areaSuburban ?? "";
-    _aboutController.text = widget.user.participant.aboutUser ?? "";
-    countries.asMap().forEach((index, element) {
-      if (element.code == widget.user.participant.countryCode) {
-        selectedPhoneCountry = countries[index];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    if (userMap?["role_id"] == 4) {
+      _firstNameController.text = widget.user.provider!.firstName!;
+      _phoneNumController.text = widget.user.provider!.phone!;
+      _emailController.text = widget.user.provider!.email!;
+      interests = widget.user.provider!.interests;
+      selectedGender = "Other";
+      selectedCountry = widget.user.provider?.location ?? "Select Country";
+      if (selectedCountry != "Select Country") {
+        getStates();
       }
-    });
-    ndisAgreement = widget.user.participant.ndisAgreement;
-    ndisTc = widget.user.participant.ndisTc;
-    widget.ndisQues.questions.asMap().forEach((index, element) {
-      toggleValues?.add(element.answer);
-    });
-    imgResponse = await get(Uri.parse(widget.user.participant.profilePic!));
-    update();
-    providers?.providerNames.forEach((element) {
-      listChecked.add(false);
-    });
+      selectedState = widget.user.provider?.state;
+      if (selectedCountry != "Select Country") {
+        getAreas();
+      }
+      selectedArea = widget.user.provider?.areaSuburban;
+      selectedArea = selectedArea?.toTitleCase();
+      _postalController.text = widget.user.provider?.postalCode ?? "";
+      _areaController.text = widget.user.provider?.areaSuburban ?? "";
+      _aboutController.text = widget.user.provider?.aboutUser ?? "";
+      countries.asMap().forEach((index, element) {
+        if (element.code == widget.user.provider?.countryCode) {
+          selectedPhoneCountry = countries[index];
+        }
+      });
+      ndisTc = widget.user.provider?.ndisTc;
+      widget.ndisQues.questions.asMap().forEach((index, element) {
+        toggleValues?.add(element.answer);
+      });
+      if (widget.user.provider?.profilePic != null) {
+        imgResponse = await get(Uri.parse(widget.user.provider!.profilePic!));
+      }
+      update();
+      providers?.providerNames.forEach((element) {
+        listChecked.add(false);
+      });
+    } else {
+      _firstNameController.text = widget.user.participant!.firstName!;
+      _lastNameController.text = widget.user.participant!.lastName!;
+      _phoneNumController.text = widget.user.participant!.phone!;
+      _emailController.text = widget.user.participant!.email!;
+      interests = widget.user.participant?.interests;
+      if (widget.user.participant?.dateOfBirth != null) {
+        selectedDob = DateFormat("dd/MM/yyyy")
+            .parse(widget.user.participant!.dateOfBirth!);
+      }
+      selectedGender = widget.user.participant?.gender ?? "Other";
+      selectedCountry = widget.user.participant?.location ?? "Select Country";
+      if (selectedCountry != "Select Country") {
+        getStates();
+      }
+      selectedState = widget.user.participant?.state;
+      if (selectedCountry != "Select Country") {
+        getAreas();
+      }
+      selectedArea = widget.user.participant?.areaSuburban;
+      selectedArea = selectedArea?.toTitleCase();
+      _postalController.text = widget.user.participant?.postalCode ?? "";
+      ndis = widget.user.participant?.ndis;
+      if (widget.user.participant?.ndisStartDate != null) {
+        ndisStart = DateFormat("dd/MM/yyyy")
+            .parse(widget.user.participant!.ndisStartDate!);
+      }
+      if (widget.user.participant?.ndisEndDate != null) {
+        ndisEnd = DateFormat("dd/MM/yyyy")
+            .parse(widget.user.participant!.ndisEndDate!);
+      }
+      _areaController.text = widget.user.participant?.areaSuburban ?? "";
+      _aboutController.text = widget.user.participant?.aboutUser ?? "";
+      countries.asMap().forEach((index, element) {
+        if (element.code == widget.user.participant?.countryCode) {
+          selectedPhoneCountry = countries[index];
+        }
+      });
+      ndisAgreement = widget.user.participant?.ndisAgreement;
+      ndisTc = widget.user.participant?.ndisTc;
+      widget.ndisQues.questions.asMap().forEach((index, element) {
+        toggleValues?.add(element.answer);
+      });
+      if (widget.user.participant?.profilePic != null) {
+        imgResponse =
+            await get(Uri.parse(widget.user.participant!.profilePic!));
+      }
+      update();
+      providers?.providerNames.forEach((element) {
+        listChecked.add(false);
+      });
+    }
   }
 
   getImage() {
-    if (widget.user.participant.profilePic != null &&
+    if (widget.user.participant?.profilePic != null &&
         imgResponse?.statusCode == 200) {
       return Image.network(
-        widget.user.participant.profilePic!,
+        widget.user.participant!.profilePic!,
         fit: BoxFit.fill,
       );
     } else {
-      return Image.asset("lib/resources/images/place_holder.png");
+      if (widget.user.provider?.profilePic != null &&
+          imgResponse?.statusCode == 200) {
+        return Image.network(
+          widget.user.provider!.profilePic!,
+          fit: BoxFit.fill,
+        );
+      } else {
+        return Image.asset("lib/resources/images/place_holder.png");
+      }
     }
   }
 
@@ -1867,8 +1941,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         setState(() {
           isLoading = true;
         });
-        var res = await ApiService()
-            .uploadImage(File(pickedFile.path), widget.user.participant.email);
+        var res;
+        if (userMap?["role_id"] == 4) {
+          res = await ApiService()
+              .uploadImage(File(pickedFile.path), widget.user.provider?.email);
+        } else {
+          res = await ApiService().uploadImage(
+              File(pickedFile.path), widget.user.participant?.email);
+        }
 
         if (res == "Success") {
           PaintingBinding.instance.imageCache.clear();
@@ -1917,8 +1997,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     var profile = await ApiService()
         .getProfile(userMap?["user_name"], userMap?["role_id"]);
     setState(() {
-      ndisAgreement = profile.participant.ndisAgreement;
-      ndisTc = profile.participant.ndisTc;
+      if (userMap?["role_id"] == 4) {
+        ndisTc = profile.participant?.ndisTc;
+      } else {
+        ndisAgreement = profile.participant?.ndisAgreement;
+        ndisTc = profile.participant?.ndisTc;
+      }
       var a = 10;
     });
   }
