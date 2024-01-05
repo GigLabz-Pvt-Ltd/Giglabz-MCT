@@ -106,7 +106,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Do You want to Breakdown one time achievement goal into multiple milestones ? ",
+              "Do you want to breakdown one time achievement goal into multiple milestones ? ",
               style: GoogleFonts.poppins(
                 color: blueGrey,
                 fontSize: 15,
@@ -196,7 +196,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   style: GoogleFonts.poppins(
                     color: blueGrey,
                     fontSize: 16,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
