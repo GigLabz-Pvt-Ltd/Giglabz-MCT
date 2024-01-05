@@ -487,8 +487,41 @@ class _HomeScreenState extends State<HomeScreen> {
           case 2:
             break;
           case 3:
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => const ProfileScreen()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        ProfileScreen()))
+                .then((value) async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String userPref = prefs.getString('user')!;
+              var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+              var mDashboard =
+                  await ApiService().getDashBoard(userMap["user_name"]);
+
+              var mProfile = await ApiService()
+                  .getProfile(userMap?["user_name"], userMap?["role_id"]);
+              setState(() {
+                dashboard = mDashboard;
+                goalCount = mDashboard.goalList.length;
+                if (userMap["role_id"] == 4) {
+                  name = "Hey, ${mProfile.provider!.firstName} 👋";
+                  if (mProfile.provider?.ndisTc == 1) {
+                    tcAgreed = true;
+                  } else {
+                    tcAgreed = false;
+                  }
+                } else {
+                  name = "Hey, ${mProfile.participant!.firstName} 👋";
+                  if (mProfile.participant?.ndisAgreement == 1 &&
+                      mProfile.participant?.ndisTc == 1) {
+                    tcAgreed = true;
+                  } else {
+                    tcAgreed = false;
+                  }
+                }
+              });
+            });
             break;
         }
       },
