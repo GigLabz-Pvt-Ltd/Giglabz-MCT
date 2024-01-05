@@ -640,6 +640,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ]),
                   GestureDetector(
                     onTap: () {
+                      _ndisNumberController.text = ndis;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -654,6 +655,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      _ndisNumberController.text = ndis;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
