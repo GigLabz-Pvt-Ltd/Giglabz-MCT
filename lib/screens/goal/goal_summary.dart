@@ -571,6 +571,11 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
               GestureDetector(
                 onTap: () {
+                  if (_nameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Enter name..")));
+                    return;
+                  }
                   final bool emailValid = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
                       .hasMatch(_emailController.text);
