@@ -421,32 +421,34 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         Row(
           children: [
             Row(children: [
-              Radio(
-                fillColor: MaterialStateColor.resolveWith(
-                  (Set<MaterialState> states) {
-                    if (goalFor == "Self") {
-                      return iconBlue;
-                    }
-                    return borderGrey;
+              if (isParticipant)
+                Radio(
+                  fillColor: MaterialStateColor.resolveWith(
+                    (Set<MaterialState> states) {
+                      if (goalFor == "Self") {
+                        return iconBlue;
+                      }
+                      return borderGrey;
+                    },
+                  ),
+                  value: "Self",
+                  groupValue: goalFor,
+                  onChanged: (value) {
+                    setState(() {
+                      goalFor = value;
+                      print("Button value: $value");
+                    });
                   },
                 ),
-                value: "Self",
-                groupValue: goalFor,
-                onChanged: (value) {
-                  setState(() {
-                    goalFor = value;
-                    print("Button value: $value");
-                  });
-                },
-              ),
-              Text(
-                "Self",
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
+              if (isParticipant)
+                Text(
+                  "Self",
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
             ]),
             if (!isParticipant)
               Row(children: [
@@ -1387,6 +1389,11 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         areaResponse?.achiever[0].subTypes.forEach((element) {
           goalAreaList.add(element);
         });
+      });
+    } else {
+      setState(() {
+        isParticipant = false;
+        goalFor = "Someone Else";
       });
     }
 
