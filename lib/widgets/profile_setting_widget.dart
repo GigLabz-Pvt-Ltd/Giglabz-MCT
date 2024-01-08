@@ -640,7 +640,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ]),
                   GestureDetector(
                     onTap: () {
-                      _ndisNumberController.text = ndis;
+                      _ndisNumberController.text = ndis ?? "";
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -655,7 +655,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      _ndisNumberController.text = ndis;
+                      _ndisNumberController.text = ndis ?? "";
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -1328,7 +1328,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           ),
                         if (ndisStart != null && ndisEnd != null)
                           Text(
-                            ndisEnd!.difference(ndisStart!).inDays.toString(),
+                            (ndisEnd!.difference(DateTime.now()).inDays + 1)
+                                .toString(),
                             textAlign: TextAlign.left,
                             style: GoogleFonts.poppins(
                                 fontSize: 14,

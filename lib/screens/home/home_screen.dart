@@ -1124,6 +1124,11 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
+    if(!tcAgreed){
+       ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Agree TC in profile")));
+      return;
+    }
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;

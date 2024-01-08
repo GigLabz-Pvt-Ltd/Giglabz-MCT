@@ -37,7 +37,8 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
   final _reasonController = TextEditingController();
 
   var selectedRFrequency = goalRecurring[0];
-  var selectedRRole = peopleRole[0];
+  // var selectedRRole = peopleRole[0];
+  var selectedRRole = "Nominated by";
   final _firstnameRController = TextEditingController();
   final _lastnameRController = TextEditingController();
   final _emailRController = TextEditingController();
@@ -427,8 +428,13 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                                 fontWeight: FontWeight.w500,
                                 color: blueGrey),
                           ),
-                          SvgPicture.asset(
-                              "lib/resources/images/close_verify_otp.svg"),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: SvgPicture.asset(
+                                "lib/resources/images/close_verify_otp.svg"),
+                          ),
                         ]),
                   ),
                   Divider(
@@ -1186,8 +1192,13 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                                 fontWeight: FontWeight.w500,
                                 color: blueGrey),
                           ),
-                          SvgPicture.asset(
-                              "lib/resources/images/close_verify_otp.svg"),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: SvgPicture.asset(
+                                "lib/resources/images/close_verify_otp.svg"),
+                          ),
                         ]),
                   ),
                   Divider(
@@ -1341,72 +1352,72 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       ),
                     ),
                   ),
-                  Container(
-                    height: 20,
-                    margin: const EdgeInsets.only(left: 20, top: 12),
-                    child: Row(children: [
-                      Expanded(
-                        child: Text(
-                          "Role",
-                          style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: blueGrey),
-                        ),
-                      ),
-                    ]),
-                  ),
-                  Row(children: [
-                    Expanded(
-                      child: Container(
-                        height: 40,
-                        margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                        padding: EdgeInsets.only(right: 12),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          border: Border.all(color: outlineGrey),
-                        ),
-                        child: Stack(children: [
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: SvgPicture.asset(
-                                  "lib/resources/images/dropdownArrow.svg")),
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            // color: Colors.amber,
-                            padding: const EdgeInsets.only(top: 0, left: 10),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                icon: const Icon(null),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedRRole = newValue!;
-                                  });
-                                },
-                                value: selectedRRole,
-                                items: peopleRole.map((String dropDownString) {
-                                  return DropdownMenuItem<String>(
-                                    value: dropDownString,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 4),
-                                      child: Text(
-                                        dropDownString,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: secondaryColor),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ]),
+                  // Container(
+                  //   height: 20,
+                  //   margin: const EdgeInsets.only(left: 20, top: 12),
+                  //   child: Row(children: [
+                  //     Expanded(
+                  //       child: Text(
+                  //         "Role",
+                  //         style: GoogleFonts.poppins(
+                  //             fontSize: 15,
+                  //             fontWeight: FontWeight.w400,
+                  //             color: blueGrey),
+                  //       ),
+                  //     ),
+                  //   ]),
+                  // ),
+                  // Row(children: [
+                  //   Expanded(
+                  //     child: Container(
+                  //       height: 40,
+                  //       margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  //       padding: EdgeInsets.only(right: 12),
+                  //       decoration: BoxDecoration(
+                  //         borderRadius:
+                  //             const BorderRadius.all(Radius.circular(3)),
+                  //         border: Border.all(color: outlineGrey),
+                  //       ),
+                  //       child: Stack(children: [
+                  //         Align(
+                  //             alignment: Alignment.centerRight,
+                  //             child: SvgPicture.asset(
+                  //                 "lib/resources/images/dropdownArrow.svg")),
+                  //         Container(
+                  //           height: 50,
+                  //           width: double.infinity,
+                  //           // color: Colors.amber,
+                  //           padding: const EdgeInsets.only(top: 0, left: 10),
+                  //           child: DropdownButtonHideUnderline(
+                  //             child: DropdownButton<String>(
+                  //               icon: const Icon(null),
+                  //               onChanged: (String? newValue) {
+                  //                 setState(() {
+                  //                   selectedRRole = newValue!;
+                  //                 });
+                  //               },
+                  //               value: selectedRRole,
+                  //               items: peopleRole.map((String dropDownString) {
+                  //                 return DropdownMenuItem<String>(
+                  //                   value: dropDownString,
+                  //                   child: Padding(
+                  //                     padding: const EdgeInsets.only(left: 4),
+                  //                     child: Text(
+                  //                       dropDownString,
+                  //                       textAlign: TextAlign.center,
+                  //                       style: const TextStyle(
+                  //                           color: secondaryColor),
+                  //                     ),
+                  //                   ),
+                  //                 );
+                  //               }).toList(),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ]),
+                  //     ),
+                  //   ),
+                  // ]),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, top: 14),
                     child: Text(
@@ -1444,110 +1455,110 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 14),
-                    child: Text(
-                      "Parameters to Review",
-                      style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: blueGrey),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                    ),
-                    margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      border: Border.all(color: outlineGrey),
-                    ),
-                    child: TextField(
-                      controller: _parameterRController,
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Write Parameter',
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 20,
-                    margin: const EdgeInsets.only(left: 20, top: 12),
-                    child: Row(children: [
-                      Expanded(
-                        child: Text(
-                          "Frequency",
-                          style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: blueGrey),
-                        ),
-                      ),
-                    ]),
-                  ),
-                  Row(children: [
-                    Expanded(
-                      child: Container(
-                        height: 40,
-                        margin: EdgeInsets.only(top: 8, left: 20, right: 20),
-                        padding: EdgeInsets.only(right: 12),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          border: Border.all(color: outlineGrey),
-                        ),
-                        child: Stack(children: [
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: SvgPicture.asset(
-                                  "lib/resources/images/dropdownArrow.svg")),
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            // color: Colors.amber,
-                            padding: const EdgeInsets.only(top: 0, left: 10),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                icon: const Icon(null),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedRFrequency = newValue!;
-                                  });
-                                },
-                                value: selectedRFrequency,
-                                items:
-                                    goalRecurring.map((String dropDownString) {
-                                  return DropdownMenuItem<String>(
-                                    value: dropDownString,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 4),
-                                      child: Text(
-                                        dropDownString,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: secondaryColor),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ]),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(left: 20, top: 14),
+                  //   child: Text(
+                  //     "Parameters to Review",
+                  //     style: GoogleFonts.poppins(
+                  //         fontSize: 15,
+                  //         fontWeight: FontWeight.w400,
+                  //         color: blueGrey),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   height: 40,
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 18,
+                  //   ),
+                  //   margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  //     border: Border.all(color: outlineGrey),
+                  //   ),
+                  //   child: TextField(
+                  //     controller: _parameterRController,
+                  //     style: GoogleFonts.poppins(
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.w400,
+                  //         color: secondaryColor),
+                  //     decoration: InputDecoration(
+                  //       border: InputBorder.none,
+                  //       hintText: 'Write Parameter',
+                  //       hintStyle: GoogleFonts.poppins(
+                  //         color: secondaryColor,
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.w400,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   height: 20,
+                  //   margin: const EdgeInsets.only(left: 20, top: 12),
+                  //   child: Row(children: [
+                  //     Expanded(
+                  //       child: Text(
+                  //         "Frequency",
+                  //         style: GoogleFonts.poppins(
+                  //             fontSize: 15,
+                  //             fontWeight: FontWeight.w400,
+                  //             color: blueGrey),
+                  //       ),
+                  //     ),
+                  //   ]),
+                  // ),
+                  // Row(children: [
+                  //   Expanded(
+                  //     child: Container(
+                  //       height: 40,
+                  //       margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+                  //       padding: EdgeInsets.only(right: 12),
+                  //       decoration: BoxDecoration(
+                  //         borderRadius:
+                  //             const BorderRadius.all(Radius.circular(3)),
+                  //         border: Border.all(color: outlineGrey),
+                  //       ),
+                  //       child: Stack(children: [
+                  //         Align(
+                  //             alignment: Alignment.centerRight,
+                  //             child: SvgPicture.asset(
+                  //                 "lib/resources/images/dropdownArrow.svg")),
+                  //         Container(
+                  //           height: 50,
+                  //           width: double.infinity,
+                  //           // color: Colors.amber,
+                  //           padding: const EdgeInsets.only(top: 0, left: 10),
+                  //           child: DropdownButtonHideUnderline(
+                  //             child: DropdownButton<String>(
+                  //               icon: const Icon(null),
+                  //               onChanged: (String? newValue) {
+                  //                 setState(() {
+                  //                   selectedRFrequency = newValue!;
+                  //                 });
+                  //               },
+                  //               value: selectedRFrequency,
+                  //               items:
+                  //                   goalRecurring.map((String dropDownString) {
+                  //                 return DropdownMenuItem<String>(
+                  //                   value: dropDownString,
+                  //                   child: Padding(
+                  //                     padding: const EdgeInsets.only(left: 4),
+                  //                     child: Text(
+                  //                       dropDownString,
+                  //                       textAlign: TextAlign.center,
+                  //                       style: const TextStyle(
+                  //                           color: secondaryColor),
+                  //                     ),
+                  //                   ),
+                  //                 );
+                  //               }).toList(),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ]),
+                  //     ),
+                  //   ),
+                  // ]),
                   GestureDetector(
                     onTap: () {
                       if (_firstnameRController.text.isEmpty) {
@@ -1570,22 +1581,22 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                             content: Text("Phone number can't be empty")));
                         return;
                       }
-                      if (_parameterRController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content:
-                                Text("Parameters to review can't be empty")));
-                        return;
-                      }
+                      // if (_parameterRController.text.isEmpty) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //       content:
+                      //           Text("Parameters to review can't be empty")));
+                      //   return;
+                      // }
                       if (_reasonRController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Reason can't be empty")));
                         return;
                       }
-                      if (selectedRRole == "Select Role") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Role can't be empty")));
-                        return;
-                      }
+                      // if (selectedRRole == "Select Role") {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //       SnackBar(content: Text("Role can't be empty")));
+                      //   return;
+                      // }
                       if (reviewer.isNotEmpty) {
                         reviewer[0] = ReviewerList(
                             firstName: _firstnameRController.text,
@@ -1782,7 +1793,8 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       ),
                     ),
                     Text(
-                      _parameterRController.text,
+                      // _parameterRController.text,
+                      "Self Actulaisation",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
