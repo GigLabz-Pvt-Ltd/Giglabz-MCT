@@ -895,7 +895,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       )),
                   aboutMeWidget(),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (_firstNameController.text == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter first name")));
@@ -961,52 +961,46 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         return;
                       }
                       updateNdisValues();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            if (ndisAgreement != 1) {
-                              return okDialog("update_profile");
-                            } else if (ndisTc != 1) {
-                              return okDialog("ndis_agreement");
-                            } else {
-                              var mParticipant = UpdateParticipant(
-                                  firstName: _firstNameController.text,
-                                  lastName: _lastNameController.text,
-                                  phone: _phoneNumController.text,
-                                  email: _emailController.text,
-                                  gender: selectedGender,
-                                  dateOfBirth: selectedDob != null
-                                      ? selectedDob!.day.toString() +
-                                          "/" +
-                                          selectedDob!.month.toString() +
-                                          "/" +
-                                          selectedDob!.year.toString()
-                                      : "",
-                                  ndisNumber: ndis,
-                                  aboutUser: _aboutController.text,
-                                  postalCode: _postalController.text,
-                                  areaSuburban: selectedArea ?? "",
-                                  address: "some address",
-                                  state: selectedState,
-                                  country: selectedCountry,
-                                  ndisStartDate: ndisStart!.day.toString() +
-                                      "/" +
-                                      ndisStart!.month.toString() +
-                                      "/" +
-                                      ndisStart!.year.toString(),
-                                  ndisEndDate: ndisEnd!.day.toString() +
-                                      "/" +
-                                      ndisEnd!.month.toString() +
-                                      "/" +
-                                      ndisEnd!.year.toString(),
-                                  providers: [310, 364],
-                                  interests: interests);
-                              UpdateProfile profile =
-                                  UpdateProfile(participant: mParticipant);
-                              updateProfile(profile);
-                              return okDialog("terms_and_conditions");
-                            }
-                          });
+                      var mParticipant = UpdateParticipant(
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
+                          phone: _phoneNumController.text,
+                          email: _emailController.text,
+                          gender: selectedGender,
+                          dateOfBirth: selectedDob != null
+                              ? selectedDob!.day.toString() +
+                                  "/" +
+                                  selectedDob!.month.toString() +
+                                  "/" +
+                                  selectedDob!.year.toString()
+                              : "",
+                          ndisNumber: ndis,
+                          aboutUser: _aboutController.text,
+                          postalCode: _postalController.text,
+                          areaSuburban: selectedArea ?? "",
+                          address: "some address",
+                          state: selectedState,
+                          country: selectedCountry,
+                          ndisStartDate: ndisStart!.day.toString() +
+                              "/" +
+                              ndisStart!.month.toString() +
+                              "/" +
+                              ndisStart!.year.toString(),
+                          ndisEndDate: ndisEnd!.day.toString() +
+                              "/" +
+                              ndisEnd!.month.toString() +
+                              "/" +
+                              ndisEnd!.year.toString(),
+                          providers: [310, 364],
+                          interests: interests);
+                      UpdateProfile profile = UpdateProfile(
+                          participant: mParticipant, provider: null);
+                      if (userMap?["role_id"] == 4) {
+                        profile = UpdateProfile(
+                            provider: mParticipant, participant: null);
+                      }
+                      var updated = await updateProfile(profile);
+                      show(updated);
                     },
                     child: Container(
                       height: 40,
@@ -1803,7 +1797,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     }
   }
 
-  void updateProfile(UpdateProfile profile) async {
+  Future<bool> updateProfile(UpdateProfile profile) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     userMap = jsonDecode(userPref) as Map<String, dynamic>;
@@ -1817,9 +1811,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         widget.user = mProfile;
         init();
       });
+      return true;
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(res.responseMessage)));
+      return false;
     }
   }
 
@@ -1852,6 +1848,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
           selectedPhoneCountry = countries[index];
         }
       });
+      //for care team member no value received in ndisAgreement so hard coding to true
+      ndisAgreement = 1;
       ndisTc = widget.user.provider?.ndisTc;
       widget.ndisQues.questions.asMap().forEach((index, element) {
         toggleValues?.add(element.answer);
@@ -2001,7 +1999,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         .getProfile(userMap?["user_name"], userMap?["role_id"]);
     setState(() {
       if (userMap?["role_id"] == 4) {
-        ndisTc = profile.participant?.ndisTc;
+        ndisTc = profile.provider?.ndisTc;
       } else {
         ndisAgreement = profile.participant?.ndisAgreement;
         ndisTc = profile.participant?.ndisTc;
@@ -2068,5 +2066,19 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       ));
     });
     return items;
+  }
+
+  void show(bool updated) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          if (ndisAgreement != 1) {
+            return okDialog("update_profile");
+          } else if (ndisTc != 1) {
+            return okDialog("ndis_agreement");
+          } else {
+            return okDialog("terms_and_conditions");
+          }
+        });
   }
 }

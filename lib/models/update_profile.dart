@@ -2,26 +2,28 @@ import 'dart:convert';
 
 import 'package:mycareteam/models/get_profile_response.dart';
 
-UpdateProfile getUpdateProfileApiFromJson(String str) => UpdateProfile.fromJson(json.decode(str));
-String getUpdateProfileApiToJson(UpdateProfile data) => json.encode(data.toJson());
+UpdateProfile getUpdateProfileApiFromJson(String str) =>
+    UpdateProfile.fromJson(json.decode(str));
+String getUpdateProfileApiToJson(UpdateProfile data) =>
+    json.encode(data.toJson());
 
 class UpdateProfile {
   UpdateProfile({
-    required this.participant,
-     this.provider,
+    this.participant,
+    this.provider,
   });
-  late final UpdateParticipant participant;
-  late final Null provider;
-  
-  UpdateProfile.fromJson(Map<String, dynamic> json){
+  late final UpdateParticipant? participant;
+  late final UpdateParticipant? provider;
+
+  UpdateProfile.fromJson(Map<String, dynamic> json) {
     participant = UpdateParticipant.fromJson(json['participant']);
-    provider = null;
+    provider = UpdateParticipant.fromJson(json['provider']);
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['participant'] = participant.toJson();
-    _data['provider'] = provider;
+    _data['participant'] = participant?.toJson();
+    _data['provider'] = provider?.toJson();
     return _data;
   }
 }
@@ -63,8 +65,8 @@ class UpdateParticipant {
   late final String? ndisEndDate;
   late final List<int> providers;
   late final List<Interests>? interests;
-  
-  UpdateParticipant.fromJson(Map<String, dynamic> json){
+
+  UpdateParticipant.fromJson(Map<String, dynamic> json) {
     firstName = json['firstName'];
     lastName = json['lastName'];
     phone = json['phone'];
@@ -81,7 +83,8 @@ class UpdateParticipant {
     ndisStartDate = json['ndisStartDate'];
     ndisEndDate = json['ndisEndDate'];
     providers = List.castFrom<dynamic, int>(json['providers']);
-    interests = List.from(json['interests']).map((e)=>Interests.fromJson(e)).toList();
+    interests =
+        List.from(json['interests']).map((e) => Interests.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -102,7 +105,7 @@ class UpdateParticipant {
     _data['ndisStartDate'] = ndisStartDate;
     _data['ndisEndDate'] = ndisEndDate;
     _data['providers'] = providers;
-    _data['interests'] = interests?.map((e)=>e.toJson()).toList();
+    _data['interests'] = interests?.map((e) => e.toJson()).toList();
     return _data;
   }
 }
