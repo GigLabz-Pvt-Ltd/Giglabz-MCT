@@ -137,28 +137,39 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 userMap?["role_id"] == 4
-                                    ? Text(
-                                        widget.user.provider!.firstName!,
-                                        textAlign: TextAlign.left,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            color: secondaryColor),
+                                    ? Container(
+                                        width: 200,
+                                        child: Text(
+                                          widget.user.provider!.firstName!,
+                                          textAlign: TextAlign.left,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: secondaryColor),
+                                        ),
                                       )
-                                    : Text(
-                                        widget.user.participant?.firstName !=
-                                                null
-                                            ? "${widget.user.participant?.firstName!} ${widget.user.participant!.lastName!}"
-                                            : "",
-                                        textAlign: TextAlign.left,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            color: secondaryColor),
+                                    : Container(
+                                        width: 200,
+                                        child: Text(
+                                          widget.user.participant?.firstName !=
+                                                  null
+                                              ? "${widget.user.participant?.firstName!} ${widget.user.participant!.lastName!}"
+                                              : "",
+                                          textAlign: TextAlign.left,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: secondaryColor),
+                                        ),
                                       ),
                                 Text(
                                   widget.user.role.toCapitalized(),
                                   textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -1715,58 +1726,58 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      Text(
-                        tc,
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: iconBlack),
-                      ),
-                      Text(
-                        "Interpretation and Definitions",
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: iconBlack),
-                      ),
-                       Text(
-                        "Interpretation",
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: iconBlack),
-                      ),
-                      Text(
-                        termsAndCondition,
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: iconBlack),
-                      ),
-                      Text(
-                        "Definitions",
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: iconBlack),
-                      ),
-                      Text(
-                        "For the purposes of these Terms and Conditions: \n",
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: iconBlack),
-                      ),
-                       Text(
-                        purpose,
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: iconBlack),
-                      ),
-                    ]),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tc,
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            "Interpretation and Definitions",
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            "Interpretation",
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            termsAndCondition,
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            "Definitions",
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            "For the purposes of these Terms and Conditions: \n",
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: iconBlack),
+                          ),
+                          Text(
+                            purpose,
+                            style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: iconBlack),
+                          ),
+                        ]),
                   ),
                   GestureDetector(
                     onTap: () async {
