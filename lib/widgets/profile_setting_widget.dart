@@ -1714,13 +1714,59 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: Text(
-                      termsAndCondition,
-                      style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: iconBlack),
-                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Text(
+                        tc,
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: iconBlack),
+                      ),
+                      Text(
+                        "Interpretation and Definitions",
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: iconBlack),
+                      ),
+                       Text(
+                        "Interpretation",
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: iconBlack),
+                      ),
+                      Text(
+                        termsAndCondition,
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: iconBlack),
+                      ),
+                      Text(
+                        "Definitions",
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: iconBlack),
+                      ),
+                      Text(
+                        "For the purposes of these Terms and Conditions: \n",
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: iconBlack),
+                      ),
+                       Text(
+                        purpose,
+                        style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: iconBlack),
+                      ),
+                    ]),
                   ),
                   GestureDetector(
                     onTap: () async {
@@ -1779,8 +1825,13 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               },
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
-                  child: SvgPicture.asset(
-                      "lib/resources/images/dialog_close.svg")),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: SvgPicture.asset(
+                        "lib/resources/images/dialog_close.svg"),
+                  )),
             ),
           ]),
         ),
