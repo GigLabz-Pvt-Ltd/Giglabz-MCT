@@ -23,9 +23,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   int isGoalClicked = -1;
+  Response? imgResponse;
   var goal_id, name, tcAgreed = false;
   DashboardResponse? dashboard;
   int? goalCount;
+  var imgUrl;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -79,20 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             height: 30,
             width: 30,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: darkGrey,
-            ),
-            alignment: Alignment.center,
-            margin: const EdgeInsets.fromLTRB(16, 0, 20, 0),
-            child: Text(
-              "R",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            margin: EdgeInsets.all(14),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                child: getImage()),
           ),
         ],
       ),
@@ -489,8 +483,7 @@ class _HomeScreenState extends State<HomeScreen> {
           case 3:
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        ProfileScreen()))
+                    builder: (BuildContext context) => ProfileScreen()))
                 .then((value) async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String userPref = prefs.getString('user')!;
@@ -1124,8 +1117,8 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-    if(!tcAgreed){
-       ScaffoldMessenger.of(context)
+    if (!tcAgreed) {
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Agree TC in profile")));
       return;
     }
@@ -1187,6 +1180,8 @@ class _HomeScreenState extends State<HomeScreen> {
       dashboard = mDashboard;
       goalCount = mDashboard.goalList.length;
       if (userMap["role_id"] == 4) {
+        imgUrl = mProfile.provider?.profilePic ?? "";
+
         name = "Hey, ${mProfile.provider!.firstName} 👋";
         if (mProfile.provider?.ndisTc == 1) {
           tcAgreed = true;
@@ -1194,6 +1189,8 @@ class _HomeScreenState extends State<HomeScreen> {
           tcAgreed = false;
         }
       } else {
+        imgUrl = mProfile.participant?.profilePic ?? "";
+
         name = "Hey, ${mProfile.participant!.firstName} 👋";
         if (mProfile.participant?.ndisAgreement == 1 &&
             mProfile.participant?.ndisTc == 1) {
@@ -1203,5 +1200,29 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+
+    if (userMap["role_id"] == 4 && imgUrl != "") {
+      imgResponse = await get(Uri.parse(imgUrl));
+    } else if (imgUrl != "") {
+      imgResponse = await get(Uri.parse(imgUrl));
+    }
+  }
+
+  getImage() {
+    if (imgResponse?.statusCode == 200) {
+      return Image.network(
+        imgUrl,
+        fit: BoxFit.fill,
+      );
+    } else {
+      if (imgResponse?.statusCode == 200) {
+        return Image.network(
+          imgUrl,
+          fit: BoxFit.fill,
+        );
+      } else {
+        return Image.asset("lib/resources/images/place_holder.png");
+      }
+    }
   }
 }
