@@ -586,6 +586,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                       someoneElse.add(ForSomeoneElse(
                           name: _nameController.text,
                           email: _emailController.text));
+                      _nameController.text = "";
+                      _emailController.text = "";
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
