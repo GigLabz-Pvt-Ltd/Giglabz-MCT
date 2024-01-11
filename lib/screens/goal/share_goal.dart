@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/create_goal.dart';
@@ -200,8 +201,8 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     });
               }
               if (selectedOption == 1) {
-                if(reviewer.isNotEmpty){
-                   ScaffoldMessenger.of(context).showSnackBar(
+                if (reviewer.isNotEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("1 Reviewer is maximum")));
                   return;
                 }
@@ -573,6 +574,10 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     ),
                     child: TextField(
                       controller: _phoneNumController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -842,6 +847,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       if (_emailController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Email can't be empty")));
+                        return;
+                      }
+                      final bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                          .hasMatch(_emailController.text);
+                      if (!emailValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Email is not valid")));
                         return;
                       }
                       if (_phoneNumController.text.isEmpty) {
@@ -1337,6 +1350,10 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     ),
                     child: TextField(
                       controller: _phoneNumRController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -1574,6 +1591,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       if (_emailRController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("email can't be empty")));
+                        return;
+                      }
+                      final bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                          .hasMatch(_emailRController.text);
+                      if (!emailValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Email is not valid")));
                         return;
                       }
                       if (_phoneNumRController.text.isEmpty) {
