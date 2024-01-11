@@ -86,7 +86,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 color: secondaryColor),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Enter Expected Outcome of this Goal',
+              hintText: 'Enter Expected Outcome of this Goal *',
               hintStyle: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 14,
@@ -504,7 +504,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         color: secondaryColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter Name',
+                      hintText: 'Enter Name *',
                       hintStyle: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 14,
@@ -541,7 +541,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         color: secondaryColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter Description',
+                      hintText: 'Enter Description *',
                       hintStyle: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 14,
@@ -556,7 +556,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   child: Row(children: [
                     Expanded(
                       child: Text(
-                        "Start Date",
+                        "Start Date *",
                         style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
@@ -565,7 +565,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     ),
                     Expanded(
                       child: Text(
-                        "End Date",
+                        "End Date *",
                         style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
@@ -681,7 +681,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   child: Row(children: [
                     Expanded(
                       child: Text(
-                        "Celebrations",
+                        "Celebrations *",
                         style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
@@ -690,7 +690,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     ),
                     Expanded(
                       child: Text(
-                        "Progress",
+                        "Progress *",
                         style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,

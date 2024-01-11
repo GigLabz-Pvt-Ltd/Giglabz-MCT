@@ -97,7 +97,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 color: secondaryColor),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Enter Goal Title',
+              hintText: 'Enter Goal Title *',
               hintStyle: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 14,
@@ -372,7 +372,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           ),
         if (goalArea == 2)
           Container(
-            height: 40,
+            height: 50,
             padding: const EdgeInsets.symmetric(
               horizontal: 18,
             ),
@@ -389,7 +389,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   color: secondaryColor),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Your area of Goal',
+                hintText: 'Your area of Goal *',
                 hintStyle: GoogleFonts.poppins(
                   color: secondaryColor,
                   fontSize: 14,
@@ -889,7 +889,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                                     selectedStartDate!.month.toString() +
                                     "/" +
                                     selectedStartDate!.year.toString()
-                                : "Start Date",
+                                : "Start Date *",
                             style: GoogleFonts.poppins(
                               color: secondaryColor,
                               fontSize: 14,
@@ -937,7 +937,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                                     selectedEndDate!.month.toString() +
                                     "/" +
                                     selectedEndDate!.year.toString()
-                                : "End Date",
+                                : "End Date *",
                             style: GoogleFonts.poppins(
                               color: secondaryColor,
                               fontSize: 14,
@@ -1124,7 +1124,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Goal Summary",
+              "Goal Summary *",
               style: GoogleFonts.poppins(
                 color: blueGrey,
                 fontSize: 16,

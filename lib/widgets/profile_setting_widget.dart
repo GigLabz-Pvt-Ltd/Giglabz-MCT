@@ -595,7 +595,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           selectDobDate(context);
                         },
                         child: CalendarOrDropDown(
-                            label: "Date of birth",
+                            label: "Date of birth *",
                             hint: selectedDob != null
                                 ? selectedDob!.day.toString() +
                                     "/" +
@@ -612,7 +612,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     Expanded(
                       child: Stack(children: [
                         const CalendarOrDropDown(
-                            label: "Gender",
+                            label: "Gender *",
                             hint: "",
                             suffixIcon: "dropdownArrow"),
                         Container(
@@ -659,8 +659,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           });
                     },
                     child: CalendarOrDropDown(
-                        label: "NDIS Number",
-                        hint: ndis ?? "Enter NDIS Number",
+                        label: "NDIS Number *",
+                        hint: ndis ?? "Enter NDIS Number *",
                         suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
                         bgColor: ndisFilled ? ndisSelectedBg : null),
                   ),
@@ -677,7 +677,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       children: [
                         Expanded(
                           child: CalendarOrDropDown(
-                              label: "NDIS Plan Start Date",
+                              label: "NDIS Plan Start Date *",
                               hint: ndisStart != null
                                   ? ndisStart!.day.toString() +
                                       "/" +
@@ -693,7 +693,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         ),
                         Expanded(
                           child: CalendarOrDropDown(
-                              label: "NDIS Plan End Date",
+                              label: "NDIS Plan End Date *",
                               hint: ndisEnd != null
                                   ? ndisEnd!.day.toString() +
                                       "/" +
@@ -711,7 +711,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     height: 70,
                     child: Stack(children: [
                       const CalendarOrDropDown(
-                          label: "Country",
+                          label: "Country *",
                           hint: "",
                           suffixIcon: "dropdownArrow"),
                       Container(
@@ -756,7 +756,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       height: 70,
                       child: Stack(children: [
                         CalendarOrDropDown(
-                            label: "State",
+                            label: "State *",
                             hint: selectedState == null ? "Select State" : "",
                             suffixIcon: "dropdownArrow"),
                         Container(
@@ -803,7 +803,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       height: 70,
                       child: Stack(children: [
                         CalendarOrDropDown(
-                            label: "Area / Sub urban",
+                            label: "Area / Sub urban *",
                             hint: selectedArea == null ? "Select Area" : "",
                             suffixIcon: "dropdownArrow"),
                         Container(
@@ -886,7 +886,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                               color: outlineGrey,
                             ),
                           ),
-                          labelText: "Postal Code",
+                          labelText: "Postal Code *",
                           border: InputBorder.none,
                           hintText: 'Postal Code *',
                         ),
