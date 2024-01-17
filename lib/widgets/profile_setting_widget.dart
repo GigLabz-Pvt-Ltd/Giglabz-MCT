@@ -649,6 +649,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ]),
                     ),
                   ]),
+                  if(userMap?["role_id"] != 3)
                   GestureDetector(
                     onTap: () {
                       _ndisNumberController.text = ndis ?? "";
@@ -664,6 +665,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
                         bgColor: ndisFilled ? ndisSelectedBg : null),
                   ),
+                  if(userMap?["role_id"] != 3)
                   GestureDetector(
                     onTap: () {
                       _ndisNumberController.text = ndis ?? "";
@@ -927,29 +929,29 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter date of birth")));
                         return;
                       }
-                      if (ndis == null || ndis == "") {
+                      if (userMap?["role_id"] != 3 && ndis == null || ndis == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS number")));
                         return;
                       }
-                      if (ndis == null || ndis == "") {
+                      if (userMap?["role_id"] != 3 && ndis == null || ndis == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS number")));
                         return;
                       }
-                      if (ndisStart == null) {
+                      if (userMap?["role_id"] != 3 && ndisStart == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS start date")));
                         return;
                       }
-                      if (ndisEnd == null) {
+                      if (userMap?["role_id"] != 3 && ndisEnd == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS start date")));
                         return;
                       }
-                      print("start ${ndisStart!.millisecondsSinceEpoch}");
-                      print("end   ${ndisEnd!.millisecondsSinceEpoch}");
-                      if (ndisEnd!.millisecondsSinceEpoch <
+                      print("start ${ndisStart?.millisecondsSinceEpoch}");
+                      print("end   ${ndisEnd?.millisecondsSinceEpoch}");
+                      if (userMap?["role_id"] != 3 && ndisEnd!.millisecondsSinceEpoch <
                           ndisStart!.millisecondsSinceEpoch) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
@@ -992,16 +994,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           address: "some address",
                           state: selectedState,
                           country: selectedCountry,
-                          ndisStartDate: ndisStart!.day.toString() +
-                              "/" +
-                              ndisStart!.month.toString() +
-                              "/" +
-                              ndisStart!.year.toString(),
-                          ndisEndDate: ndisEnd!.day.toString() +
-                              "/" +
-                              ndisEnd!.month.toString() +
-                              "/" +
-                              ndisEnd!.year.toString(),
+                          ndisStartDate: "${ndisStart?.day} / ${ndisStart?.month} / ${ndisStart?.year}",
+                          ndisEndDate: "${ndisEnd?.day} / ${ndisEnd?.month} / ${ndisEnd?.year}",
                           providers: [310, 364],
                           interests: interests);
                       UpdateProfile profile = UpdateProfile(
@@ -2142,5 +2136,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             return okDialog("terms_and_conditions");
           }
         });
+        // if(!updated){
+        //     Navigator.pop(context);
+        // }
   }
 }
