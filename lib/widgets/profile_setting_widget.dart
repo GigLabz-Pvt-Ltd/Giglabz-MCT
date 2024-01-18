@@ -649,66 +649,66 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ]),
                     ),
                   ]),
-                  if(userMap?["role_id"] != 3)
-                  GestureDetector(
-                    onTap: () {
-                      _ndisNumberController.text = ndis ?? "";
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ndisPlanInfoDialog();
-                          });
-                    },
-                    child: CalendarOrDropDown(
-                        label: "NDIS Number *",
-                        hint: ndis ?? "Enter NDIS Number *",
-                        suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
-                        bgColor: ndisFilled ? ndisSelectedBg : null),
-                  ),
-                  if(userMap?["role_id"] != 3)
-                  GestureDetector(
-                    onTap: () {
-                      _ndisNumberController.text = ndis ?? "";
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ndisPlanInfoDialog();
-                          });
-                    },
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: CalendarOrDropDown(
-                              label: "NDIS Plan Start Date *",
-                              hint: ndisStart != null
-                                  ? ndisStart!.day.toString() +
-                                      "/" +
-                                      ndisStart!.month.toString() +
-                                      "/" +
-                                      ndisStart!.year.toString()
-                                  : "00/00/0000",
-                              suffixIcon: "calendar",
-                              bgColor: ndisFilled ? ndisSelectedBg : null),
-                        ),
-                        Container(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: CalendarOrDropDown(
-                              label: "NDIS Plan End Date *",
-                              hint: ndisEnd != null
-                                  ? ndisEnd!.day.toString() +
-                                      "/" +
-                                      ndisEnd!.month.toString() +
-                                      "/" +
-                                      ndisEnd!.year.toString()
-                                  : "00/00/0000",
-                              suffixIcon: "calendar",
-                              bgColor: ndisFilled ? ndisSelectedBg : null),
-                        ),
-                      ],
+                  if (userMap?["role_id"] == 1)
+                    GestureDetector(
+                      onTap: () {
+                        _ndisNumberController.text = ndis ?? "";
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: CalendarOrDropDown(
+                          label: "NDIS Number *",
+                          hint: ndis ?? "Enter NDIS Number *",
+                          suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
                     ),
-                  ),
+                  if (userMap?["role_id"] == 1)
+                    GestureDetector(
+                      onTap: () {
+                        _ndisNumberController.text = ndis ?? "";
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CalendarOrDropDown(
+                                label: "NDIS Plan Start Date *",
+                                hint: ndisStart != null
+                                    ? ndisStart!.day.toString() +
+                                        "/" +
+                                        ndisStart!.month.toString() +
+                                        "/" +
+                                        ndisStart!.year.toString()
+                                    : "00/00/0000",
+                                suffixIcon: "calendar",
+                                bgColor: ndisFilled ? ndisSelectedBg : null),
+                          ),
+                          Container(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: CalendarOrDropDown(
+                                label: "NDIS Plan End Date *",
+                                hint: ndisEnd != null
+                                    ? ndisEnd!.day.toString() +
+                                        "/" +
+                                        ndisEnd!.month.toString() +
+                                        "/" +
+                                        ndisEnd!.year.toString()
+                                    : "00/00/0000",
+                                suffixIcon: "calendar",
+                                bgColor: ndisFilled ? ndisSelectedBg : null),
+                          ),
+                        ],
+                      ),
+                    ),
                   Container(
                     height: 70,
                     child: Stack(children: [
@@ -929,30 +929,33 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter date of birth")));
                         return;
                       }
-                      if (userMap?["role_id"] != 3 && ndis == null || ndis == "") {
+                      if (userMap?["role_id"] == 1 && ndis == null ||
+                          ndis == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS number")));
                         return;
                       }
-                      if (userMap?["role_id"] != 3 && ndis == null || ndis == "") {
+                      if (userMap?["role_id"] == 1 && ndis == null ||
+                          ndis == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS number")));
                         return;
                       }
-                      if (userMap?["role_id"] != 3 && ndisStart == null) {
+                      if (userMap?["role_id"] == 1 && ndisStart == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS start date")));
                         return;
                       }
-                      if (userMap?["role_id"] != 3 && ndisEnd == null) {
+                      if (userMap?["role_id"] == 1 && ndisEnd == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter NDIS start date")));
                         return;
                       }
                       print("start ${ndisStart?.millisecondsSinceEpoch}");
                       print("end   ${ndisEnd?.millisecondsSinceEpoch}");
-                      if (userMap?["role_id"] != 3 && ndisEnd!.millisecondsSinceEpoch <
-                          ndisStart!.millisecondsSinceEpoch) {
+                      if (userMap?["role_id"] == 1 &&
+                          ndisEnd!.millisecondsSinceEpoch <
+                              ndisStart!.millisecondsSinceEpoch) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
                                 "Enter NDIS end date is before start date")));
@@ -994,9 +997,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           address: "some address",
                           state: selectedState,
                           country: selectedCountry,
-                          ndisStartDate: "${ndisStart?.day} / ${ndisStart?.month} / ${ndisStart?.year}",
-                          ndisEndDate: "${ndisEnd?.day} / ${ndisEnd?.month} / ${ndisEnd?.year}",
-                          providers: [310, 364],
+                          ndisStartDate:
+                              "${ndisStart?.day} / ${ndisStart?.month} / ${ndisStart?.year}",
+                          ndisEndDate:
+                              "${ndisEnd?.day} / ${ndisEnd?.month} / ${ndisEnd?.year}",
+                          providers: [364],
                           interests: interests);
                       UpdateProfile profile = UpdateProfile(
                           participant: mParticipant, provider: null);
@@ -2128,7 +2133,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          if (ndisAgreement != 1) {
+          if (ndisAgreement != 1 && userMap?["role_id"] == 1) {
             return okDialog("update_profile");
           } else if (ndisTc != 1) {
             return okDialog("ndis_agreement");
@@ -2136,8 +2141,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             return okDialog("terms_and_conditions");
           }
         });
-        // if(!updated){
-        //     Navigator.pop(context);
-        // }
+    // if(!updated){
+    //     Navigator.pop(context);
+    // }
   }
 }

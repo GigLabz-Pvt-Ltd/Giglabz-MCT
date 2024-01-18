@@ -166,6 +166,8 @@ class ApiService {
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
+    print(getUpdateProfileApiToJson(profile));
+
     final response = await post(
         Uri.parse(
             "$BASE_URL_8080/api/userprofile/update/user/${userMap["user_name"]}/${userMap["role_id"]}"),
