@@ -34,11 +34,11 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     init();
   }
 
-  Object? goalArea = 1;
+  Object? goalArea = -1;
   Object? shareGoalTo = "family";
-  Object? goalType = "Recurring";
-  Object? selectedOption = "High";
-  Object? goalFor = "Self";
+  Object? goalType = "";
+  Object? selectedOption = "";
+  Object? goalFor = "";
   var selectedName = null;
   List<String> goalTypeList = [];
   List<GoalArea> goalAreaList = [];
@@ -1146,9 +1146,41 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     .showSnackBar(SnackBar(content: Text("Enter Goal Title")));
                 return;
               }
-              if(goalFor == "Someone Else" && someoneElse.length > 1){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Can add only one person in goal for someone else option...select group option for adding more")));
+              if (selectedOption == "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Select goal priority")));
+                return;
+              }
+              if (goalArea == -1) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Select goal area type")));
+                return;
+              }
+              if (goalArea == 2 && _customAreaController.text == "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Enter area of goal")));
+                return;
+              }
+              if (goalFor == "") {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Select goal for")));
+                return;
+              }
+              if (goalType == "") {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Select goal type")));
+                return;
+              }
+              if (goalFor == "Someone Else" && someoneElse.length > 1) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "Can add only one person in goal for someone else option...select group option for adding more")));
+                return;
+              }
+              if (goalType == "Recurring" &&
+                  selectedRecurring == "Select recurring frequency *") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Select recurring frequency")));
                 return;
               }
               if (selectedStartDate == null || selectedEndDate == null) {
@@ -1400,7 +1432,6 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     } else {
       setState(() {
         isParticipant = false;
-        goalFor = "Someone Else";
       });
     }
 

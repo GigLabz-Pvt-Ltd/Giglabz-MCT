@@ -6,6 +6,7 @@ List<FlagsAndCode> countries = [
 
 List<String> countriesStings = ["Select Country", "Australia"];
 List<String> goalRecurring = ["Daily", "Weekly", "Monthly", "Yearly"];
+List<String> goalSummaryRecurring = ["Select recurring frequency *", "Daily", "Weekly", "Monthly", "Yearly"];
 List<String> progressPercent = [
   "10%",
   "20%",
