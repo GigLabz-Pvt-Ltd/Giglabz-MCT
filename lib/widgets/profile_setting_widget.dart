@@ -681,9 +681,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             child: CalendarOrDropDown(
                                 label: "NDIS Plan Start Date *",
                                 hint: ndisStart != null
-                                    ? ndisStart!.day.toString() +
-                                        "/" +
-                                        ndisStart!.month.toString() +
+                                    ? ndisStart!.day.toString()+
+                                        "/"+
+                                        ndisStart!.month.toString()+
                                         "/" +
                                         ndisStart!.year.toString()
                                     : "00/00/0000",
@@ -998,9 +998,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           state: selectedState,
                           country: selectedCountry,
                           ndisStartDate:
-                              "${ndisStart?.day} / ${ndisStart?.month} / ${ndisStart?.year}",
+                              "${ndisStart?.day}/${ndisStart?.month}/${ndisStart?.year}",
                           ndisEndDate:
-                              "${ndisEnd?.day} / ${ndisEnd?.month} / ${ndisEnd?.year}",
+                              "${ndisEnd?.day}/${ndisEnd?.month}/${ndisEnd?.year}",
                           providers: [364],
                           interests: interests);
                       UpdateProfile profile = UpdateProfile(

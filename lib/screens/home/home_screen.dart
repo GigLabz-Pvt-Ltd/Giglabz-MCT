@@ -506,11 +506,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 } else {
                   name = "Hey, ${mProfile.participant!.firstName} 👋";
-                  if (mProfile.participant?.ndisAgreement == 1 &&
-                      mProfile.participant?.ndisTc == 1) {
-                    tcAgreed = true;
+                  if (userMap["role_id"] == 1) {
+                    if (mProfile.participant?.ndisAgreement == 1 &&
+                        mProfile.participant?.ndisTc == 1) {
+                      tcAgreed = true;
+                    } else {
+                      tcAgreed = false;
+                    }
                   } else {
-                    tcAgreed = false;
+                    if (mProfile.participant?.ndisTc == 1) {
+                      tcAgreed = true;
+                    } else {
+                      tcAgreed = false;
+                    }
                   }
                 }
               });
@@ -1151,11 +1159,19 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           } else {
             name = "Hey, ${mProfile.participant!.firstName} 👋";
-            if (mProfile.participant?.ndisAgreement == 1 &&
-                mProfile.participant?.ndisTc == 1) {
-              tcAgreed = true;
+            if (userMap["role_id"] == 1) {
+              if (mProfile.participant?.ndisAgreement == 1 &&
+                  mProfile.participant?.ndisTc == 1) {
+                tcAgreed = true;
+              } else {
+                tcAgreed = false;
+              }
             } else {
-              tcAgreed = false;
+              if (mProfile.participant?.ndisTc == 1) {
+                tcAgreed = true;
+              } else {
+                tcAgreed = false;
+              }
             }
           }
         });
@@ -1192,11 +1208,19 @@ class _HomeScreenState extends State<HomeScreen> {
         imgUrl = mProfile.participant?.profilePic ?? "";
 
         name = "Hey, ${mProfile.participant!.firstName} 👋";
-        if (mProfile.participant?.ndisAgreement == 1 &&
-            mProfile.participant?.ndisTc == 1) {
-          tcAgreed = true;
+        if (userMap["role_id"] == 1) {
+          if (mProfile.participant?.ndisAgreement == 1 &&
+              mProfile.participant?.ndisTc == 1) {
+            tcAgreed = true;
+          } else {
+            tcAgreed = false;
+          }
         } else {
-          tcAgreed = false;
+          if (mProfile.participant?.ndisTc == 1) {
+            tcAgreed = true;
+          } else {
+            tcAgreed = false;
+          }
         }
       }
     });
