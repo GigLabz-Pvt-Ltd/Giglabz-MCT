@@ -1509,6 +1509,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   if (fromDialog == "terms_and_conditions") {
                     updateNdisValues();
                     Navigator.pop(context);
+                    Navigator.pop(context);
                   }
                 },
                 child: Container(
