@@ -1831,6 +1831,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
             Container(
               width: 10,
             ),
+            if(false)
             Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

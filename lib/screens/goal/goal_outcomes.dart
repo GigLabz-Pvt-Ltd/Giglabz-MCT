@@ -243,6 +243,12 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         milestone: milestone,
                         goalId: widget.goalId));
 
+                        if(_outcomeController.text.isEmpty){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Outcome cannot be empty")));
+                      return;
+                        }
+
                 if (response.responseStatus == 200) {
                   showDialog(
                       context: context,
