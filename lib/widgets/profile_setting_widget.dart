@@ -426,13 +426,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     )
                   ]),
                   BorderedEditText(
-                      label: "First Name",
-                      hint: "Enter First Name *",
+                      label: userMap?["role_id"] != 4 ? "First Name" : "Care Team Member",
+                      hint: userMap?["role_id"] != 4 ? "Enter First Name *" : "Enter Care Team Member *",
                       controller: _firstNameController),
-                  BorderedEditText(
-                      label: "Last Name",
-                      hint: "Enter Last Name *",
-                      controller: _lastNameController),
+                  if (userMap?["role_id"] != 4)
+                    BorderedEditText(
+                        label: "Last Name",
+                        hint: "Enter Last Name *",
+                        controller: _lastNameController),
                   Stack(children: [
                     Container(
                       margin: const EdgeInsets.only(top: 20),
@@ -588,67 +589,68 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ),
                     ),
                   ),
-                  Row(children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          selectDobDate(context);
-                        },
-                        child: CalendarOrDropDown(
-                            label: "Date of birth *",
-                            hint: selectedDob != null
-                                ? selectedDob!.day.toString() +
-                                    "/" +
-                                    selectedDob!.month.toString() +
-                                    "/" +
-                                    selectedDob!.year.toString()
-                                : "",
-                            suffixIcon: "calendar"),
+                  if (userMap?["role_id"] != 4)
+                    Row(children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            selectDobDate(context);
+                          },
+                          child: CalendarOrDropDown(
+                              label: "Date of birth *",
+                              hint: selectedDob != null
+                                  ? selectedDob!.day.toString() +
+                                      "/" +
+                                      selectedDob!.month.toString() +
+                                      "/" +
+                                      selectedDob!.year.toString()
+                                  : "",
+                              suffixIcon: "calendar"),
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Stack(children: [
-                        const CalendarOrDropDown(
-                            label: "Gender *",
-                            hint: "",
-                            suffixIcon: "dropdownArrow"),
-                        Container(
-                          height: 70,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(top: 30, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              alignment: Alignment.center,
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedGender = newValue!;
-                                });
-                              },
-                              value: selectedGender,
-                              items: genders.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
+                      Container(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Stack(children: [
+                          const CalendarOrDropDown(
+                              label: "Gender *",
+                              hint: "",
+                              suffixIcon: "dropdownArrow"),
+                          Container(
+                            height: 70,
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(top: 30, left: 10),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                alignment: Alignment.center,
+                                icon: const Icon(null),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedGender = newValue!;
+                                  });
+                                },
+                                value: selectedGender,
+                                items: genders.map((String dropDownString) {
+                                  return DropdownMenuItem<String>(
+                                    value: dropDownString,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 4),
+                                      child: Text(
+                                        dropDownString,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: secondaryColor),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
-                        ),
-                      ]),
-                    ),
-                  ]),
+                        ]),
+                      ),
+                    ]),
                   if (userMap?["role_id"] == 1)
                     GestureDetector(
                       onTap: () {
@@ -681,9 +683,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             child: CalendarOrDropDown(
                                 label: "NDIS Plan Start Date *",
                                 hint: ndisStart != null
-                                    ? ndisStart!.day.toString()+
-                                        "/"+
-                                        ndisStart!.month.toString()+
+                                    ? ndisStart!.day.toString() +
+                                        "/" +
+                                        ndisStart!.month.toString() +
                                         "/" +
                                         ndisStart!.year.toString()
                                     : "00/00/0000",
@@ -914,7 +916,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter first name")));
                         return;
                       }
-                      if (_lastNameController.text == "") {
+                      if (_lastNameController.text == "" && userMap?["role_id"] != 4) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter Last name")));
                         return;
@@ -924,7 +926,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter phone number")));
                         return;
                       }
-                      if (selectedDob == null) {
+                      if (selectedDob == null && userMap?["role_id"] != 4) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter date of birth")));
                         return;
