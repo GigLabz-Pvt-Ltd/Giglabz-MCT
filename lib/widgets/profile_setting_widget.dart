@@ -20,6 +20,7 @@ import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/calendar_or_dropdown.dart';
@@ -426,8 +427,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     )
                   ]),
                   BorderedEditText(
-                      label: userMap?["role_id"] != 4 ? "First Name" : "Care Team Member",
-                      hint: userMap?["role_id"] != 4 ? "Enter First Name *" : "Enter Care Team Member *",
+                      label: userMap?["role_id"] != 4
+                          ? "First Name"
+                          : "Care Team Member",
+                      hint: userMap?["role_id"] != 4
+                          ? "Enter First Name *"
+                          : "Enter Care Team Member *",
                       controller: _firstNameController),
                   if (userMap?["role_id"] != 4)
                     BorderedEditText(
@@ -916,7 +921,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter first name")));
                         return;
                       }
-                      if (_lastNameController.text == "" && userMap?["role_id"] != 4) {
+                      if (_lastNameController.text == "" &&
+                          userMap?["role_id"] != 4) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Enter Last name")));
                         return;
@@ -1489,7 +1495,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       textAlign: TextAlign.center,
                     )),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (fromDialog == "update_profile") {
                     updateNdisValues();
                     Navigator.pop(context);
@@ -1510,8 +1516,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                   }
                   if (fromDialog == "terms_and_conditions") {
                     updateNdisValues();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const HomeScreen()),
+                          (Route route) => false);
                   }
                 },
                 child: Container(
