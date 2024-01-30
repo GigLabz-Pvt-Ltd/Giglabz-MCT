@@ -163,13 +163,30 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     value: 0,
                     focusColor: grey,
                     groupValue: selectedOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedOption = int.parse(value.toString());
-                        print("Button value: $value");
-                        // milestone.clear();
-                        widget.updateTab(2, widget.goalStart, widget.goalEnd);
-                      });
+                    onChanged: (value) async {
+                      if (_outcomeController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Outcome cannot be empty")));
+                        return;
+                      }
+                      var response = await ApiService().createMilestone(
+                          CreateMilestone(
+                              expectedOutcome: _outcomeController.text,
+                              breakdown: 0,
+                              milestone: null,
+                              goalId: widget.goalId));
+
+                      if (response.responseStatus == 200) {
+                        setState(() {
+                          selectedOption = int.parse(value.toString());
+                          print("Button value: $value");
+                          // milestone.clear();
+                          widget.updateTab(2, widget.goalStart, widget.goalEnd);
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(response.responseMessage)));
+                      }
                     },
                   ),
                   Text(
@@ -243,11 +260,11 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         milestone: milestone,
                         goalId: widget.goalId));
 
-                        if(_outcomeController.text.isEmpty){
-                              ScaffoldMessenger.of(context).showSnackBar(
+                if (_outcomeController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Outcome cannot be empty")));
-                      return;
-                        }
+                  return;
+                }
 
                 if (response.responseStatus == 200) {
                   showDialog(

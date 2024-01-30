@@ -9,12 +9,12 @@ class CreateMilestone {
   CreateMilestone({
     required this.expectedOutcome,
     required this.breakdown,
-    required this.milestone,
+    this.milestone,
     required this.goalId,
   });
   late final String expectedOutcome;
   late final int breakdown;
-  late final List<Milestone> milestone;
+  late final List<Milestone>? milestone;
   late final int goalId;
 
   CreateMilestone.fromJson(Map<String, dynamic> json) {
@@ -29,7 +29,7 @@ class CreateMilestone {
     final _data = <String, dynamic>{};
     _data['expectedOutcome'] = expectedOutcome;
     _data['breakdown'] = breakdown;
-    _data['milestone'] = milestone.map((e) => e.toJson()).toList();
+    _data['milestone'] = milestone?.map((e) => e.toJson()).toList();
     _data['goalId'] = goalId;
     return _data;
   }

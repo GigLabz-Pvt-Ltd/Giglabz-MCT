@@ -1415,19 +1415,21 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
-    if (userMap["role_id"] == 1) {
-      areaResponse = await ApiService().getAchieverGoalAreas();
+    areaResponse = await ApiService().getAchieverGoalAreas();
+    setState(() {
+      areaResponse?.achiever.forEach((element) {
+        goalTypeList.add(element.type);
+      });
+      selectedGoalType = goalTypeList[0];
 
+      areaResponse?.achiever[0].subTypes.forEach((element) {
+        goalAreaList.add(element);
+      });
+    });
+
+    if (userMap["role_id"] == 1) {
       setState(() {
         isParticipant = true;
-        areaResponse?.achiever.forEach((element) {
-          goalTypeList.add(element.type);
-        });
-        selectedGoalType = goalTypeList[0];
-
-        areaResponse?.achiever[0].subTypes.forEach((element) {
-          goalAreaList.add(element);
-        });
       });
     } else {
       setState(() {
