@@ -167,14 +167,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                         ),
                                       ),
                                 Text(
-                                  widget.user.role.toCapitalized(),
+                                  widget.user.roleDisplayName.toCapitalized(),
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       color: secondaryColor),
-                                ),
+                                )
                               ],
                             ),
                           )

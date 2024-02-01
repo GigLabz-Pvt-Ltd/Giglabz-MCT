@@ -20,9 +20,9 @@ class _InitialCarouselScreenState extends State<InitialCarouselScreen> {
     "lib/resources/images/initial_carousel_3.png"
   ];
   var carouselTexts = [
-    "Trackability refers to the ability to monitor and progress.",
-    "Trackability refers to the ability to monitor and progress.",
-    "Trackability refers to the ability to monitor and progress."
+    "MyCareTeam refers to the ability to monitor and progress.",
+    "MyCareTeam refers to the ability to monitor and progress.",
+    "MyCareTeam refers to the ability to monitor and progress."
   ];
 
   @override

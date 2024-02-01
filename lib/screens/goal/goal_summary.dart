@@ -54,12 +54,15 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   DateTime? selectedStartDate = null, selectedEndDate = null;
   DateTime selectedDob = DateTime.now();
   final _titleController = TextEditingController();
+  final _groupnameController = TextEditingController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _customAreaController = TextEditingController();
   final _descriptionController = TextEditingController();
   bool isParticipant = false;
   List<ForSomeoneElse> someoneElse = [];
+  List<ForGroup> forGroup=[];
+  bool groupFieldEnabled = true;
   var selectedSomeoneIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -228,7 +231,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              "Trackability has a set of pre-configured goal areas for you to select. Do you want to select one of them or set your own goal ?",
+              "MyCareTeam has a set of pre-configured goal areas for you to select. Do you want to select one of them or set your own goal ?",
               style: GoogleFonts.poppins(
                 color: iconBlack,
                 fontSize: 15,
@@ -512,7 +515,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ]),
           ],
         ),
-        if (!isParticipant && goalFor != "Self")
+        if (!isParticipant && goalFor == "Someone Else")
           Container(
             height: 40,
             margin: EdgeInsets.only(top: 8, left: 20, right: 20),
@@ -533,6 +536,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                         fontWeight: FontWeight.w400,
                         color: secondaryColor),
                     decoration: InputDecoration(
+                      isDense: true,
                       border: InputBorder.none,
                       hintText: 'Name',
                       hintStyle: GoogleFonts.poppins(
@@ -560,6 +564,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                         fontWeight: FontWeight.w400,
                         color: secondaryColor),
                     decoration: InputDecoration(
+                      isDense: true,
                       border: InputBorder.none,
                       hintText: 'Email',
                       hintStyle: GoogleFonts.poppins(
@@ -593,6 +598,144 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Email not valid")));
                   }
+                },
+                child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: SvgPicture.asset(
+                        "lib/resources/images/create_goal_add.svg")),
+              )
+            ]),
+          ),
+
+        if (!isParticipant && goalFor == "For Group")
+          Container(
+            height: 40,
+            margin: EdgeInsets.only(top: 8, left: 20, right: 20),
+            child: Row(children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
+                  margin: EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    enabled: groupFieldEnabled,
+                    controller: _groupnameController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: 'Group Name',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
+                  margin: EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _nameController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: 'Name',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 18, right: 18, top: 0),
+                  margin: EdgeInsets.only(left: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _emailController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: 'Email',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (_groupnameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Enter group name..")));
+                    return;
+                  }
+                  if (_nameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Enter name..")));
+                    return;
+                  }
+                  final bool emailValid = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                      .hasMatch(_emailController.text);
+                  if (emailValid) {
+                    setState(() {
+                      someoneElse.add(ForSomeoneElse(
+                          name: _nameController.text,
+                          email: _emailController.text
+                      ));
+                      forGroup.add(ForGroup(
+                          groupName: _groupnameController.text,
+                          groupMembers: someoneElse
+                          ));
+                      _nameController.text = "";
+                      _emailController.text = "";
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Email not valid")));
+                  }
+                  if(someoneElse.length>0){
+                    setState(() {
+                      groupFieldEnabled=false;
+                    });
+                  }
+
+                  print("lenght: ${someoneElse.length}");
                 },
                 child: Padding(
                     padding: EdgeInsets.only(left: 10),
@@ -1330,8 +1473,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               fontWeight: FontWeight.w400,
             ),
           ),
-        ),
-      ),
+        )
+      )
     ]);
   }
 

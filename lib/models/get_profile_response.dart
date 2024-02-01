@@ -9,6 +9,7 @@ class GetProfileResponse {
   GetProfileResponse({
     required this.roleId,
     required this.role,
+    required this.roleDisplayName,
     this.provider,
     this.participant,
     required this.responseStatus,
@@ -16,6 +17,7 @@ class GetProfileResponse {
   });
   late final int roleId;
   late final String role;
+  late final String roleDisplayName;
   late final Provider? provider;
   late final Participant? participant;
   late final int responseStatus;
@@ -24,6 +26,7 @@ class GetProfileResponse {
   GetProfileResponse.fromJson(Map<String, dynamic> json) {
     roleId = json['roleId'];
     role = json['role'];
+    roleDisplayName = json['roleDisplayName'];
     provider = Provider.fromJson(json['provider']);
     participant = Participant.fromJson(json['participant']);
     responseStatus = json['responseStatus'];
@@ -34,6 +37,7 @@ class GetProfileResponse {
     final _data = <String, dynamic>{};
     _data['roleId'] = roleId;
     _data['role'] = role;
+    _data['roleDisplayName'] = roleDisplayName;
     _data['provider'] = provider?.toJson();
     _data['participant'] = participant?.toJson();
     _data['responseStatus'] = responseStatus;

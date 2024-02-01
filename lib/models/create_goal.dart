@@ -12,6 +12,7 @@ class CreateGoal {
     this.areaCustom,
     required this.goalFor,
     this.forSomeoneElse,
+    this.forGroup,
     this.recurring,
     this.startDate,
     this.targetDate,
@@ -23,6 +24,7 @@ class CreateGoal {
   late final String? areaCustom;
   late final String goalFor;
   late final List<ForSomeoneElse>? forSomeoneElse;
+  late final List<ForGroup>? forGroup;
   late final String? recurring;
   late final String? startDate;
   late final String? targetDate;
@@ -97,6 +99,27 @@ class ForSomeoneElse {
     final _data = <String, dynamic>{};
     _data['name'] = name;
     _data['email'] = email;
+    return _data;
+  }
+}
+
+class ForGroup {
+  ForGroup({
+    required this.groupName,
+    required this.groupMembers
+  });
+  late final String groupName;
+  late final List<ForSomeoneElse> groupMembers;
+
+  ForGroup.fromJson(Map<String, dynamic> json) {
+    groupName = json['groupName'];
+    groupMembers = json['groupMembers'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['groupName'] = groupName;
+    _data['groupMembers'] = groupMembers;
     return _data;
   }
 }

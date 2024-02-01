@@ -8,6 +8,7 @@ import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/create_milestone.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
+import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/share_goal.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
@@ -49,6 +50,11 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
   final _paramController = TextEditingController();
 
+  Map<String, dynamic>? userMap;
+  bool isImplementer=false;
+  GetProfileResponse? implementer;
+  //Participant? implementer;
+
   bool isBeingEdited = false;
   List<FamilyColleagueList> people = [];
   List<ReviewerList> reviewer = [];
@@ -82,6 +88,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
   @override
   Widget build(BuildContext context) {
+    getImplementerProfile();
     return SingleChildScrollView(
       child: Column(children: [
         Padding(
@@ -89,7 +96,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Trackability allows you to share your goals to Family, Friends, Colleagues, Motivators etc. You can also add a reviewer to track and monitor your goals...",
+              "MyCareTeam allows you to share your goals to Family, Friends, Colleagues, Motivators etc. You can also add a implementer to track and monitor your goals...",
               style: GoogleFonts.poppins(
                 color: blueGrey,
                 fontSize: 15,
@@ -172,7 +179,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   },
                 ),
                 Text(
-                  "Reviewer",
+                  "Implementer",
                   style: GoogleFonts.poppins(
                     color: secondaryColor,
                     fontSize: 14,
@@ -203,7 +210,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               if (selectedOption == 1) {
                 if (reviewer.isNotEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("1 Reviewer is maximum")));
+                      SnackBar(content: Text("1 Implementer is maximum")));
                   return;
                 }
                 showDialog(
@@ -223,10 +230,10 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       SvgPicture.asset(
                           "lib/resources/images/add_people_disabled.svg"),
                     if (selectedOption == 1 && reviewer.isEmpty)
-                      SvgPicture.asset("lib/resources/images/add_reviewer.svg"),
+                      SvgPicture.asset("lib/resources/images/add_implementer.svg"),
                     if (selectedOption == 1 && reviewer.isNotEmpty)
                       SvgPicture.asset(
-                          "lib/resources/images/add_reviewer_disabled.svg"),
+                          "lib/resources/images/add_implementer.svg"),
                   ],
                 )),
           )
@@ -347,7 +354,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Yoy have been set a Goal Successfully',
+                          text: 'You have set a Goal Successfully',
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -1199,7 +1206,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Add Reviewer",
+                            "Add Implementer",
                             style: GoogleFonts.poppins(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
@@ -1229,6 +1236,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   ),
                   Container(
                     height: 40,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 18,
                     ),
@@ -1237,7 +1245,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
                       border: Border.all(color: outlineGrey),
                     ),
-                    child: TextField(
+                    child: isImplementer?Text(
+                      implementer!.participant!.firstName.toString(),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor
+                      ),
+                    ):TextField(
                       controller: _firstnameRController,
                       style: GoogleFonts.poppins(
                           fontSize: 16,
@@ -1252,7 +1267,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                    ),
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, top: 14),
@@ -1266,6 +1281,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   ),
                   Container(
                     height: 40,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 18,
                     ),
@@ -1274,7 +1290,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
                       border: Border.all(color: outlineGrey),
                     ),
-                    child: TextField(
+                    child: isImplementer?Text(
+                      implementer!.participant!.lastName.toString(),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor
+                      ),
+                    ):TextField(
                       controller: _lastnameRController,
                       style: GoogleFonts.poppins(
                           fontSize: 16,
@@ -1289,7 +1312,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                    ),
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, top: 14),
@@ -1303,6 +1326,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   ),
                   Container(
                     height: 40,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 18,
                     ),
@@ -1311,7 +1335,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
                       border: Border.all(color: outlineGrey),
                     ),
-                    child: TextField(
+                    child: isImplementer?Text(
+                      implementer!.participant!.email.toString(),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor
+                      ),
+                    ):TextField(
                       controller: _emailRController,
                       style: GoogleFonts.poppins(
                           fontSize: 16,
@@ -1326,7 +1357,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                    ),
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, top: 14),
@@ -1340,6 +1371,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   ),
                   Container(
                     height: 40,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 18,
                     ),
@@ -1348,7 +1380,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
                       border: Border.all(color: outlineGrey),
                     ),
-                    child: TextField(
+                    child: isImplementer?Text(
+                      implementer!.participant!.phone.toString(),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor
+                      ),
+                    ):TextField(
                       controller: _phoneNumRController,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
@@ -1578,17 +1617,17 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   // ]),
                   GestureDetector(
                     onTap: () {
-                      if (_firstnameRController.text.isEmpty) {
+                      if (_firstnameRController.text.isEmpty && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("First name can't be empty")));
                         return;
                       }
-                      if (_lastnameRController.text.isEmpty) {
+                      if (_lastnameRController.text.isEmpty && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Last name can't be empty")));
                         return;
                       }
-                      if (_emailRController.text.isEmpty) {
+                      if (_emailRController.text.isEmpty && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("email can't be empty")));
                         return;
@@ -1596,12 +1635,12 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       final bool emailValid = RegExp(
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
                           .hasMatch(_emailRController.text);
-                      if (!emailValid) {
+                      if (!emailValid && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Email is not valid")));
                         return;
                       }
-                      if (_phoneNumRController.text.isEmpty) {
+                      if (_phoneNumRController.text.isEmpty && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Phone number can't be empty")));
                         return;
@@ -1633,10 +1672,10 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                             editable: false);
                       } else {
                         reviewer.add(ReviewerList(
-                            firstName: _firstnameRController.text,
-                            lastName: _lastnameRController.text,
-                            email: _emailRController.text,
-                            phoneNo: _phoneNumRController.text,
+                            firstName: isImplementer ? implementer!.participant!.firstName.toString() :_firstnameRController.text,
+                            lastName: isImplementer ? implementer!.participant!.lastName.toString() : _lastnameRController.text,
+                            email: isImplementer?implementer!.participant!.email.toString(): _emailRController.text,
+                            phoneNo: isImplementer?implementer!.participant!.phone.toString(): _phoneNumRController.text,
                             role: selectedRRole,
                             shareReason: _reasonRController.text,
                             editable: false));
@@ -1655,7 +1694,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                         ),
                         child: Center(
                           child: Text(
-                            "Add Reviewer",
+                            "Add Implementer",
                             style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -1802,60 +1841,60 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
             ),
           ]),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(children: [
-            Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Parameters to Review",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      // _parameterRController.text,
-                      "Self Actulaisation",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ]),
-            ),
-            Container(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Review Frequency",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      selectedRFrequency,
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ]),
-            ),
-            SvgPicture.asset("lib/resources/images/download.svg")
-          ]),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 8.0),
+        //   child: Row(children: [
+        //     Expanded(
+        //       child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Text(
+        //               "Parameters to Review",
+        //               style: GoogleFonts.poppins(
+        //                 color: secondaryColor,
+        //                 fontSize: 12,
+        //                 fontWeight: FontWeight.w400,
+        //               ),
+        //             ),
+        //             Text(
+        //               // _parameterRController.text,
+        //               "Self Actulaisation",
+        //               style: GoogleFonts.poppins(
+        //                 color: secondaryColor,
+        //                 fontSize: 12,
+        //                 fontWeight: FontWeight.w400,
+        //               ),
+        //             ),
+        //           ]),
+        //     ),
+        //     Container(
+        //       width: 10,
+        //     ),
+        //     Expanded(
+        //       child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Text(
+        //               "Review Frequency",
+        //               style: GoogleFonts.poppins(
+        //                 color: secondaryColor,
+        //                 fontSize: 12,
+        //                 fontWeight: FontWeight.w400,
+        //               ),
+        //             ),
+        //             Text(
+        //               selectedRFrequency,
+        //               style: GoogleFonts.poppins(
+        //                 color: secondaryColor,
+        //                 fontSize: 12,
+        //                 fontWeight: FontWeight.w400,
+        //               ),
+        //             ),
+        //           ]),
+        //     ),
+        //     //SvgPicture.asset("lib/resources/images/download.svg")
+        //   ]),
+        // ),
       ]),
     );
   }
@@ -2106,5 +2145,24 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
 
   void setParamInField(int index) {
     _paramController.text = parametersToReview[index].parameter;
+  }
+
+  void getImplementerProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+
+    if (userMap != null && implementer == null) {
+      var mProfile = await ApiService()
+          .getProfile(userMap?["user_name"], userMap?["role_id"]);
+      setState(() {
+        if(userMap?["role_id"]==3) {
+          implementer = mProfile;
+          isImplementer = true;
+          print(userMap?["user_name"]);
+          print(userMap?["role_id"]);
+        }
+      });
+    }
   }
 }
