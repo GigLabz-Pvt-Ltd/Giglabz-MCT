@@ -1558,11 +1558,10 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
-    if (userMap["role_id"] == 1) {
+
       areaResponse = await ApiService().getAchieverGoalAreas();
 
       setState(() {
-        isParticipant = true;
         areaResponse?.achiever.forEach((element) {
           goalTypeList.add(element.type);
         });
@@ -1572,13 +1571,14 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           goalAreaList.add(element);
         });
       });
-    } else {
-      setState(() {
-        isParticipant = false;
-      });
-    }
 
-    // else {
+    if (userMap["role_id"] == 1) {
+      setState(() {
+        isParticipant = true;
+      });
+          }
+
+        // else {
 // values to be mapped once ui shared from the client
     GetInfluencerGoalAreaResponse Iarea =
         await ApiService().getInfluencerGoalAreas();
