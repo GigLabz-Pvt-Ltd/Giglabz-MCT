@@ -61,22 +61,29 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: scaffoldGrey,
         elevation: 0,
-        leading: const Icon(
-          Icons.menu_rounded,
-          color: iconBlack,
-          size: 24,
-        ),
-        title: SvgPicture.asset(
-          "lib/resources/images/toolbar_logo.svg",
-          width: 192,
-          height: 26,
+        // leading: const Icon(
+        //   Icons.menu_rounded,
+        //   color: iconBlack,
+        //   size: 24,
+        // ),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: SvgPicture.asset(
+            "lib/resources/images/toolbar_logo.svg",
+            width: 192,
+            height: 26,
+          ),
         ),
         titleSpacing: 0,
         actions: [
-          const Icon(
-            Icons.notifications_none_rounded,
+          IconButton(
+            onPressed: (){
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
+            },
+            icon: Icon(Icons.notifications_none_rounded),
             color: iconBlack,
-            size: 24,
+            iconSize: 24,
           ),
           Container(
             height: 30,
@@ -476,9 +483,11 @@ class _HomeScreenState extends State<HomeScreen> {
         switch (index) {
           case 0:
             break;
-          case 1:
+          case 1:  ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
             break;
-          case 2:
+          case 2:  ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
             break;
           case 3:
             Navigator.of(context)
