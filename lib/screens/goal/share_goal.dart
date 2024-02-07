@@ -1795,28 +1795,28 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(children: [
-            Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Role",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      reviewer[index].role ?? "SomeText",
-                      style: GoogleFonts.poppins(
-                        color: secondaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ]),
-            ),
+            // Expanded(
+            //   child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text(
+            //           "Role",
+            //           style: GoogleFonts.poppins(
+            //             color: secondaryColor,
+            //             fontSize: 13,
+            //             fontWeight: FontWeight.w400,
+            //           ),
+            //         ),
+            //         Text(
+            //           reviewer[index].role ?? "SomeText",
+            //           style: GoogleFonts.poppins(
+            //             color: secondaryColor,
+            //             fontSize: 12,
+            //             fontWeight: FontWeight.w400,
+            //           ),
+            //         ),
+            //       ]),
+            // ),
             Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
