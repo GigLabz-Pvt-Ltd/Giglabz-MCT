@@ -19,9 +19,14 @@ class ShareGoalWidget extends StatefulWidget {
   ShareGoalWidget({
     Key? key,
     required int this.goalId,
+    required Function this.updateTab,
+    DateTime? this.goalStart,
+    DateTime? this.goalEnd,
   }) : super(key: key);
 
   int goalId;
+  Function updateTab;
+  DateTime? goalStart, goalEnd;
   @override
   State<ShareGoalWidget> createState() => _ShareGoalWidgetState();
 }
@@ -381,7 +386,9 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  setState(() {
+                    widget.updateTab(3, widget.goalStart, widget.goalEnd);
+                  });
                 },
                 child: Container(
                     height: 40,

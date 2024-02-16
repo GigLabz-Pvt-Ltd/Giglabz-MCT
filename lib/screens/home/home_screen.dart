@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var goal_id, name, tcAgreed = false;
   DashboardResponse? dashboard;
   int? goalCount;
+  int tabSelected=0;
   var imgUrl;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
@@ -1146,7 +1147,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context)
           .push(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  CreateGoalScreen(goalId: goal_id)))
+                  CreateGoalScreen(goalId: goal_id, tabSelected: tabSelected,)))
           .then((value) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String userPref = prefs.getString('user')!;

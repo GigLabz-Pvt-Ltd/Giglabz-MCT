@@ -7,8 +7,10 @@ import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/screens/goal/goal_outcomes.dart';
+import 'package:mycareteam/screens/goal/goal_progress.dart';
 import 'package:mycareteam/screens/goal/goal_summary.dart';
 import 'package:mycareteam/screens/goal/share_goal.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:mycareteam/widgets/bordered_edit_text.dart';
 import 'package:mycareteam/widgets/profile_setting_widget.dart';
@@ -18,9 +20,11 @@ class CreateGoalScreen extends StatefulWidget {
   CreateGoalScreen({
     Key? key,
     required int this.goalId,
+    required int this.tabSelected
   }) : super(key: key);
 
   int goalId;
+  int tabSelected;
 
   @override
   State<CreateGoalScreen> createState() => _CreateGoalScreenState();
@@ -49,6 +53,10 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         currentTab = _tabCont.index;
       });
     });
+    if(widget.tabSelected==3) {
+      updateSelectedTab(_tabCont.length - 1, goalStartDate, goalEndDate);
+    }
+    print("Tab selected: $widget.tabSelected");
 
     var w = widget.goalId;
   }
@@ -69,7 +77,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
               titleSpacing: 0,
               leading: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop('String');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
                 },
                 child: const Icon(
                   Icons.arrow_back_ios_new,
@@ -111,8 +119,13 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 updateTab: updateSelectedTab,
                 goalStart: goalStartDate,
                 goalEnd: goalEndDate),
-            ShareGoalWidget(goalId: widget.goalId),
-            Center(child: Text("Coming Soon...")),
+            ShareGoalWidget(goalId: widget.goalId,
+                goalStart: goalStartDate,
+                goalEnd: goalEndDate,
+                updateTab: updateSelectedTab),
+            //Center(child: Text("Coming Soon...")),
+            GoalProgressWidget(
+                goalId: widget.goalId),
           ],
         ),
       ),
