@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Response? imgResponse;
   var goal_id, name, tcAgreed = false;
   DashboardResponse? dashboard;
+  List<int>? goalID;
   int? goalCount;
   int tabSelected=0;
   var imgUrl;
@@ -664,9 +665,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const Spacer(),
+                TextButton(
+                  onPressed: (){
+                    print('Goal id ${goalID![index]}');
+                    setState(() {
+                      tabSelected=3;
+                    });
+                    print("Tab selected : $tabSelected");
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => CreateGoalScreen(goalId: goalID![index], tabSelected: tabSelected,)));
+                  },
+                  style: ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    "Progress Update",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 10,
+                        color: primaryColor),
+                  ),
+                ),
                 Container(
                   height: 22,
                   width: 22,
+                  margin: EdgeInsets.only(top: 6),
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: goalCategoryBlue,
@@ -1143,7 +1166,9 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
-
+      setState(() {
+        tabSelected=0;
+      });
       Navigator.of(context)
           .push(MaterialPageRoute(
               builder: (BuildContext context) =>
@@ -1233,6 +1258,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       }
+      goalID = dashboard!.goalList.map((e) => e.GoalId).toList();
     });
 
     if (userMap["role_id"] == 4 && imgUrl != "") {
