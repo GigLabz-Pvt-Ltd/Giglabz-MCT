@@ -179,19 +179,23 @@ class Providers {
   Providers({
     this.providerName,
     this.providerId,
+    this.providerEmail,
   });
   late final String? providerName;
   late final int? providerId;
+  late final String? providerEmail;
 
   Providers.fromJson(Map<String, dynamic> json) {
     providerName = json['providerName'];
     providerId = json['providerId'];
+    providerEmail = json['providerEmail'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['providerName'] = providerName;
     _data['providerId'] = providerId;
+    _data['providerEmail'] = providerEmail;
     return _data;
   }
 }

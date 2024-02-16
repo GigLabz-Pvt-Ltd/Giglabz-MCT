@@ -47,6 +47,7 @@ class UpdateParticipant {
     this.ndisEndDate,
     required this.providers,
     this.interests,
+    this.providerInviteeList,
   });
   late final String firstName;
   late final String lastName;
@@ -65,6 +66,7 @@ class UpdateParticipant {
   late final String? ndisEndDate;
   late final List<int> providers;
   late final List<Interests>? interests;
+  late final List<ProviderList>? providerInviteeList;
 
   UpdateParticipant.fromJson(Map<String, dynamic> json) {
     firstName = json['firstName'];
@@ -85,6 +87,7 @@ class UpdateParticipant {
     providers = List.castFrom<dynamic, int>(json['providers']);
     interests =
         List.from(json['interests']).map((e) => Interests.fromJson(e)).toList();
+    providerInviteeList = json['providerInviteeList'];
   }
 
   Map<String, dynamic> toJson() {
@@ -106,6 +109,29 @@ class UpdateParticipant {
     _data['ndisEndDate'] = ndisEndDate;
     _data['providers'] = providers;
     _data['interests'] = interests?.map((e) => e.toJson()).toList();
+    _data['providerInviteeList'] = providerInviteeList;
+    return _data;
+  }
+}
+
+class ProviderList{
+  ProviderList({
+    this.careTeamName,
+    this.careTeamEmail,
+  });
+
+  late final String? careTeamName;
+  late final String? careTeamEmail;
+
+  ProviderList.fromJson(Map<String, dynamic> json) {
+    careTeamName = json['careTeamName'];
+    careTeamEmail = json['careTeamEmail'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['careTeamName'] = careTeamName;
+    _data['careTeamEmail'] = careTeamEmail;
     return _data;
   }
 }

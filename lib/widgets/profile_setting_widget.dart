@@ -56,19 +56,25 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   DateTime? ndisStart = null;
   DateTime? ndisEnd = null;
   var ndis, ndisAgreement, ndisTc;
+  var ctmName, ctmEmail;
   Response? imgResponse;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
   final _aboutController = TextEditingController();
   final _ndisNumberController = TextEditingController();
   final _otherInterestController = TextEditingController();
+  final _ctmNameController = TextEditingController();
+  final _ctmEmailController = TextEditingController();
   bool showProviderOptions = false;
   List<bool> listChecked = [];
   bool isLoading = false;
   GetProvidersResponse? providers;
+  Providers? provider;
   List<String>? areas = [];
   List<String> pincodes = [];
   List<Interests>? interests = [];
+  List<ProviderList>? providerList = [];
+
   int selectedInterestIndex = 0;
   bool ndisFilled = false;
   var selectedInterest = 0;
@@ -717,6 +723,38 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         ],
                       ),
                     ),
+                  if (userMap?["role_id"] == 1)
+                    GestureDetector(
+                      onTap: () {
+                        _ctmNameController.text = ctmName ?? "";
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: CalendarOrDropDown(
+                          label: "CTM Name *",
+                          hint: ctmName ?? "Enter NDIS Number *",
+                          suffixIcon: "",
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
+                    ),
+                  if (userMap?["role_id"] == 1)
+                    GestureDetector(
+                      onTap: () {
+                        _ctmEmailController.text = ctmEmail ?? "";
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ndisPlanInfoDialog();
+                            });
+                      },
+                      child: CalendarOrDropDown(
+                          label: "CTM Email *",
+                          hint: ctmEmail ?? "Enter CTM Email *",
+                          suffixIcon: "",
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
+                    ),
                   Container(
                     height: 70,
                     child: Stack(children: [
@@ -960,6 +998,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Enter NDIS start date")));
                         return;
                       }
+                      if (userMap?["role_id"] == 1 && _ctmNameController.text == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter CTM Name")));
+                        return;
+                      }
+                      if (userMap?["role_id"] == 1 && _ctmEmailController.text == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Enter CTM Email")));
+                        return;
+                      }
                       print("start ${ndisStart?.millisecondsSinceEpoch}");
                       print("end   ${ndisEnd?.millisecondsSinceEpoch}");
                       if (userMap?["role_id"] == 1 &&
@@ -985,6 +1033,18 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             SnackBar(content: Text("Select a area")));
                         return;
                       }
+                      setState(() {
+                        ctmName=_ctmNameController.text;
+                        ctmEmail=_ctmEmailController.text;
+                        if(ctmName!=null && ctmEmail!=null){
+                          providerList!.add(
+                              ProviderList(
+                                  careTeamName: ctmName,
+                                  careTeamEmail: ctmEmail
+                              )
+                          );
+                        }
+                      });
                       updateNdisValues();
                       var mParticipant = UpdateParticipant(
                           firstName: _firstNameController.text,
@@ -1011,7 +1071,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           ndisEndDate:
                               "${ndisEnd?.day}/${ndisEnd?.month}/${ndisEnd?.year}",
                           providers: [364],
-                          interests: interests);
+                          interests: interests,
+                          providerInviteeList: providerList);
                       UpdateProfile profile = UpdateProfile(
                           participant: mParticipant, provider: null);
                       if (userMap?["role_id"] == 4) {
@@ -1020,6 +1081,11 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       }
                       var updated = await updateProfile(profile);
                       show(updated);
+                      print(ctmEmail);
+                      print(ctmName);
+                      print(_ctmEmailController.text);
+                      print(_ctmNameController.text);
+                      print(providerList!.first);
                     },
                     child: Container(
                       height: 40,
@@ -1263,6 +1329,82 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 //         suffixIcon: "dropdownArrow"),
                 //   ),
                 // ),
+                Container(
+                  height: 44,
+                  margin: const EdgeInsets.only(top: 24, left: 20, right: 20),
+                  child: TextField(
+                    controller: _ctmNameController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: GoogleFonts.poppins(
+                        color: iconBlack,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: outlineGrey,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: outlineGrey,
+                        ),
+                      ),
+                      labelText: "CTM Name",
+                      border: InputBorder.none,
+                      hintText: ctmName ?? 'Add CTM Name',
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 44,
+                  margin: const EdgeInsets.only(top: 24, left: 20, right: 20),
+                  child: TextField(
+                    controller: _ctmEmailController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      labelStyle: GoogleFonts.poppins(
+                        color: iconBlack,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: outlineGrey,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: outlineGrey,
+                        ),
+                      ),
+                      labelText: "CTM Email",
+                      border: InputBorder.none,
+                      hintText: ctmEmail ?? 'Enter CTM Email',
+                    ),
+                  ),
+                ),
                 if (showProviderOptions)
                   Container(
                     height: 150,
@@ -1365,6 +1507,12 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                     setState(() {
                       if (_ndisNumberController.text != "") {
                         ndis = _ndisNumberController.text;
+                      }
+                      if(_ctmNameController.text != ""){
+                        ctmName = _ctmNameController.text;
+                      }
+                      if(_ctmEmailController.text != ""){
+                        ctmEmail = _ctmEmailController.text;
                       }
                       ndisFilled = true;
                       update();
@@ -1982,6 +2130,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         imgResponse =
             await get(Uri.parse(widget.user.participant!.profilePic!));
       }
+      providerList = widget.user.participant!.providers!.map((element) {
+        return ProviderList(
+            careTeamName: element.providerName,
+            careTeamEmail: element.providerEmail
+        );
+      }).toList();
+      ctmName = providerList![0].careTeamName;
+      ctmEmail = providerList![0].careTeamEmail;
       update();
       providers?.providerNames.forEach((element) {
         listChecked.add(false);
