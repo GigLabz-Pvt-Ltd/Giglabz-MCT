@@ -988,7 +988,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
             ]),
           ],
         ),
-        if (goalType == "Recurring")
+        if (goalType == "Recurring" || (type_radio!=null && type_radio=="Recurring"))
           Container(
             height: 50,
             margin: EdgeInsets.only(top: 8, left: 20, right: 20),
@@ -1640,7 +1640,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         goalfor = getGoal!.goalFor;
         type_radio = getGoal!.goalType;
         if(type_radio == "Recurring"){
-          type_radio = getGoal!.recurring;
+          type = getGoal!.recurring;
         }
         sDate = getGoal!.startDate;
         eDate = getGoal!.targetDate;

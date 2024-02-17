@@ -8,6 +8,7 @@ import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/create_milestone.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
+import 'package:mycareteam/models/get_goal_milestone.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/service/api_service.dart';
@@ -50,6 +51,13 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   final _descriptionController = TextEditingController();
   List<Milestone> milestone = [];
   bool isBeingEdited = false;
+  GetMilestone? getOutcome;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1035,6 +1043,13 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
         ),
       ]),
     );
+  }
+
+  void init() async{
+    print(widget.goalId);
+    if(widget.tabSelected == 3){
+      getOutcome = await ApiService().getGoalOutcomes(widget.goalId);
+    }
   }
 
   void update() async {
