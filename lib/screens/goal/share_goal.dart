@@ -22,9 +22,10 @@ class ShareGoalWidget extends StatefulWidget {
     required Function this.updateTab,
     DateTime? this.goalStart,
     DateTime? this.goalEnd,
+    required int this.tabSelected
   }) : super(key: key);
 
-  int goalId;
+  int goalId, tabSelected;
   Function updateTab;
   DateTime? goalStart, goalEnd;
   @override

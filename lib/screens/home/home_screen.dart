@@ -63,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: scaffoldGrey,
         elevation: 0,
+          automaticallyImplyLeading: false,
         // leading: const Icon(
         //   Icons.menu_rounded,
         //   color: iconBlack,
@@ -1169,6 +1170,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         tabSelected=0;
       });
+      print("Tab selected : $tabSelected");
       Navigator.of(context)
           .push(MaterialPageRoute(
               builder: (BuildContext context) =>

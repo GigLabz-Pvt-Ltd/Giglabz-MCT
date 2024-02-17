@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/create_goal.dart';
 import 'package:mycareteam/models/create_goal_response.dart';
 import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
+import 'package:mycareteam/models/get_goal_summary.dart';
 import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
@@ -17,9 +18,10 @@ class GoalSummaryWidget extends StatefulWidget {
     Key? key,
     required int this.goalId,
     required Function this.updateTab,
+    required int this.tabSelected
   }) : super(key: key);
 
-  int goalId;
+  int goalId, tabSelected;
   Function updateTab;
 
   @override
@@ -47,6 +49,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   GetAchieverGoalAreaResponse? areaResponse;
   int selectedGoalAreaIndex = 0;
   GoalArea? selectedGoalArea;
+  GetGoalSummary? getGoal;
   var startSelectedHours = hours[0];
   var startSelectedMinutes = minutes[0];
   var endSelectedHours = hours[0];
@@ -64,6 +67,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   List<ForGroup> forGroup=[];
   bool groupFieldEnabled = true;
   var selectedSomeoneIndex = 0;
+
+  var title, priority, area, area_custom, area_radio, goalfor, sDate, eDate, sHour, eHour, sMin, eMin, type, type_radio, desc;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -100,7 +105,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 color: secondaryColor),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Enter Goal Title *',
+              hintText: title!=null? title: 'Enter Goal Title *',
               hintStyle: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 14,
@@ -137,6 +142,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if(priority=="High"){
+                        return iconBlue;
+                      }
                       if (selectedOption == "High") {
                         return iconBlue;
                       }
@@ -144,7 +152,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     },
                   ),
                   value: "High",
-                  groupValue: selectedOption,
+                  groupValue: priority!=null? priority: selectedOption,
                   onChanged: (value) {
                     setState(() {
                       selectedOption = value;
@@ -165,6 +173,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if(priority=="Medium"){
+                        return iconBlue;
+                      }
                       if (selectedOption == "Medium") {
                         return iconBlue;
                       }
@@ -173,7 +184,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                   value: "Medium",
                   focusColor: grey,
-                  groupValue: selectedOption,
+                  groupValue: priority!=null? priority: selectedOption,
                   onChanged: (value) {
                     setState(() {
                       selectedOption = value;
@@ -194,6 +205,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if(priority=="Low"){
+                        return iconBlue;
+                      }
                       if (selectedOption == "Low") {
                         return iconBlue;
                       }
@@ -202,7 +216,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                   value: "Low",
                   focusColor: grey,
-                  groupValue: selectedOption,
+                  groupValue: priority!=null? priority: selectedOption,
                   onChanged: (value) {
                     setState(() {
                       selectedOption = value;
@@ -247,6 +261,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (area_radio == 1) {
+                        return iconBlue;
+                      }
                       if (goalArea == 1) {
                         return iconBlue;
                       }
@@ -254,7 +271,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     },
                   ),
                   value: 1,
-                  groupValue: goalArea,
+                  groupValue: area_radio!=null? area_radio :goalArea,
                   onChanged: (value) {
                     setState(() {
                       goalArea = value;
@@ -275,6 +292,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (area_radio == 2) {
+                        return iconBlue;
+                      }
                       if (goalArea == 2) {
                         return iconBlue;
                       }
@@ -283,7 +303,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                   value: 2,
                   focusColor: grey,
-                  groupValue: goalArea,
+                  groupValue: area_radio!=null? area_radio:goalArea,
                   onChanged: (value) {
                     setState(() {
                       goalArea = value;
@@ -392,7 +412,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   color: secondaryColor),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Your area of Goal *',
+                hintText: area_custom!=null? area_custom:'Your area of Goal *',
                 hintStyle: GoogleFonts.poppins(
                   color: secondaryColor,
                   fontSize: 14,
@@ -428,6 +448,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (goalfor == "Self") {
+                        return iconBlue;
+                      }
                       if (goalFor == "Self") {
                         return iconBlue;
                       }
@@ -435,7 +458,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     },
                   ),
                   value: "Self",
-                  groupValue: goalFor,
+                  groupValue: goalfor!=null? goalFor : goalFor,
                   onChanged: (value) {
                     setState(() {
                       goalFor = value;
@@ -458,6 +481,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (goalfor == "Someone Else") {
+                        return iconBlue;
+                      }
                       if (goalFor == "Someone Else") {
                         return iconBlue;
                       }
@@ -466,7 +492,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                   value: "Someone Else",
                   focusColor: grey,
-                  groupValue: goalFor,
+                  groupValue: goalfor!=null? goalfor :goalFor,
                   onChanged: (value) {
                     setState(() {
                       goalFor = value;
@@ -488,6 +514,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (goalfor == "For Group") {
+                        return iconBlue;
+                      }
                       if (goalFor == "For Group") {
                         return iconBlue;
                       }
@@ -496,7 +525,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   ),
                   value: "For Group",
                   focusColor: grey,
-                  groupValue: goalFor,
+                  groupValue: goalfor!=null? goalfor : goalFor,
                   onChanged: (value) {
                     setState(() {
                       goalFor = value;
@@ -898,6 +927,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
+                    if (type_radio == "Recurring") {
+                      return iconBlue;
+                    }
                     if (goalType == "Recurring") {
                       return iconBlue;
                     }
@@ -905,7 +937,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                   },
                 ),
                 value: "Recurring",
-                groupValue: goalType,
+                groupValue: type_radio!=null? type_radio: goalType,
                 onChanged: (value) {
                   setState(() {
                     goalType = value;
@@ -926,15 +958,18 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               Radio(
                 fillColor: MaterialStateColor.resolveWith(
                   (Set<MaterialState> states) {
-                    if (goalType == "OneTime") {
+                    if (type_radio == "One-time Achievement") {
+                      return iconBlue;
+                    }
+                    if (goalType == "One-time Achievement") {
                       return iconBlue;
                     }
                     return borderGrey;
                   },
                 ),
-                value: "OneTime",
+                value: "One-time Achievement",
                 focusColor: grey,
-                groupValue: goalType,
+                groupValue: type_radio!=null? type_radio: goalType,
                 onChanged: (value) {
                   setState(() {
                     goalType = value;
@@ -980,7 +1015,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                         selectedRecurring = newValue!;
                       });
                     },
-                    value: selectedRecurring,
+                    value: type!=null? type: selectedRecurring,
                     items: goalRecurring.map((String dropDownString) {
                       return DropdownMenuItem<String>(
                         value: dropDownString,
@@ -1026,7 +1061,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            selectedStartDate != null
+                            sDate!=null? sDate : selectedStartDate != null
                                 ? selectedStartDate!.day.toString() +
                                     "/" +
                                     selectedStartDate!.month.toString() +
@@ -1074,7 +1109,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            selectedEndDate != null
+                            eDate!=null? eDate : selectedEndDate != null
                                 ? selectedEndDate!.day.toString() +
                                     "/" +
                                     selectedEndDate!.month.toString() +
@@ -1466,7 +1501,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: "",
+            hintText: desc!=null? desc: "",
             hintStyle: GoogleFonts.poppins(
               color: secondaryColor,
               fontSize: 12,
@@ -1584,6 +1619,38 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         await ApiService().getInfluencerGoalAreas();
     var b = Iarea;
     // }
+    if(widget.tabSelected == 3){
+      print(widget.goalId);
+      getGoal = await ApiService().getGoalSummary(widget.goalId);
+
+      setState(() {
+        title = getGoal!.title;
+        priority = getGoal!.priority;
+        if(getGoal!.area !=null){
+          area_radio = 1;
+        }
+        if(getGoal!.areaCustom !=null){
+          area_radio = 2;
+        }
+        goalfor = getGoal!.goalFor;
+        type_radio = getGoal!.goalType;
+        if(type_radio == "Recurring"){
+          type_radio = getGoal!.recurring;
+        }
+        sDate = getGoal!.startDate;
+        eDate = getGoal!.targetDate;
+        desc = getGoal!.description;
+      });
+
+      print(title);
+      print(priority);
+      print(area_radio);
+      print(goalfor);
+      print(type);
+      print(type_radio);
+      print("$sDate, $eDate");
+      print(desc);
+    }
   }
 
   List<Widget> areaItems() {

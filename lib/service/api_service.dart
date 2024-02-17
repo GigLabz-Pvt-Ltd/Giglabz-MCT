@@ -11,6 +11,7 @@ import 'package:mycareteam/models/get_areas.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
 import 'package:mycareteam/models/get_goal_id_response.dart';
+import 'package:mycareteam/models/get_goal_summary.dart';
 import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
@@ -326,6 +327,19 @@ class ApiService {
           "confirmationCode": code,
         }));
     final activity = forgotPasswordResponseApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetGoalSummary> getGoalSummary(int goalId) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/summary/$goalId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print("manasa ${response.statusCode}");
+    print("manasa ${response.body}");
+    final activity = getGoalSummaryApiFromJson(response.body);
     return activity;
   }
 }

@@ -13,9 +13,10 @@ class GoalProgressWidget extends StatefulWidget {
   GoalProgressWidget({
     Key? key,
     required int this.goalId,
+    required int this.tabSelected,
   }) : super(key: key);
 
-  int goalId;
+  int goalId, tabSelected;
   DateTime? goalStart, goalEnd;
 
   @override
