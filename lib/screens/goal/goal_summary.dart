@@ -68,7 +68,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   bool groupFieldEnabled = true;
   var selectedSomeoneIndex = 0;
 
-  var title, priority, area, area_custom, area_radio, goalfor, sDate, eDate, sHour, eHour, sMin, eMin, type, type_radio, desc;
+  var title, priority, area, area_custom, area_radio, area_type, area_subtype, goalfor, sDate, eDate, sHour, eHour, sMin, eMin, type, type_radio, desc;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -329,7 +329,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
             color: dividerGrey,
           ),
         ),
-        if (goalArea == 1)
+        if (goalArea == 1 || (area_radio!=null && area_radio == 1))
           Container(
             height: 50,
             margin: EdgeInsets.only(top: 8, left: 20, right: 20, bottom: 10),
@@ -358,7 +358,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                         updateAreas();
                       });
                     },
-                    value: selectedGoalType,
+                    value: area_type!=null? area_type :selectedGoalType,
                     items: goalTypeList.map((String dropDownString) {
                       return DropdownMenuItem<String>(
                         value: dropDownString,
@@ -377,8 +377,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
             ]),
           ),
-        if (goalArea == 1) selectGoalArea(),
-        if (goalArea == 2)
+        if (goalArea == 1 || (area_radio!=null && area_radio==1)) selectGoalArea(),
+        if (goalArea == 2 || (area_radio!=null && area_radio==2))
           Padding(
             padding: EdgeInsets.only(top: 0, left: 20, right: 20),
             child: Align(
@@ -393,7 +393,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
               ),
             ),
           ),
-        if (goalArea == 2)
+        if (goalArea == 2 || (area_radio!=null && area_radio==2))
           Container(
             height: 50,
             padding: const EdgeInsets.symmetric(
@@ -458,7 +458,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     },
                   ),
                   value: "Self",
-                  groupValue: goalfor!=null? goalFor : goalFor,
+                  groupValue: goalfor!=null? goalfor : goalFor,
                   onChanged: (value) {
                     setState(() {
                       goalFor = value;
@@ -1440,7 +1440,9 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
           Radius.circular(3),
         ),
       ),
-      child: Wrap(children: areaItems()),
+      child: area_subtype!=null?
+                Text(area_subtype, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),)
+                : Wrap(children: areaItems()),
     );
   }
 
@@ -1628,9 +1630,12 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
         priority = getGoal!.priority;
         if(getGoal!.area !=null){
           area_radio = 1;
+          area_type = getGoal!.area!.type;
+          area_subtype = getGoal!.area!.subType;
         }
         if(getGoal!.areaCustom !=null){
           area_radio = 2;
+          area_custom = getGoal!.areaCustom;
         }
         goalfor = getGoal!.goalFor;
         type_radio = getGoal!.goalType;
@@ -1650,6 +1655,7 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
       print(type_radio);
       print("$sDate, $eDate");
       print(desc);
+      print("$area_type, $area_subtype, $area_custom");
     }
   }
 
