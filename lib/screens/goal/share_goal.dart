@@ -360,7 +360,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'You have set a Goal Successfully',
+                          text: 'Goal details are shared Successfully!',
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,

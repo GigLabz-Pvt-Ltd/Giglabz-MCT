@@ -12,6 +12,7 @@ import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
 import 'package:mycareteam/models/get_goal_id_response.dart';
 import 'package:mycareteam/models/get_goal_milestone.dart';
+import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_goal_summary.dart';
 import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
 import 'package:mycareteam/models/get_states.dart';
@@ -354,6 +355,19 @@ class ApiService {
     print("manasa ${response.statusCode}");
     print("manasa ${response.body}");
     final activity = getMilestoneApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetGoalProgress> getGoalProgress(String userName, int goalId, int roleId) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/progress/$userName/$goalId/$roleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print("manasa ${response.statusCode}");
+    print("manasa ${response.body}");
+    final activity = getGoalProgressApiFromJson(response.body);
     return activity;
   }
 }

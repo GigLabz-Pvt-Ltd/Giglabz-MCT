@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-//import 'package:mycareteam/models/get_goal_progress.dart';
+import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,13 +27,15 @@ class GoalProgressWidget extends StatefulWidget {
 class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   GetProfileResponse? user;
   Map<String, dynamic>? userMap;
-  //GetGoalProgressResponse? progressResponse;
-  var overallProgress, progress, overallRating;
+  GetGoalProgress? progressResponse;
+  var userName, roleId;
+  List<String>? parameters;
+  double? overallProgress,progress, overallRating;
 
   @override
   void initState(){
     super.initState();
-    // init();
+    init();
     // print(progressResponse);
     print(widget.goalId);
   }
@@ -59,20 +62,14 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
               child: Slider(
-                  value: overallProgress ?? 0,
+                  value: overallProgress!=null? overallProgress! : 0,
                   min: 0,
                   max: 3,
                   divisions: 3,
-                  onChanged: (double value) {
-                    // setState(() {
-                    //   overallProgress = progressResponse!.overallProgress;
-                    //   value = overallProgress;
-                    // });
-                  },
+                  onChanged: (double value) {},
                   activeColor: primaryColor,
                   inactiveColor: Color(0xffC0E2FF),
                   thumbColor: thumbColorOverall()//primaryColor,
-
               )
           ),
           Padding(
@@ -92,16 +89,11 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
               child: Slider(
-                value: progress ?? 0,
+                value: progress!=null ? progress! : 0,
                 min: 0,
                 max: 100,
                 divisions: 100,
-                onChanged: (double value) {
-                  // setState(() {
-                  //   progress = progressResponse?.progress;
-                  //   value = progress;
-                  // });
-                },
+                onChanged: (double value) {},
                 activeColor: primaryColor,
                 inactiveColor: Color(0xffC0E2FF),
                 thumbColor: primaryColor,
@@ -131,7 +123,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "4.5",
+                        overallRating!=null ? overallRating!.toString() : "4.5",
                         style: GoogleFonts.poppins(
                           color: iconBlue,
                           fontSize: 28,
@@ -141,7 +133,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     ),
                   ),
                   RatingBarIndicator(
-                    rating: 4.5,
+                    rating: overallRating!=null ? overallRating! : 4.5,
                     itemBuilder: (context, index) => Icon(
                       Icons.star,
                       color: Colors.amber,
@@ -201,30 +193,139 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               border: Border.all(color: outlineGrey),
               borderRadius: BorderRadius.circular(5),
             ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: (){
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return okDialog("");
+                    });
+              },
+              child: Container(
+                height: 40,
+                width: 82,
+                margin: EdgeInsets.only(top: 8, right: 20, bottom: 20),
+                color: primaryColor,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Save",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              )
+          )
           )
         ],
       ),
     );
   }
 
-  // void init() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String userPref = prefs.getString('user')!;
-  //   userMap = jsonDecode(userPref) as Map<String, dynamic>;
-  //   if (userMap != null && user == null) {
-  //     var mProfile = await ApiService()
-  //         .getProfile(userMap?["user_name"], userMap?["role_id"]);
-  //     setState(() {
-  //       if(userMap?["role_id"]==3) {
-  //         user = mProfile;
-  //         print(userMap?["user_name"]);
-  //         print(userMap?["role_id"]);
-  //       }
-  //     });
-  //   }
-  //
-  //   progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
-  // }
+  Widget okDialog(String fromDialog) {
+    return Dialog(
+      child: Container(
+        height: 250,
+        decoration: const BoxDecoration(
+            color: scaffoldGrey,
+            borderRadius: BorderRadius.all(Radius.circular(3.0))),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(35, 35, 35, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("lib/resources/images/ndis_tick.svg"),
+              Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'You have set a Goal Successfully',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: secondaryColor),
+                        ),
+                        TextSpan(
+                          text: '',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: secondaryColor),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 24),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "OK",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userPref = prefs.getString('user')!;
+    userMap = jsonDecode(userPref) as Map<String, dynamic>;
+    if (userMap != null && user == null) {
+      var mProfile = await ApiService()
+          .getProfile(userMap?["user_name"], userMap?["role_id"]);
+      setState(() {
+        userName = userMap?["user_name"];
+        roleId = userMap?["role_id"];
+      });
+    }
+    print("$userName, ${widget.goalId}, $roleId");
+
+    progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
+    setState(() {
+      overallProgress = progressResponse!.overallProgress!.toDouble();
+      progress = progressResponse!.progress!.toDouble();
+      overallRating = progressResponse!.overallRating;
+      parameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
+    });
+    print(overallProgress);
+    print(progress);
+    print(overallRating);
+  }
 
   Color thumbColorOverall(){
     if(overallProgress == 0){
