@@ -189,10 +189,19 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: EdgeInsets.only(bottom: 24),
             decoration: BoxDecoration(
               border: Border.all(color: outlineGrey),
               borderRadius: BorderRadius.circular(5),
             ),
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: parameters!.length,
+              itemBuilder: (context, index) {
+                  return parametersTile(index);
+              }),
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -299,6 +308,64 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         ),
       ),
     );
+  }
+
+  Widget parametersTile(int index) {
+    return Column(children: [
+      Padding(
+        padding: EdgeInsets.only(left: 20, right: 10),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 15,
+              child: Container(
+                child: Text(
+                  parameters![index],
+                  style: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            Container(
+              width: 10,
+            ),
+            RatingBarIndicator(
+              rating: overallRating!=null ? overallRating! : 4.5,
+              itemBuilder: (context, index) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              itemCount: 5,
+              itemSize: 25.0,
+              unratedColor: Colors.amber.withAlpha(50),
+              direction: Axis.horizontal,
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            SvgPicture.asset("lib/resources/images/reviewer_parameter_red.svg"),
+            Container(
+              width: 10,
+            ),
+          ],
+        ),
+      ),
+      if (index < parameters!.length - 1)
+        Padding(
+          padding: EdgeInsets.only(top: 0, bottom: 4),
+          child: Divider(
+            color: dividerGrey,
+          ),
+        ),
+    ]);
   }
 
   void init() async {
