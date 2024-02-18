@@ -52,6 +52,11 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   List<Milestone> milestone = [];
   bool isBeingEdited = false;
   GetMilestone? getOutcome;
+  var outcome_name;
+  List<AddMilestone>? get_milestone;
+  int? break_down;
+  int radio=0;
+  var sDate, eDate;
 
   @override
   void initState() {
@@ -95,7 +100,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 color: secondaryColor),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Enter Expected Outcome of this Goal *',
+              hintText: outcome_name!=null? outcome_name : 'Enter Expected Outcome of this Goal *',
               hintStyle: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 14,
@@ -133,6 +138,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
                     (Set<MaterialState> states) {
+                      if (radio == 1) {
+                        return iconBlue;
+                      }
                       if (selectedOption == 1) {
                         return iconBlue;
                       }
@@ -140,7 +148,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     },
                   ),
                   value: 1,
-                  groupValue: selectedOption,
+                  groupValue: radio!=null? radio : selectedOption,
                   onChanged: (value) {
                     setState(() {
                       selectedOption = int.parse(value.toString());
@@ -163,6 +171,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                   Radio(
                     fillColor: MaterialStateColor.resolveWith(
                       (Set<MaterialState> states) {
+                        if (radio == 0) {
+                          return iconBlue;
+                        }
                         if (selectedOption == 0) {
                           return iconBlue;
                         }
@@ -171,7 +182,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     ),
                     value: 0,
                     focusColor: grey,
-                    groupValue: selectedOption,
+                    groupValue: radio!=null? radio : selectedOption,
                     onChanged: (value) async {
                       if (_outcomeController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -211,7 +222,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
             ],
           ),
         ),
-        if (selectedOption == 1)
+        if (selectedOption == 1 || (radio!=null && radio==1))
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
@@ -248,12 +259,12 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               ),
             )
           ]),
-        if (selectedOption == 1)
+        if (selectedOption == 1 || (radio!=null && radio==1))
           ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: milestone?.length,
+              itemCount: get_milestone!=null? get_milestone!.length : milestone?.length,
               itemBuilder: (context, index) {
                 return milestoneTile(index);
               }),
@@ -460,14 +471,14 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   }
 
   setCurrentMileValues(int index) {
-    _titleController.text = milestone[index].name;
-    _descriptionController.text = milestone[index].description;
-    selectedStartDate =
-        DateFormat("dd/MM/yyyy").parse(milestone[index].startDate);
-    selectedEndDate =
-        DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate);
-    selectedCelebration = milestone[index].celebrations;
-    selectedPercent = milestone[index].progress + "%";
+    sDate = get_milestone!.length != 0 ? get_milestone![index].startDate.toString() : null;
+    eDate = get_milestone!.length != 0 ? get_milestone![index].targetDate.toString() : null;
+    _titleController.text = get_milestone!.length!=0? get_milestone![index].name.toString() : milestone[index].name;
+    _descriptionController.text = get_milestone!.length!=0? get_milestone![index].description.toString() : milestone[index].description;
+    selectedStartDate = DateFormat("dd/MM/yyyy").parse(milestone[index].startDate);
+    selectedEndDate = DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate);
+    selectedCelebration = get_milestone!.length != 0 ? get_milestone![index].celebrations.toString() : milestone[index].celebrations;
+    selectedPercent = get_milestone!.length != 0 ? get_milestone![index].progress.toString() + "%" : milestone[index].progress + "%";
   }
 
   StatefulWidget addMilestoneDialog(int indx) {
@@ -639,7 +650,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    selectedStartDate != null
+                                    sDate!=null? sDate : selectedStartDate != null
                                         ? selectedStartDate!.day.toString() +
                                             "/" +
                                             selectedStartDate!.month
@@ -689,7 +700,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    selectedEndDate != null
+                                    eDate!=null ? eDate : selectedEndDate != null
                                         ? selectedEndDate!.day.toString() +
                                             "/" +
                                             selectedEndDate!.month.toString() +
@@ -919,7 +930,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
         Row(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              milestone?[index].name ?? "SomeText",
+              get_milestone![index].name!=null? get_milestone![index].name.toString() : milestone?[index].name ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: iconBlue,
                 fontSize: 16,
@@ -927,7 +938,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               ),
             ),
             Text(
-              milestone?[index].description ?? "SomeText",
+              get_milestone![index].name!=null? get_milestone![index].description.toString() : milestone?[index].description ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 12,
@@ -958,6 +969,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               child:
                   SvgPicture.asset("lib/resources/images/delete_milestone.svg"))
         ]),
+        if(milestone?.length!=0 || widget.tabSelected == 3)
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(children: [
@@ -974,7 +986,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      milestone?[index].startDate ?? "SomeText",
+                      //"SomeText",
+                        get_milestone!.length != 0 ? get_milestone![index].startDate.toString() : milestone?[index].startDate ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -996,7 +1009,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      milestone?[index].targetDate ?? "SomeText",
+                      //"SomeText",
+                      get_milestone!.length != 0 ? get_milestone![index].targetDate.toString() : milestone?[index].targetDate ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -1018,7 +1032,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      milestone?[index].celebrations ?? "SomeText",
+                      //"SomeText",
+                      get_milestone!.length != 0 ? get_milestone![index].celebrations.toString() :milestone?[index].celebrations ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -1036,7 +1051,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
             valueColor: AlwaysStoppedAnimation<Color>(
               Colors.amber,
             ),
-            value: double.parse(milestone[index].progress) / 100,
+            value: 100, //double.parse(milestone[index].progress) / 100,
             minHeight: 6,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
@@ -1049,6 +1064,22 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
     print(widget.goalId);
     if(widget.tabSelected == 3){
       getOutcome = await ApiService().getGoalOutcomes(widget.goalId);
+      setState(() {
+        outcome_name = getOutcome!.expectedOutcome;
+        break_down = getOutcome!.breakdown;
+        if(break_down!=0){
+          radio = 1;
+        }
+        get_milestone = getOutcome!.milestone!.map((e) => AddMilestone(
+          name: e.name,
+          description: e.description,
+          startDate: e.startDate,
+          targetDate: e.targetDate,
+          progress: e.progress,
+          celebrations: e.celebrations
+        )).toList();
+      });
+      print("$outcome_name, $break_down, $radio");
     }
   }
 
