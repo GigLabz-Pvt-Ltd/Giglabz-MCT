@@ -29,13 +29,44 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   Map<String, dynamic>? userMap;
   GetGoalProgress? progressResponse;
   var userName, roleId;
-  List<String>? parameters;
+  List<CurrentReviewCycleRating> parameters = [
+    CurrentReviewCycleRating(
+      parametersToReview: "Basic Needs (food, water, air, rest etc)",
+      rating: 0
+    ),
+    CurrentReviewCycleRating(
+        parametersToReview: "Security and Stability (home and personal safety)",
+        rating: 0
+    ),
+    CurrentReviewCycleRating(
+        parametersToReview: "Love and Belonging (relationships)",
+        rating: 0
+    ),
+    CurrentReviewCycleRating(
+        parametersToReview: "Esteem",
+        rating: 0
+    ),
+    CurrentReviewCycleRating(
+        parametersToReview: "Self Actualisation",
+        rating: 0
+    )
+  ];
   double? overallProgress,progress, overallRating;
+  double progress_changed = 0;
+  double _rating=0;
+
+  final List<OverallProgressSlider> checkpoints = [
+    OverallProgressSlider(value: 0, label: "Not Started", thumbColor: primaryColor, labelColor: Color(0xffc4c4c4)),
+    OverallProgressSlider(value: 1, label: "Pending", thumbColor: Color(0xfff35958), labelColor: Color(0xffc11f27)),
+    OverallProgressSlider(value: 2, label: "In Progress", thumbColor: Color(0xfffdd504), labelColor: Color(0xfffdd504)),
+    OverallProgressSlider(value: 3, label: "Completed", thumbColor: Color(0xff00a24e), labelColor: Color(0xff00a24e))
+  ];
 
   @override
   void initState(){
     super.initState();
     init();
+    //progress_changed= overallProgress!=null? overallProgress! : 0;
     // print(progressResponse);
     print(widget.goalId);
   }
@@ -62,14 +93,21 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
               child: Slider(
-                  value: overallProgress!=null? overallProgress! : 0,
+                  value: overallProgress ?? 0,
                   min: 0,
                   max: 3,
                   divisions: 3,
-                  onChanged: (double value) {},
+                  onChanged: (double value) {
+                    setState(() {
+                      overallProgress = value;
+                      print(overallProgress);
+                    });
+                  },
                   activeColor: primaryColor,
                   inactiveColor: Color(0xffC0E2FF),
-                  thumbColor: thumbColorOverall()//primaryColor,
+                  thumbColor: checkpoints[overallProgress!.toInt()].thumbColor,
+                  label: checkpoints[overallProgress!.toInt()].label,
+
               )
           ),
           Padding(
@@ -89,14 +127,19 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
               child: Slider(
-                value: progress!=null ? progress! : 0,
+                value: progress ?? 0,
                 min: 0,
                 max: 100,
                 divisions: 100,
-                onChanged: (double value) {},
+                onChanged: (double value) {
+                  setState(() {
+                    progress = value;
+                  });
+                },
                 activeColor: primaryColor,
                 inactiveColor: Color(0xffC0E2FF),
                 thumbColor: primaryColor,
+                label : progress.toString()
               )
           ),
           Row(
@@ -140,7 +183,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     ),
                     itemCount: 5,
                     itemSize: 25.0,
-                    unratedColor: Colors.amber.withAlpha(50),
+                    unratedColor: Colors.amber.withAlpha(70),
                     direction: Axis.horizontal,
                   ),
                 ],
@@ -188,17 +231,18 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            padding: EdgeInsets.only(bottom: 24),
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 8, left: 20, right: 20, bottom: 12),
+            padding: EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
               border: Border.all(color: outlineGrey),
-              borderRadius: BorderRadius.circular(5),
             ),
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: parameters!.length,
+              itemCount: parameters.length,
               itemBuilder: (context, index) {
                   return parametersTile(index);
               }),
@@ -320,7 +364,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               flex: 15,
               child: Container(
                 child: Text(
-                  parameters![index],
+                  parameters[index].parametersToReview.toString(),
                   style: GoogleFonts.poppins(
                     color: secondaryColor,
                     fontSize: 12,
@@ -336,16 +380,23 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
             Container(
               width: 10,
             ),
-            RatingBarIndicator(
-              rating: overallRating!=null ? overallRating! : 4.5,
-              itemBuilder: (context, index) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              itemCount: 5,
-              itemSize: 25.0,
-              unratedColor: Colors.amber.withAlpha(50),
-              direction: Axis.horizontal,
+            RatingBar.builder(
+              initialRating: _rating,
+                minRating: 0,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 24,
+                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (double rating) {
+                setState(() {
+                  _rating = rating;
+                });
+              },
             ),
             Expanded(
               flex: 1,
@@ -382,31 +433,37 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     }
     print("$userName, ${widget.goalId}, $roleId");
 
-    progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
-    setState(() {
-      overallProgress = progressResponse!.overallProgress!.toDouble();
-      progress = progressResponse!.progress!.toDouble();
-      overallRating = progressResponse!.overallRating;
-      parameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
-    });
-    print(overallProgress);
-    print(progress);
-    print(overallRating);
+    if(widget.tabSelected == 3){
+      progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
+      setState(() {
+        overallProgress = progressResponse!.overallProgress!.toDouble();
+        progress = progressResponse!.progress!.toDouble();
+        overallRating = progressResponse!.overallRating;
+        // parameters = progressResponse!.currentReviewCycleRating!.map((e) => CurrentReviewCycleRating(
+        //     id: e.id,
+        //     parametersToReview: e.parametersToReview,
+        //     rating: e.rating
+        // )).toList();
+      });
+      print(overallProgress);
+      print(progress);
+      print(overallRating);
+    }
   }
+}
 
-  Color thumbColorOverall(){
-    if(overallProgress == 0){
-      return primaryColor;
-    }
-    else if(overallProgress == 1){
-      return Colors.red;
-    }
-    else if(overallProgress == 2){
-      return Colors.amber;
-    }
-    else if(overallProgress ==3){
-      return Colors.green;
-    }
-    return primaryColor;
+class OverallProgressSlider {
+  OverallProgressSlider(
+  {
+    required this.value,
+    required this.label,
+    required this.thumbColor,
+    required this.labelColor
   }
+  );
+
+  final int value;
+  final String label;
+  final Color thumbColor;
+  final Color labelColor;
 }
