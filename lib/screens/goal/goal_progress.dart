@@ -29,31 +29,10 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   Map<String, dynamic>? userMap;
   GetGoalProgress? progressResponse;
   var userName, roleId;
-  List<CurrentReviewCycleRating>? parameters= [
-    CurrentReviewCycleRating(
-      parametersToReview: "Basic Needs (food, water, air, rest etc)",
-      rating: 0
-    ),
-    CurrentReviewCycleRating(
-        parametersToReview: "Security and Stability (home and personal safety)",
-        rating: 0
-    ),
-    CurrentReviewCycleRating(
-        parametersToReview: "Love and Belonging (relationships)",
-        rating: 0
-    ),
-    CurrentReviewCycleRating(
-        parametersToReview: "Esteem",
-        rating: 0
-    ),
-    CurrentReviewCycleRating(
-        parametersToReview: "Self Actualisation",
-        rating: 0
-    )
-  ];
+  List<CurrentReviewCycleRating>? parameters;
   double? overallProgress,progress, overallRating;
   double progress_changed = 0;
-  double _rating=0;
+  double? rate;
   final _chatController = TextEditingController();
 
   final List<OverallProgressSlider> checkpoints = [
@@ -69,6 +48,28 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     init();
     //progress_changed= overallProgress!=null? overallProgress! : 0;
     // print(progressResponse);
+    parameters= [
+      CurrentReviewCycleRating(
+          parametersToReview: "Basic Needs (food, water, air, rest etc)",
+          rating: rate
+      ),
+      CurrentReviewCycleRating(
+        parametersToReview: "Security and Stability (home and personal safety)",
+        rating: rate
+      ),
+      CurrentReviewCycleRating(
+        parametersToReview: "Love and Belonging (relationships)",
+        rating: rate
+      ),
+      CurrentReviewCycleRating(
+        parametersToReview: "Esteem",
+        rating: rate
+      ),
+      CurrentReviewCycleRating(
+        parametersToReview: "Self Actualisation",
+        rating: rate
+      )
+    ];
     print(widget.goalId);
   }
 
@@ -396,7 +397,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               width: 10,
             ),
             RatingBar.builder(
-              initialRating: _rating,
+              initialRating: 0,
                 minRating: 0,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -408,8 +409,11 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (double rating) {
+                print("manasa : $rating");
                 setState(() {
-                  _rating = rating;
+                  rate = rating;
+                  print("manasa : $rate");
+                  print("manasa ${parameters![index].rating}");
                 });
               },
             ),
@@ -525,6 +529,20 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
       print(overallRating);
     }
   }
+
+  Widget showTooTip(String label, Color bgColor, Offset globalPosition){
+    return Tooltip(
+      message: label,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      showDuration: Duration(seconds: 5),
+      preferBelow: false,
+      verticalOffset: 20,
+      decoration: BoxDecoration(
+        color: bgColor
+      ),
+    );
+  }
+
 }
 
 class OverallProgressSlider {
