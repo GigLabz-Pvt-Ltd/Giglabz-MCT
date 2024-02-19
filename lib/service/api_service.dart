@@ -24,6 +24,7 @@ import 'package:mycareteam/models/ndis_response.dart';
 import 'package:mycareteam/models/share_goal.dart';
 import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/models/update_profile_response.dart';
+import 'package:mycareteam/models/update_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/register_response.dart';
 import '../models/login_response.dart';
@@ -368,6 +369,17 @@ class ApiService {
     print("manasa ${response.statusCode}");
     print("manasa ${response.body}");
     final activity = getGoalProgressApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<UpdateGoalProgress> updateProgress(UpdateGoalProgress progressBody) async {
+    final response = await post(Uri.parse("$BASE_URL_8082/goals/progress/save"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: updateGoalProgressApiToJson(progressBody)
+        );
+    final activity = updateGoalProgressApiFromJson(response.body);
     return activity;
   }
 }

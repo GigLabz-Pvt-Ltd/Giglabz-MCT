@@ -29,7 +29,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   Map<String, dynamic>? userMap;
   GetGoalProgress? progressResponse;
   var userName, roleId;
-  List<CurrentReviewCycleRating> parameters = [
+  List<CurrentReviewCycleRating>? parameters= [
     CurrentReviewCycleRating(
       parametersToReview: "Basic Needs (food, water, air, rest etc)",
       rating: 0
@@ -54,6 +54,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   double? overallProgress,progress, overallRating;
   double progress_changed = 0;
   double _rating=0;
+  final _chatController = TextEditingController();
 
   final List<OverallProgressSlider> checkpoints = [
     OverallProgressSlider(value: 0, label: "Not Started", thumbColor: primaryColor, labelColor: Color(0xffc4c4c4)),
@@ -76,19 +77,33 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Over All Goal Progress",
-                style: GoogleFonts.poppins(
-                  color: blueGrey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Over All Goal Progress",
+                    style: GoogleFonts.poppins(
+                      color: blueGrey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Expanded(flex:1, child: Container()),
+              Padding(
+                padding: EdgeInsets.only(top: 14, left: 20, right: 20),
+                child: GestureDetector(
+                  onTap: (){
+                    showModalBottomSheet(context: context, builder: (context) => chatWidget());
+                  },
+                    child: SvgPicture.asset("lib/resources/icons/chat_icon.svg", height: 70, width: 70,)
+                ),
+              )
+            ],
           ),
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
@@ -105,8 +120,8 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                   },
                   activeColor: primaryColor,
                   inactiveColor: Color(0xffC0E2FF),
-                  thumbColor: checkpoints[overallProgress!.toInt()].thumbColor,
-                  label: checkpoints[overallProgress!.toInt()].label,
+                  thumbColor: overallProgress!=null ? checkpoints[overallProgress!.toInt()].thumbColor : primaryColor,
+                  label: overallProgress!=null ? checkpoints[overallProgress!.toInt()].label : "",
 
               )
           ),
@@ -242,7 +257,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: parameters.length,
+              itemCount: parameters!.length,
               itemBuilder: (context, index) {
                   return parametersTile(index);
               }),
@@ -364,7 +379,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               flex: 15,
               child: Container(
                 child: Text(
-                  parameters[index].parametersToReview.toString(),
+                  parameters![index].parametersToReview.toString(),
                   style: GoogleFonts.poppins(
                     color: secondaryColor,
                     fontSize: 12,
@@ -419,6 +434,66 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     ]);
   }
 
+  Widget chatWidget(){
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          width: double.infinity,
+          height: 60,
+          color: Color(0xff06284b),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: Text(
+            "Review Comments",
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              color: Colors.white
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Container(
+          //alignment: Alignment.bottomCenter,
+          decoration: BoxDecoration(
+            border: Border.all(color: outlineGrey),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: Row(
+            children: [
+              Expanded(
+                flex:1,
+                child: TextField(
+                  controller: _chatController,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: secondaryColor),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Send a message',
+                    hintStyle: GoogleFonts.poppins(
+                      color: secondaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: (){},
+                icon: Icon(Icons.send, color: secondaryColor),
+              )
+            ],
+          )
+        )
+      ],
+    );
+  }
+
   void init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
@@ -439,11 +514,11 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         overallProgress = progressResponse!.overallProgress!.toDouble();
         progress = progressResponse!.progress!.toDouble();
         overallRating = progressResponse!.overallRating;
-        // parameters = progressResponse!.currentReviewCycleRating!.map((e) => CurrentReviewCycleRating(
-        //     id: e.id,
-        //     parametersToReview: e.parametersToReview,
-        //     rating: e.rating
-        // )).toList();
+        parameters = progressResponse!.currentReviewCycleRating!.map((e) => CurrentReviewCycleRating(
+            id: e.id,
+            parametersToReview: e.parametersToReview,
+            rating: e.rating
+        )).toList();
       });
       print(overallProgress);
       print(progress);
