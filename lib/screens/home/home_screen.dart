@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<int>? goalID;
   int? goalCount;
   int tabSelected=0;
-  var imgUrl;
+  var imgUrl, roleId;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -672,9 +672,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {
                       tabSelected=3;
                     });
-                    print("Tab selected : $tabSelected");
+                    print("Tab selected : $tabSelected, $roleId");
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => CreateGoalScreen(goalId: goalID![index], tabSelected: tabSelected,)));
+                        builder: (BuildContext context) => CreateGoalScreen(roleId: roleId, goalId: goalID![index], tabSelected: tabSelected,)));
                   },
                   style: ButtonStyle(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1170,11 +1170,11 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         tabSelected=0;
       });
-      print("Tab selected : $tabSelected");
+      print("Tab selected : $tabSelected,  $roleId");
       Navigator.of(context)
           .push(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  CreateGoalScreen(goalId: goal_id, tabSelected: tabSelected,)))
+                  CreateGoalScreen(roleId: roleId, goalId: goal_id, tabSelected: tabSelected,)))
           .then((value) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String userPref = prefs.getString('user')!;
@@ -1223,7 +1223,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
-
+    roleId = userMap['role_id'];
     var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
 
     var mProfile = await ApiService()

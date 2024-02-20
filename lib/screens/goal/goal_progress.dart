@@ -31,7 +31,8 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   Map<String, dynamic>? userMap;
   GetGoalProgress? progressResponse;
   var userName, roleId;
-  List<CurrentReviewCycleRating>? parameters;
+  List<String>? getParameters;
+  List<double>? getRating;
   double? overallProgress,progress, overallRating;
   double overallProgress_changed=0;
   double progress_changed = 0;
@@ -49,30 +50,6 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   void initState(){
     super.initState();
     init();
-    //progress_changed= overallProgress!=null? overallProgress! : 0;
-    // print(progressResponse);
-    parameters= [
-      CurrentReviewCycleRating(
-          parametersToReview: "Basic Needs (food, water, air, rest etc)",
-          rating: rate
-      ),
-      CurrentReviewCycleRating(
-        parametersToReview: "Security and Stability (home and personal safety)",
-        rating: rate
-      ),
-      CurrentReviewCycleRating(
-        parametersToReview: "Love and Belonging (relationships)",
-        rating: rate
-      ),
-      CurrentReviewCycleRating(
-        parametersToReview: "Esteem",
-        rating: rate
-      ),
-      CurrentReviewCycleRating(
-        parametersToReview: "Self Actualisation",
-        rating: rate
-      )
-    ];
     print(widget.goalId);
   }
 
@@ -280,7 +257,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: parameters!.length,
+              itemCount: getParameters!=null ? getParameters!.length : 0,
               itemBuilder: (context, index) {
                   return parametersTile(index);
               }),
@@ -402,7 +379,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               flex: 15,
               child: Container(
                 child: Text(
-                  parameters![index].parametersToReview.toString(),
+                  getParameters![index],
                   style: GoogleFonts.poppins(
                     color: secondaryColor,
                     fontSize: 12,
@@ -434,8 +411,9 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 print("manasa : $rating");
                 setState(() {
                   rate = rating;
+                  getRating![index] = rate!;
                   print("manasa : $rate");
-                  print("manasa ${parameters![index].rating}");
+                  print("manasa ${getParameters![index]}");
                 });
               },
             ),
@@ -450,7 +428,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ],
         ),
       ),
-      if (index < parameters!.length - 1)
+      if (index < getParameters!.length - 1)
         Padding(
           padding: EdgeInsets.only(top: 0, bottom: 4),
           child: Divider(
@@ -533,20 +511,16 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
       });
     }
     print("$userName, ${widget.goalId}, $roleId");
-
     if(widget.tabSelected == 3){
-      progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
+     progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
       setState(() {
         overallProgress = progressResponse!.overallProgress!.toDouble();
         progress = progressResponse!.progress!.toDouble();
         overallRating = progressResponse!.overallRating;
         overallProgress_changed = overallProgress!;
         progress_changed = progress!;
-        parameters = progressResponse!.currentReviewCycleRating!.map((e) => CurrentReviewCycleRating(
-            id: e.id,
-            parametersToReview: e.parametersToReview,
-            rating: e.rating
-        )).toList();
+        getParameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
+        getRating = progressResponse!.currentReviewCycleRating!.map((e) => e.rating!).toList();
       });
       print(overallProgress);
       print(progress);

@@ -360,7 +360,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Goal details are shared Successfully!',
+                          text: isImplementer == true ? 'Goal details are shared Successfully!' : 'Goal details saved Successfully!',
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -386,10 +386,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   )),
               GestureDetector(
                 onTap: () {
+                  if(isImplementer == true){
+                    Navigator.pop(context);
+                    setState(() {
+                      widget.updateTab(3, widget.goalStart, widget.goalEnd);
+                    });
+                  }
                   Navigator.pop(context);
-                  setState(() {
-                    widget.updateTab(3, widget.goalStart, widget.goalEnd);
-                  });
+                  Navigator.pop(context);
                 },
                 child: Container(
                     height: 40,

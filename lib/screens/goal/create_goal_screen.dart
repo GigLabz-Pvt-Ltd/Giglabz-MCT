@@ -19,11 +19,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CreateGoalScreen extends StatefulWidget {
   CreateGoalScreen({
     Key? key,
+    required int this.roleId,
     required int this.goalId,
     required int this.tabSelected
   }) : super(key: key);
 
-  int goalId;
+  int goalId, roleId;
   int tabSelected;
 
   @override
@@ -32,12 +33,13 @@ class CreateGoalScreen extends StatefulWidget {
 
 class _CreateGoalScreenState extends State<CreateGoalScreen>
     with SingleTickerProviderStateMixin {
-  final _tabs = [
-    "Goal Summary",
-    "Outcomes",
-    "Share Goal / Reviewer",
-    "Goal Progress"
-  ];
+  // final _tabs = [
+  //   "Goal Summary",
+  //   "Outcomes",
+  //   "Share Goal / Reviewer",
+  //   "Goal Progress"
+  // ];
+  var _tabs=[];
 
   late final TabController _tabCont;
   var currentTab = 0;
@@ -45,9 +47,10 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
 
   @override
   void initState() {
-    _tabCont = TabController(length: 4, vsync: this);
+    //_tabCont = TabController(length: _getNumberOfTabs(widget.roleId, widget.tabSelected), vsync: this);
     super.initState();
-
+    ((widget.tabSelected == 3) || (widget.tabSelected == 0 && widget.roleId ==3)) ? _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer", "Goal Progress"] : _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer"];
+    _tabCont = TabController(length: _getNumberOfTabs(widget.roleId, widget.tabSelected), vsync: this);
     _tabCont.addListener(() {
       setState(() {
         currentTab = _tabCont.index;
@@ -59,6 +62,12 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
     print("Tab selected: $widget.tabSelected");
 
     var w = widget.goalId;
+  }
+
+  @override
+  void dispose() {
+    _tabCont.dispose();
+    super.dispose();
   }
 
   @override
@@ -126,6 +135,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                 updateTab: updateSelectedTab,
                 tabSelected: widget.tabSelected,),
             //Center(child: Text("Coming Soon...")),
+            if(_getNumberOfTabs(widget.roleId, widget.tabSelected) == 4)
             GoalProgressWidget(
                 goalId: widget.goalId,
                 tabSelected: widget.tabSelected,),
@@ -141,6 +151,20 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
       this.goalEndDate = goalEndDate;
     });
     _tabCont.animateTo(index);
+  }
+
+  int _getNumberOfTabs(int roleId, int tabSelected) {
+    if(tabSelected==3)
+      return 4;
+    if(roleId==1 && tabSelected==0)
+      return 3;
+    if(roleId==2 && tabSelected==0)
+      return 3;
+    if(roleId==3 && tabSelected==0)
+      return 4;
+    if(roleId==4 && tabSelected==0)
+      return 3;
+    return -1;
   }
 
   TabBar get _tabBar => TabBar(
