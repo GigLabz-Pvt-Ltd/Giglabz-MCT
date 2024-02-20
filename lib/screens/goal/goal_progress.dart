@@ -9,6 +9,8 @@ import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 
 class GoalProgressWidget extends StatefulWidget {
   GoalProgressWidget({
@@ -31,15 +33,16 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   var userName, roleId;
   List<CurrentReviewCycleRating>? parameters;
   double? overallProgress,progress, overallRating;
+  double overallProgress_changed=0;
   double progress_changed = 0;
   double? rate;
   final _chatController = TextEditingController();
 
   final List<OverallProgressSlider> checkpoints = [
-    OverallProgressSlider(value: 0, label: "Not Started", thumbColor: primaryColor, labelColor: Color(0xffc4c4c4)),
+    OverallProgressSlider(value: 0, label: "Not Started", thumbColor: Colors.white, labelColor: Color(0xffc4c4c4)),
     OverallProgressSlider(value: 1, label: "Pending", thumbColor: Color(0xfff35958), labelColor: Color(0xffc11f27)),
-    OverallProgressSlider(value: 2, label: "In Progress", thumbColor: Color(0xfffdd504), labelColor: Color(0xfffdd504)),
-    OverallProgressSlider(value: 3, label: "Completed", thumbColor: Color(0xff00a24e), labelColor: Color(0xff00a24e))
+    OverallProgressSlider(value: 2, label: "In Progress", thumbColor: Color(0xffEFE7AE), labelColor: Color(0xfffdd504)),
+    OverallProgressSlider(value: 3, label: "Completed", thumbColor: Color(0xff7CF1B4), labelColor: Color(0xff00a24e))
   ];
 
   @override
@@ -108,23 +111,35 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-              child: Slider(
-                  value: overallProgress ?? 0,
-                  min: 0,
-                  max: 3,
-                  divisions: 3,
-                  onChanged: (double value) {
-                    setState(() {
-                      overallProgress = value;
-                      print(overallProgress);
-                    });
-                  },
-                  activeColor: primaryColor,
-                  inactiveColor: Color(0xffC0E2FF),
-                  thumbColor: overallProgress!=null ? checkpoints[overallProgress!.toInt()].thumbColor : primaryColor,
-                  label: overallProgress!=null ? checkpoints[overallProgress!.toInt()].label : "",
-
-              )
+            child: SfSliderTheme(
+              data: SfSliderThemeData(
+                tooltipBackgroundColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                activeTrackColor: primaryColor,
+                inactiveTrackColor: Color(0xffC0E2FF),
+                thumbColor: checkpoints[overallProgress_changed.toInt()].thumbColor,
+                thumbStrokeColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                thumbStrokeWidth: 4,
+                thumbRadius: 12
+              ),
+              child: SfSlider(
+                min: 0,
+                max: 3,
+                value: overallProgress_changed,
+                stepSize: 1,
+                enableTooltip: true,
+                //activeColor: Colors.blue,
+                //inactiveColor: Color(0xffC0E2FF),
+                interval: 20,
+                tooltipTextFormatterCallback: (dynamic value, String actual){
+                  return checkpoints[overallProgress_changed.toInt()].label;
+                },
+                onChanged: (dynamic newValue) {
+                  setState(() {
+                    overallProgress_changed = newValue;
+                  });
+                },
+              ),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 14, left: 20, right: 20),
@@ -142,21 +157,28 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-              child: Slider(
-                value: progress ?? 0,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                onChanged: (double value) {
-                  setState(() {
-                    progress = value;
-                  });
-                },
-                activeColor: primaryColor,
-                inactiveColor: Color(0xffC0E2FF),
-                thumbColor: primaryColor,
-                label : progress.toString()
-              )
+              child: SfSliderTheme(
+                data: SfSliderThemeData(
+                    tooltipBackgroundColor: primaryColor,
+                    activeTrackColor: primaryColor,
+                    inactiveTrackColor: Color(0xffC0E2FF),
+                    thumbColor: primaryColor,
+                    thumbRadius: 12
+                ),
+                child: SfSlider(
+                  min: 0,
+                  max: 100,
+                  value: progress_changed,
+                  enableTooltip: true,
+                  interval: 20,
+                  onChanged: (dynamic newValue) {
+                    setState(() {
+                      progress_changed = newValue;
+                      print(progress_changed);
+                    });
+                  },
+                ),
+              ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -518,6 +540,8 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         overallProgress = progressResponse!.overallProgress!.toDouble();
         progress = progressResponse!.progress!.toDouble();
         overallRating = progressResponse!.overallRating;
+        overallProgress_changed = overallProgress!;
+        progress_changed = progress!;
         parameters = progressResponse!.currentReviewCycleRating!.map((e) => CurrentReviewCycleRating(
             id: e.id,
             parametersToReview: e.parametersToReview,

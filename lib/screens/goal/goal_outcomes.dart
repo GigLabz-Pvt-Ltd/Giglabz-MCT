@@ -51,12 +51,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   final _descriptionController = TextEditingController();
   List<Milestone> milestone = [];
   bool isBeingEdited = false;
-  GetMilestone? getOutcome;
-  var outcome_name;
-  List<AddMilestone>? get_milestone;
-  int? break_down;
-  int radio=0;
-  var sDate, eDate;
+  //GetMilestone? getOutcome;
+  //CreateMilestone? getOutcome;
 
   @override
   void initState() {
@@ -100,7 +96,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 color: secondaryColor),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: outcome_name!=null? outcome_name : 'Enter Expected Outcome of this Goal *',
+              hintText: 'Enter Expected Outcome of this Goal *',
               hintStyle: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 14,
@@ -137,10 +133,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               Row(children: [
                 Radio(
                   fillColor: MaterialStateColor.resolveWith(
-                    (Set<MaterialState> states) {
-                      if (radio == 1) {
-                        return iconBlue;
-                      }
+                        (Set<MaterialState> states) {
                       if (selectedOption == 1) {
                         return iconBlue;
                       }
@@ -148,7 +141,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                     },
                   ),
                   value: 1,
-                  groupValue: radio!=null? radio : selectedOption,
+                  groupValue: selectedOption,
                   onChanged: (value) {
                     setState(() {
                       selectedOption = int.parse(value.toString());
@@ -169,45 +162,42 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 padding: EdgeInsets.only(left: 30),
                 child: Row(children: [
                   Radio(
-                    fillColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (radio == 0) {
-                          return iconBlue;
+                      fillColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                          if (selectedOption == 0) {
+                            return iconBlue;
+                          }
+                          return borderGrey;
+                        },
+                      ),
+                      value: 0,
+                      focusColor: grey,
+                      groupValue: selectedOption,
+                      onChanged: (value) async {
+                        if (_outcomeController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Outcome cannot be empty")));
+                          return;
                         }
-                        if (selectedOption == 0) {
-                          return iconBlue;
-                        }
-                        return borderGrey;
-                      },
-                    ),
-                    value: 0,
-                    focusColor: grey,
-                    groupValue: radio!=null? radio : selectedOption,
-                    onChanged: (value) async {
-                      if (_outcomeController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Outcome cannot be empty")));
-                        return;
-                      }
-                      var response = await ApiService().createMilestone(
-                          CreateMilestone(
-                              expectedOutcome: _outcomeController.text,
-                              breakdown: 0,
-                              milestone: null,
-                              goalId: widget.goalId));
+                        var response = await ApiService().createMilestone(
+                            CreateMilestone(
+                                expectedOutcome: _outcomeController.text,
+                                breakdown: 0,
+                                milestone: null,
+                                goalId: widget.goalId));
 
-                      if (response.responseStatus == 200) {
-                        setState(() {
-                          selectedOption = int.parse(value.toString());
-                          print("Button value: $value");
-                          // milestone.clear();
-                          widget.updateTab(2, widget.goalStart, widget.goalEnd);
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(response.responseMessage)));
+                        if (response.responseStatus == 200) {
+                          setState(() {
+                            selectedOption = int.parse(value.toString());
+                            print("Button value: $value");
+                            // milestone.clear();
+                            widget.updateTab(2, widget.goalStart, widget.goalEnd);
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(response.responseMessage)));
+                        }
                       }
-                    }
                   ),
                   Text(
                     "No",
@@ -222,7 +212,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
             ],
           ),
         ),
-        if (selectedOption == 1 || (radio!=null && radio==1))
+        if (selectedOption == 1)
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Padding(
               padding: EdgeInsets.only(top: 14, left: 20, right: 20),
@@ -255,16 +245,16 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               child: Padding(
                 padding: EdgeInsets.only(top: 14, right: 20),
                 child:
-                    SvgPicture.asset("lib/resources/images/add_milestone.svg"),
+                SvgPicture.asset("lib/resources/images/add_milestone.svg"),
               ),
             )
           ]),
-        if (selectedOption == 1 || (radio!=null && radio==1))
+        if (selectedOption == 1)
           ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: get_milestone!=null? get_milestone!.length : milestone?.length,
+              itemCount: milestone?.length,
               itemBuilder: (context, index) {
                 return milestoneTile(index);
               }),
@@ -279,10 +269,10 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         breakdown: selectedOption,
                         milestone: milestone,
                         goalId: widget.goalId));
-
+                print(response);
                 if (_outcomeController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Outcome cannot be empty")));
+                      SnackBar(content: Text("Outcome cannot be empty")));
                   return;
                 }
 
@@ -471,14 +461,14 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   }
 
   setCurrentMileValues(int index) {
-    sDate = get_milestone!.length != 0 ? get_milestone![index].startDate.toString() : null;
-    eDate = get_milestone!.length != 0 ? get_milestone![index].targetDate.toString() : null;
-    _titleController.text = get_milestone!.length!=0? get_milestone![index].name.toString() : milestone[index].name;
-    _descriptionController.text = get_milestone!.length!=0? get_milestone![index].description.toString() : milestone[index].description;
-    selectedStartDate = DateFormat("dd/MM/yyyy").parse(milestone[index].startDate);
-    selectedEndDate = DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate);
-    selectedCelebration = get_milestone!.length != 0 ? get_milestone![index].celebrations.toString() : milestone[index].celebrations;
-    selectedPercent = get_milestone!.length != 0 ? get_milestone![index].progress.toString() + "%" : milestone[index].progress + "%";
+    _titleController.text = milestone[index].name.toString();
+    _descriptionController.text = milestone[index].description.toString();
+    selectedStartDate =
+        DateFormat("dd/MM/yyyy").parse(milestone[index].startDate.toString());
+    selectedEndDate =
+        DateFormat("dd/MM/yyyy").parse(milestone[index].targetDate.toString());
+    selectedCelebration = milestone[index].celebrations.toString();
+    selectedPercent = milestone[index].progress.toString() + "%";
   }
 
   StatefulWidget addMilestoneDialog(int indx) {
@@ -634,7 +624,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         padding: EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
+                          const BorderRadius.all(Radius.circular(3)),
                           border: Border.all(color: outlineGrey),
                         ),
                         child: Stack(children: [
@@ -650,13 +640,13 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    sDate!=null? sDate : selectedStartDate != null
+                                    selectedStartDate != null
                                         ? selectedStartDate!.day.toString() +
-                                            "/" +
-                                            selectedStartDate!.month
-                                                .toString() +
-                                            "/" +
-                                            selectedStartDate!.year.toString()
+                                        "/" +
+                                        selectedStartDate!.month
+                                            .toString() +
+                                        "/" +
+                                        selectedStartDate!.year.toString()
                                         : "Start Date",
                                     style: GoogleFonts.poppins(
                                       color: secondaryColor,
@@ -684,7 +674,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                         padding: EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
+                          const BorderRadius.all(Radius.circular(3)),
                           border: Border.all(color: outlineGrey),
                         ),
                         child: Stack(children: [
@@ -700,12 +690,12 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    eDate!=null ? eDate : selectedEndDate != null
+                                    selectedEndDate != null
                                         ? selectedEndDate!.day.toString() +
-                                            "/" +
-                                            selectedEndDate!.month.toString() +
-                                            "/" +
-                                            selectedEndDate!.year.toString()
+                                        "/" +
+                                        selectedEndDate!.month.toString() +
+                                        "/" +
+                                        selectedEndDate!.year.toString()
                                         : "End Date",
                                     style: GoogleFonts.poppins(
                                       color: secondaryColor,
@@ -750,7 +740,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       padding: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
+                        const BorderRadius.all(Radius.circular(3)),
                         border: Border.all(color: outlineGrey),
                       ),
                       child: Stack(children: [
@@ -799,7 +789,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       padding: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
+                        const BorderRadius.all(Radius.circular(3)),
                         border: Border.all(color: outlineGrey),
                       ),
                       child: Stack(children: [
@@ -822,7 +812,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                               },
                               value: selectedPercent,
                               items:
-                                  progressPercent.map((String dropDownString) {
+                              progressPercent.map((String dropDownString) {
                                 return DropdownMenuItem<String>(
                                   value: dropDownString,
                                   child: Padding(
@@ -865,9 +855,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                           name: _titleController.text,
                           description: _descriptionController.text,
                           startDate:
-                              "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
+                          "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
                           targetDate:
-                              "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
+                          "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
                           celebrations: selectedCelebration,
                           progress: selectedPercent.substring(
                               0, selectedPercent.length - 1),
@@ -878,9 +868,9 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                           name: _titleController.text,
                           description: _descriptionController.text,
                           startDate:
-                              "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
+                          "${selectedStartDate?.day}/${selectedStartDate?.month}/${selectedStartDate?.year}",
                           targetDate:
-                              "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
+                          "${selectedEndDate?.day}/${selectedEndDate?.month}/${selectedEndDate?.year}",
                           celebrations: selectedCelebration,
                           progress: selectedPercent.substring(
                               0, selectedPercent.length - 1),
@@ -930,7 +920,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
         Row(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              get_milestone![index].name!=null? get_milestone![index].name.toString() : milestone?[index].name ?? "SomeText",
+              milestone?[index].name ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: iconBlue,
                 fontSize: 16,
@@ -938,7 +928,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
               ),
             ),
             Text(
-              get_milestone![index].name!=null? get_milestone![index].description.toString() : milestone?[index].description ?? "SomeText",
+              milestone?[index].description ?? "SomeText",
               style: GoogleFonts.poppins(
                 color: secondaryColor,
                 fontSize: 12,
@@ -967,9 +957,8 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                 update();
               },
               child:
-                  SvgPicture.asset("lib/resources/images/delete_milestone.svg"))
+              SvgPicture.asset("lib/resources/images/delete_milestone.svg"))
         ]),
-        if(milestone?.length!=0 || widget.tabSelected == 3)
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(children: [
@@ -986,8 +975,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      //"SomeText",
-                        get_milestone!.length != 0 ? get_milestone![index].startDate.toString() : milestone?[index].startDate ?? "SomeText",
+                      milestone?[index].startDate ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -1009,8 +997,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      //"SomeText",
-                      get_milestone!.length != 0 ? get_milestone![index].targetDate.toString() : milestone?[index].targetDate ?? "SomeText",
+                      milestone?[index].targetDate ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -1032,8 +1019,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
                       ),
                     ),
                     Text(
-                      //"SomeText",
-                      get_milestone!.length != 0 ? get_milestone![index].celebrations.toString() :milestone?[index].celebrations ?? "SomeText",
+                      milestone?[index].celebrations ?? "SomeText",
                       style: GoogleFonts.poppins(
                         color: secondaryColor,
                         fontSize: 12,
@@ -1051,7 +1037,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
             valueColor: AlwaysStoppedAnimation<Color>(
               Colors.amber,
             ),
-            value: 100, //double.parse(milestone[index].progress) / 100,
+            value: double.parse(milestone[index].progress.toString()) / 100,
             minHeight: 6,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
@@ -1063,23 +1049,7 @@ class _GoalSummaryWidgetState extends State<GoalOutComesWidget>
   void init() async{
     print(widget.goalId);
     if(widget.tabSelected == 3){
-      getOutcome = await ApiService().getGoalOutcomes(widget.goalId);
-      setState(() {
-        outcome_name = getOutcome!.expectedOutcome;
-        break_down = getOutcome!.breakdown;
-        if(break_down!=0){
-          radio = 1;
-        }
-        get_milestone = getOutcome!.milestone!.map((e) => AddMilestone(
-          name: e.name,
-          description: e.description,
-          startDate: e.startDate,
-          targetDate: e.targetDate,
-          progress: e.progress,
-          celebrations: e.celebrations
-        )).toList();
-      });
-      print("$outcome_name, $break_down, $radio");
+      //getOutcome = await ApiService().getOutcomes(widget.goalId);
     }
   }
 
