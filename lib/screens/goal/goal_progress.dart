@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
+import 'package:mycareteam/models/update_progress.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mycareteam/service/api_service.dart';
@@ -36,6 +37,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   double? overallProgress,progress, overallRating;
   double overallProgress_changed=0;
   double progress_changed = 0;
+  List<int>? getId;
   double? rate;
   final _chatController = TextEditingController();
 
@@ -44,6 +46,49 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     OverallProgressSlider(value: 1, label: "Pending", thumbColor: Color(0xfff35958), labelColor: Color(0xffc11f27)),
     OverallProgressSlider(value: 2, label: "In Progress", thumbColor: Color(0xffEFE7AE), labelColor: Color(0xfffdd504)),
     OverallProgressSlider(value: 3, label: "Completed", thumbColor: Color(0xff7CF1B4), labelColor: Color(0xff00a24e))
+  ];
+
+  List<ReviewRating> reviewRating = [
+    ReviewRating(
+        id: 1,
+        parametersToReview: "",
+        //proofOfProgress: "",
+        proofOfProgressUrl: "",
+        rating: 0,
+        current: true
+    ),
+    ReviewRating(
+        id: 2,
+        parametersToReview: "",
+        //proofOfProgress: "",
+        proofOfProgressUrl: "",
+        rating: 0,
+        current: true
+    ),
+    ReviewRating(
+        id: 3,
+        parametersToReview: "",
+        //proofOfProgress: "",
+        proofOfProgressUrl: "",
+        rating: 0,
+        current: true
+    ),
+    ReviewRating(
+        id: 4,
+        parametersToReview: "",
+        //proofOfProgress: "",
+        proofOfProgressUrl: "",
+        rating: 0,
+        current: true
+    ),
+    ReviewRating(
+        id: 5,
+        parametersToReview: "",
+        //proofOfProgress: "",
+        proofOfProgressUrl: "",
+        rating: 0,
+        current: true
+    )
   ];
 
   @override
@@ -265,12 +310,27 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: (){
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return okDialog("");
-                    });
+              onTap: () async{
+                UpdateGoalProgress response = await ApiService().updateProgress(
+                  UpdateGoalProgress(
+                   overallProgress: overallProgress_changed.toInt(),
+                   progress: progress_changed.toInt(),
+                   overallRating: overallRating!,
+                   currentReviewCycleRating: reviewRating,
+                   responseStatus: 200,
+                   responseMessage: "Successfull",
+                   goalId: widget.goalId,
+                   roleId: roleId,
+                   email: userName
+                  )
+                );
+                if(response.responseStatus == 200){
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return okDialog("");
+                      });
+                }
               },
               child: Container(
                 height: 40,
@@ -411,9 +471,16 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 print("manasa : $rating");
                 setState(() {
                   rate = rating;
-                  getRating![index] = rate!;
+                  reviewRating[index].rating = rate!;
+                  reviewRating[index].parametersToReview = getParameters![index];
+                  reviewRating[index].id = getId![index];
+                  reviewRating[index].proofOfProgressUrl = "https://trackability-dev-files.s3.amazonaws.com/goal-documents/${widget.goalId}_${index+1}";
                   print("manasa : $rate");
                   print("manasa ${getParameters![index]}");
+                  print("manasa ${reviewRating[index].rating}");
+                  print("manasa ${reviewRating[index].parametersToReview}");
+                  print("manasa ${reviewRating[index].id}");
+                  print("manasa ${reviewRating[index].proofOfProgressUrl}");
                 });
               },
             ),
@@ -521,6 +588,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         progress_changed = progress!;
         getParameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
         getRating = progressResponse!.currentReviewCycleRating!.map((e) => e.rating!).toList();
+        getId = progressResponse!.currentReviewCycleRating!.map((e) => e.id!).toList();
       });
       print(overallProgress);
       print(progress);

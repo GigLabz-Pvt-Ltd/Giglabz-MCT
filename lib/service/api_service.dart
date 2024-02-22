@@ -379,6 +379,8 @@ class ApiService {
         },
         body: updateGoalProgressApiToJson(progressBody)
         );
+    print("manasa role id : ${progressBody.roleId}");
+    print("manasa : ${response.statusCode}");
     final activity = updateGoalProgressApiFromJson(response.body);
     return activity;
   }
