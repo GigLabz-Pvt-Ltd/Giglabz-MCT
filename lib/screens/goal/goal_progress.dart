@@ -15,6 +15,7 @@ import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:http/http.dart';
 
 class GoalProgressWidget extends StatefulWidget {
   GoalProgressWidget({
@@ -47,6 +48,8 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   List<ReviewChat> messages=[];
   GetReviewComments? reviewComments;
   bool onIconPressed = false;
+  Response? imgResponse;
+  List<String>? imgUrl;
 
   final List<OverallProgressSlider> checkpoints = [
     OverallProgressSlider(value: 0, label: "Not Started", thumbColor: Colors.white, labelColor: Color(0xffc4c4c4)),
@@ -523,18 +526,30 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     return Column(
       children: [
         Container(
-          alignment: Alignment.centerLeft,
+          //alignment: Alignment.centerLeft,
           width: double.infinity,
           height: 60,
           color: Color(0xff06284b),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Text(
-            "Review Comments",
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              color: Colors.white
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Review Comments",
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white
+                ),
+              ),
+              IconButton(
+                  onPressed: (){Navigator.pop(context);},
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  )
+              )
+            ],
           ),
         ),
         Expanded(
@@ -553,9 +568,9 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            Uri.parse(messages[index].profilePic).toString(),
-                          ),
+                          backgroundImage: AssetImage(
+                            'lib/resources/images/place_holder.png',
+                          )
                         ),
                       ),
                       Flexible(
@@ -585,8 +600,8 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            Uri.parse(messages[index].profilePic).toString(),
+                          backgroundImage: AssetImage(
+                            'lib/resources/images/place_holder.png',
                           )
                         ),
                       )
@@ -636,20 +651,23 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               ),
               IconButton(
                 onPressed: () async{
+                  setState(() {
+                    onIconPressed = true;
+                  });
                   if(_chatController.text.isNotEmpty){
                      UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
                          reviewComment: ReviewComment(comment: _chatController.text),
                          roleId: roleId,
                          email: userName,
                          goalId: widget.goalId));
-
+                     _chatController.clear();
+                     _scrollController.animateTo(
+                       _scrollController.position.maxScrollExtent,
+                       duration: Duration(milliseconds: 300),
+                       curve: Curves.easeOut,
+                     );
+                     init();
                   }
-                  _chatController.clear();
-                  _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
                 },
                 icon: Icon(Icons.send, color: secondaryColor),
               )
@@ -688,6 +706,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
 
     if(onIconPressed == true || widget.tabSelected == 3){
       reviewComments = await ApiService().getReviewComments(userMap?["user_name"], widget.goalId);
+      imgUrl = reviewComments!.reviewComments!.map((e) => e.profilePic).toList();
       setState(() {
         messages = reviewComments!.reviewComments!.map((e) =>
             ReviewChat(
@@ -711,6 +730,25 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         color: bgColor
       ),
     );
+  }
+
+  getImage(int index) async{
+    imgResponse = await get(Uri.parse(imgUrl![index]));
+    if (imgResponse?.statusCode == 200) {
+      return NetworkImage(
+        Uri.parse(messages[index].profilePic).toString(),
+      );
+    } else {
+      if (imgResponse?.statusCode == 200) {
+        return NetworkImage(
+          Uri.parse(messages[index].profilePic).toString(),
+        );
+      } else {
+        return AssetImage(
+          'lib/resources/images/place_holder.png',
+        );
+      }
+    }
   }
 
 }

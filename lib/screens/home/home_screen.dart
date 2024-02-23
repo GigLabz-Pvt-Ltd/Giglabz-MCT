@@ -747,13 +747,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 8,
                             width: 8,
                             margin: const EdgeInsets.only(right: 4),
-                            decoration: const BoxDecoration(
-                                color: goalCategoryGreen,
+                            decoration: BoxDecoration(
+                                color: dashboard?.goalList[index].GoalStatus == 0 ? Colors.grey :
+                                dashboard?.goalList[index].GoalStatus == 1 ? Colors.red :
+                                dashboard?.goalList[index].GoalStatus == 2 ? Colors.yellow : goalCategoryGreen,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),
                           ),
-                          const Text(
-                            "Completed",
+                          Text(
+                            dashboard?.goalList[index].GoalStatus == 0? "Not Started" :
+                            dashboard?.goalList[index].GoalStatus == 1 ? "Pending" :
+                            dashboard?.goalList[index].GoalStatus == 2 ? "In Progress" :"Completed",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
