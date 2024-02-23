@@ -26,6 +26,7 @@ import 'package:mycareteam/models/share_goal.dart';
 import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:mycareteam/models/update_progress.dart';
+import 'package:mycareteam/models/update_review_comments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/register_response.dart';
 import '../models/login_response.dart';
@@ -396,6 +397,19 @@ class ApiService {
     print("manasa ${response.statusCode}");
     print("manasa ${response.body}");
     final activity = getReviewCommentsApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<UpdateReviewComments> updateReviewComments(UpdateReviewComments reviewComments) async {
+    final response = await post(Uri.parse("$BASE_URL_8082/goals/progress/rcomments"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: updateReviewCommentsApiToJson(reviewComments)
+    );
+    print("manasa role id : ${reviewComments.roleId}");
+    print("manasa : ${response.statusCode}");
+    final activity = updateReviewCommentsApiFromJson(response.body);
     return activity;
   }
 }

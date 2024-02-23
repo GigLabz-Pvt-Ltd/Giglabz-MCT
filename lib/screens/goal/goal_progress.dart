@@ -7,6 +7,7 @@ import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_review_comments.dart';
 import 'package:mycareteam/models/update_progress.dart';
+import 'package:mycareteam/models/update_review_comments.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
@@ -634,12 +635,15 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 ),
               ),
               IconButton(
-                onPressed: (){
-                  // if(_chatController.text.isNotEmpty){
-                  //    setState(() {
-                  //      messages.add(_chatController.text);
-                  //    });
-                  // }
+                onPressed: () async{
+                  if(_chatController.text.isNotEmpty){
+                     UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
+                         reviewComment: ReviewComment(comment: _chatController.text),
+                         roleId: roleId,
+                         email: userName,
+                         goalId: widget.goalId));
+
+                  }
                   _chatController.clear();
                   _scrollController.animateTo(
                     _scrollController.position.maxScrollExtent,
