@@ -49,7 +49,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
   void initState() {
     //_tabCont = TabController(length: _getNumberOfTabs(widget.roleId, widget.tabSelected), vsync: this);
     super.initState();
-    ((widget.tabSelected == 3) || (widget.tabSelected == 0 && widget.roleId ==3)) ? _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer", "Goal Progress"] : _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer"];
+    (widget.tabSelected == 3) ? _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer", "Goal Progress"] : _tabs = ["Goal Summary", "Outcomes", "Share Goal / Reviewer"];
     _tabCont = TabController(length: _getNumberOfTabs(widget.roleId, widget.tabSelected), vsync: this);
     _tabCont.addListener(() {
       setState(() {
@@ -156,15 +156,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
   int _getNumberOfTabs(int roleId, int tabSelected) {
     if(tabSelected==3)
       return 4;
-    if(roleId==1 && tabSelected==0)
-      return 3;
-    if(roleId==2 && tabSelected==0)
-      return 3;
-    if(roleId==3 && tabSelected==0)
-      return 4;
-    if(roleId==4 && tabSelected==0)
-      return 3;
-    return -1;
+    return 3;
   }
 
   TabBar get _tabBar => TabBar(

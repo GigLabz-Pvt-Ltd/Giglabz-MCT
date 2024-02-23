@@ -15,6 +15,7 @@ import 'package:mycareteam/models/get_goal_milestone.dart';
 import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_goal_summary.dart';
 import 'package:mycareteam/models/get_influencer_goal_area_response.dart';
+import 'package:mycareteam/models/get_review_comments.dart';
 import 'package:mycareteam/models/get_states.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_roles_response.dart';
@@ -382,6 +383,19 @@ class ApiService {
     print("manasa role id : ${progressBody.roleId}");
     print("manasa : ${response.statusCode}");
     final activity = updateGoalProgressApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<GetReviewComments> getReviewComments(String userName, int goalId) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/progress/rcomments/$userName/$goalId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print("manasa ${response.statusCode}");
+    print("manasa ${response.body}");
+    final activity = getReviewCommentsApiFromJson(response.body);
     return activity;
   }
 }

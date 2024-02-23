@@ -5,9 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
+import 'package:mycareteam/models/get_review_comments.dart';
 import 'package:mycareteam/models/update_progress.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -40,6 +42,10 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   List<int>? getId;
   double? rate;
   final _chatController = TextEditingController();
+  final _scrollController = ScrollController();
+  List<ReviewChat> messages=[];
+  GetReviewComments? reviewComments;
+  bool onIconPressed = false;
 
   final List<OverallProgressSlider> checkpoints = [
     OverallProgressSlider(value: 0, label: "Not Started", thumbColor: Colors.white, labelColor: Color(0xffc4c4c4)),
@@ -124,7 +130,13 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 padding: EdgeInsets.only(top: 14, left: 20, right: 20),
                 child: GestureDetector(
                   onTap: (){
-                    showModalBottomSheet(context: context, builder: (context) => chatWidget());
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => FractionallySizedBox(
+                          heightFactor: 0.9,
+                          child: chatWidget(),
+                        ));
                   },
                     child: SvgPicture.asset("lib/resources/icons/chat_icon.svg", height: 70, width: 70,)
                 ),
@@ -192,6 +204,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                   max: 100,
                   value: progress_changed,
                   enableTooltip: true,
+                  stepSize: 1,
                   interval: 20,
                   onChanged: (dynamic newValue) {
                     setState(() {
@@ -243,7 +256,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     ),
                     itemCount: 5,
                     itemSize: 25.0,
-                    unratedColor: Colors.amber.withAlpha(70),
+                    unratedColor: Colors.grey,
                     direction: Axis.horizontal,
                   ),
                 ],
@@ -401,8 +414,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                   )),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
                 },
                 child: Container(
                     height: 40,
@@ -456,12 +468,13 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               width: 10,
             ),
             RatingBar.builder(
-              initialRating: 0,
+              initialRating: getRating![index],
                 minRating: 0,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 24,
+                unratedColor: Colors.grey,
                 itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
@@ -525,7 +538,73 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         ),
         Expanded(
           flex: 1,
-          child: Container(),
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: messages.length!=0 ? messages.length : 0,
+            itemBuilder: (context, index){
+              return Column(
+                crossAxisAlignment: messages[index].role == "participant" ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: messages[index].role == "participant" ? MainAxisAlignment.start : MainAxisAlignment.end,
+                    children: [
+                      if(messages[index].role == "participant")
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            Uri.parse(messages[index].profilePic).toString(),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: UnconstrainedBox(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            padding: EdgeInsets.all(12),
+                            constraints: BoxConstraints(minWidth: 50,minHeight: 10, maxWidth : MediaQuery.of(context).size.width * 0.6),
+                            alignment: messages[index].role == "participant" ? Alignment.centerLeft : Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Color(0xffC0E2FF),
+                            ),
+                            child: Text(
+                              messages[index].comment,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if(messages[index].role != "participant")
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            Uri.parse(messages[index].profilePic).toString(),
+                          )
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Text(
+                      messages[index].updatedAt ?? "Some text",
+                      style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
         ),
         Container(
           //alignment: Alignment.bottomCenter,
@@ -555,7 +634,19 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 ),
               ),
               IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  // if(_chatController.text.isNotEmpty){
+                  //    setState(() {
+                  //      messages.add(_chatController.text);
+                  //    });
+                  // }
+                  _chatController.clear();
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                },
                 icon: Icon(Icons.send, color: secondaryColor),
               )
             ],
@@ -578,21 +669,30 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
       });
     }
     print("$userName, ${widget.goalId}, $roleId");
-    if(widget.tabSelected == 3){
-     progressResponse = await ApiService().getGoalProgress(userMap?["user_name"], widget.goalId, userMap?["role_id"]);
+
+    progressResponse = await ApiService().getGoalProgress(userName, widget.goalId, roleId);
+    setState(() {
+      overallProgress = progressResponse!.overallProgress!.toDouble();
+      progress = progressResponse!.progress!.toDouble();
+      overallRating = progressResponse!.overallRating;
+      overallProgress_changed = overallProgress!;
+      progress_changed = progress!;
+      getParameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
+      getRating = progressResponse!.currentReviewCycleRating!.map((e) => e.rating!).toList();
+      getId = progressResponse!.currentReviewCycleRating!.map((e) => e.id!).toList();
+    });
+
+    if(onIconPressed == true || widget.tabSelected == 3){
+      reviewComments = await ApiService().getReviewComments(userMap?["user_name"], widget.goalId);
       setState(() {
-        overallProgress = progressResponse!.overallProgress!.toDouble();
-        progress = progressResponse!.progress!.toDouble();
-        overallRating = progressResponse!.overallRating;
-        overallProgress_changed = overallProgress!;
-        progress_changed = progress!;
-        getParameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
-        getRating = progressResponse!.currentReviewCycleRating!.map((e) => e.rating!).toList();
-        getId = progressResponse!.currentReviewCycleRating!.map((e) => e.id!).toList();
+        messages = reviewComments!.reviewComments!.map((e) =>
+            ReviewChat(
+                id: e.id,
+                comment: e.comment,
+                updatedAt: e.updatedAt,
+                role: e.role, name: e.name,
+                profilePic: e.profilePic)).toList();
       });
-      print(overallProgress);
-      print(progress);
-      print(overallRating);
     }
   }
 
