@@ -666,7 +666,9 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                        duration: Duration(milliseconds: 300),
                        curve: Curves.easeOut,
                      );
-                     init();
+                     setState(() {
+                       init();
+                     });
                   }
                 },
                 icon: Icon(Icons.send, color: secondaryColor),

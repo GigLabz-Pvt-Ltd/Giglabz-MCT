@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:mycareteam/models/flags_and_code.dart';
+
+import 'colors.dart';
 
 List<FlagsAndCode> countries = [
   FlagsAndCode(svg: "au", code: "+61"),
@@ -143,4 +147,36 @@ extension StringCasingExtension on String {
       .split(' ')
       .map((str) => str.toCapitalized())
       .join(' ');
+}
+
+List<RiskAnalysis> riskAnalysis = [
+  RiskAnalysis(assetName: "lib/resources/images/timeline_ahead.png", analysis: "Before or ahead of time"),
+  RiskAnalysis(assetName: "lib/resources/images/timeline_notOnTrack.png", analysis: "Not on track"),
+  RiskAnalysis(assetName: "lib/resources/images/timeline_miss.png", analysis: "Will miss timeline"),
+  RiskAnalysis(assetName: "lib/resources/images/timeline_finish.png", analysis: "Right on time")
+];
+
+List<MilestoneStatus> milestoneStatus = [
+  MilestoneStatus(status: "Not Started", colour: goalCategoryGrey),
+  MilestoneStatus(status: "Pending", colour: goalCategoryRed),
+  MilestoneStatus(status: "In Progress", colour: goalCategoryProgress),
+  MilestoneStatus(status: "Completed", colour: goalCategoryGreen)
+];
+
+class RiskAnalysis{
+  RiskAnalysis({
+    required this.assetName,
+    required this.analysis
+  });
+  String assetName;
+  String analysis;
+}
+
+class MilestoneStatus{
+  MilestoneStatus({
+    required this.status,
+    required this.colour
+  });
+  String status;
+  Color colour;
 }

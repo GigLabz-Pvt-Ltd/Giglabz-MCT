@@ -23,6 +23,7 @@ import 'package:mycareteam/models/ndis_answers.dart';
 import 'package:mycareteam/models/ndis_ques_response.dart';
 import 'package:mycareteam/models/ndis_response.dart';
 import 'package:mycareteam/models/share_goal.dart';
+import 'package:mycareteam/models/update_milestone.dart';
 import 'package:mycareteam/models/update_profile.dart';
 import 'package:mycareteam/models/update_profile_response.dart';
 import 'package:mycareteam/models/update_progress.dart';
@@ -410,6 +411,19 @@ class ApiService {
     print("manasa role id : ${reviewComments.roleId}");
     print("manasa : ${response.statusCode}");
     final activity = updateReviewCommentsApiFromJson(response.body);
+    return activity;
+  }
+
+  Future<UpdateMilestone> updateMilestone(UpdateMilestone milestone, int goalId, int mileId) async {
+    final response = await post(Uri.parse("$BASE_URL_8082/goals/updatemilestone/$goalId/$mileId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: updateMilestoneApiToJson(milestone)
+    );
+    print("manasa role id : ${milestone.roleId}");
+    print("manasa : ${response.statusCode}");
+    final activity = updateMilestoneApiFromJson(response.body);
     return activity;
   }
 }
