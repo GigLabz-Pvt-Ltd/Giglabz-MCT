@@ -133,31 +133,31 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               Padding(
                 padding: EdgeInsets.only(top: 14, left: 20, right: 20),
                 child: GestureDetector(
-                  onTap: (){
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) => FractionallySizedBox(
-                          heightFactor: 0.9,
-                          child: chatWidget(),
-                        ));
-                  },
+                    onTap: (){
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => FractionallySizedBox(
+                            heightFactor: 0.9,
+                            child: chatWidget(),
+                          ));
+                    },
                     child: SvgPicture.asset("lib/resources/icons/chat_icon.svg", height: 70, width: 70,)
                 ),
               )
             ],
           ),
           Padding(
-              padding: EdgeInsets.only(top: 14, left: 20, right: 20),
+            padding: EdgeInsets.only(top: 14, left: 20, right: 20),
             child: SfSliderTheme(
               data: SfSliderThemeData(
-                tooltipBackgroundColor: checkpoints[overallProgress_changed.toInt()].labelColor,
-                activeTrackColor: primaryColor,
-                inactiveTrackColor: Color(0xffC0E2FF),
-                thumbColor: checkpoints[overallProgress_changed.toInt()].thumbColor,
-                thumbStrokeColor: checkpoints[overallProgress_changed.toInt()].labelColor,
-                thumbStrokeWidth: 4,
-                thumbRadius: 12
+                  tooltipBackgroundColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                  activeTrackColor: primaryColor,
+                  inactiveTrackColor: Color(0xffC0E2FF),
+                  thumbColor: checkpoints[overallProgress_changed.toInt()].thumbColor,
+                  thumbStrokeColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                  thumbStrokeWidth: 4,
+                  thumbRadius: 12
               ),
               child: SfSlider(
                 min: 0,
@@ -194,30 +194,30 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-              child: SfSliderTheme(
-                data: SfSliderThemeData(
-                    tooltipBackgroundColor: primaryColor,
-                    activeTrackColor: primaryColor,
-                    inactiveTrackColor: Color(0xffC0E2FF),
-                    thumbColor: primaryColor,
-                    thumbRadius: 12
-                ),
-                child: SfSlider(
-                  min: 0,
-                  max: 100,
-                  value: progress_changed,
-                  enableTooltip: true,
-                  stepSize: 1,
-                  interval: 20,
-                  onChanged: (dynamic newValue) {
-                    setState(() {
-                      progress_changed = newValue;
-                      print(progress_changed);
-                    });
-                  },
-                ),
+            padding: EdgeInsets.only(top: 14, left: 20, right: 20),
+            child: SfSliderTheme(
+              data: SfSliderThemeData(
+                  tooltipBackgroundColor: primaryColor,
+                  activeTrackColor: primaryColor,
+                  inactiveTrackColor: Color(0xffC0E2FF),
+                  thumbColor: primaryColor,
+                  thumbRadius: 12
               ),
+              child: SfSlider(
+                min: 0,
+                max: 100,
+                value: progress_changed,
+                enableTooltip: true,
+                stepSize: 1,
+                interval: 20,
+                onChanged: (dynamic newValue) {
+                  setState(() {
+                    progress_changed = newValue;
+                    print(progress_changed);
+                  });
+                },
+              ),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -316,57 +316,57 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               border: Border.all(color: outlineGrey),
             ),
             child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: getParameters!=null ? getParameters!.length : 0,
-              itemBuilder: (context, index) {
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: getParameters!=null ? getParameters!.length : 0,
+                itemBuilder: (context, index) {
                   return parametersTile(index);
-              }),
+                }),
           ),
           Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () async{
-                UpdateGoalProgress response = await ApiService().updateProgress(
-                  UpdateGoalProgress(
-                   overallProgress: overallProgress_changed.toInt(),
-                   progress: progress_changed.toInt(),
-                   overallRating: overallRating!,
-                   currentReviewCycleRating: reviewRating,
-                   responseStatus: 200,
-                   responseMessage: "Successfull",
-                   goalId: widget.goalId,
-                   roleId: roleId,
-                   email: userName
-                  )
-                );
-                if(response.responseStatus == 200){
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return okDialog("");
-                      });
-                }
-              },
-              child: Container(
-                height: 40,
-                width: 82,
-                margin: EdgeInsets.only(top: 8, right: 20, bottom: 20),
-                color: primaryColor,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Save",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                  onTap: () async{
+                    UpdateGoalProgress response = await ApiService().updateProgress(
+                        UpdateGoalProgress(
+                            overallProgress: overallProgress_changed.toInt(),
+                            progress: progress_changed.toInt(),
+                            overallRating: overallRating!,
+                            currentReviewCycleRating: reviewRating,
+                            responseStatus: 200,
+                            responseMessage: "Successfull",
+                            goalId: widget.goalId,
+                            roleId: roleId,
+                            email: userName
+                        )
+                    );
+                    if(response.responseStatus == 200){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return okDialog("");
+                          });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 82,
+                    margin: EdgeInsets.only(top: 8, right: 20, bottom: 20),
+                    color: primaryColor,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Save",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  )
               )
-          )
           )
         ],
       ),
@@ -392,7 +392,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'You have set a Goal Successfully',
+                          text: 'You have saved a Goal Progress Successfully',
                           style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -473,18 +473,18 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
             ),
             RatingBar.builder(
               initialRating: getRating![index],
-                minRating: 0,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 24,
-                unratedColor: Colors.grey,
-                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (double rating) {
+              minRating: 0,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: 24,
+              unratedColor: Colors.grey,
+              itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (double rating) {
                 print("manasa : $rating");
                 setState(() {
                   rate = rating;
@@ -522,161 +522,172 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     ]);
   }
 
-  Widget chatWidget(){
-    return Column(
-      children: [
-        Container(
-          //alignment: Alignment.centerLeft,
-          width: double.infinity,
-          height: 60,
-          color: Color(0xff06284b),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Review Comments",
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white
+  chatWidget(){
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        children: [
+          Container(
+            //alignment: Alignment.centerLeft,
+            width: double.infinity,
+            height: 60,
+            color: Color(0xff06284b),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Review Comments",
+                  style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white
+                  ),
                 ),
-              ),
-              IconButton(
-                  onPressed: (){Navigator.pop(context);},
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  )
-              )
-            ],
+                IconButton(
+                    onPressed: (){Navigator.pop(context);},
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    )
+                )
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: messages.length!=0 ? messages.length : 0,
-            itemBuilder: (context, index){
-              return Column(
-                crossAxisAlignment: messages[index].role == "participant" ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: messages[index].role == "participant" ? MainAxisAlignment.start : MainAxisAlignment.end,
-                    children: [
-                      if(messages[index].role == "participant")
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(
-                            'lib/resources/images/place_holder.png',
-                          )
-                        ),
-                      ),
-                      Flexible(
-                        child: UnconstrainedBox(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                            padding: EdgeInsets.all(12),
-                            constraints: BoxConstraints(minWidth: 50,minHeight: 10, maxWidth : MediaQuery.of(context).size.width * 0.6),
-                            alignment: messages[index].role == "participant" ? Alignment.centerLeft : Alignment.centerRight,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color(0xffC0E2FF),
+          Expanded(
+            flex: 1,
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: messages.length!=0 ? messages.length : 0,
+              itemBuilder: (context, index){
+                return Column(
+                  crossAxisAlignment: messages[index].role == "participant" ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: messages[index].role == "participant" ? MainAxisAlignment.start : MainAxisAlignment.end,
+                      children: [
+                        if(messages[index].role == "participant")
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: CircleAvatar(
+                              // backgroundImage: NetworkImage(
+                              //   messages[index].profilePic.toString()
+                              // ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                      messages[index].profilePic.toString(),
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                                        'lib/resources/images/place_holder.png',
+                                        fit: BoxFit.contain,
+                                        height: 50, width: 50,
+                                      )
+                                  ),
+                                )
                             ),
-                            child: Text(
-                              messages[index].comment,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400
+                          ),
+                        Flexible(
+                          child: UnconstrainedBox(
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              padding: EdgeInsets.all(12),
+                              constraints: BoxConstraints(minWidth: 50,minHeight: 10, maxWidth : MediaQuery.of(context).size.width * 0.6),
+                              alignment: messages[index].role == "participant" ? Alignment.centerLeft : Alignment.centerRight,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xffC0E2FF),
                               ),
-                              softWrap: true,
-                              overflow: TextOverflow.visible,
+                              child: Text(
+                                messages[index].comment,
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      if(messages[index].role != "participant")
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(
-                            'lib/resources/images/place_holder.png',
+                        if(messages[index].role != "participant")
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: CircleAvatar(
+                                backgroundImage: AssetImage(
+                                  'lib/resources/images/place_holder.png',
+                                )
+                            ),
                           )
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Text(
-                      messages[index].updatedAt ?? "Some text",
-                      style: GoogleFonts.poppins(
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8),
+                      child: Text(
+                        messages[index].updatedAt ?? "Some text",
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          ),
+          Container(
+            //alignment: Alignment.bottomCenter,
+              decoration: BoxDecoration(
+                border: Border.all(color: outlineGrey),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex:1,
+                    child: TextField(
+                      controller: _chatController,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Send a message',
+                        hintStyle: GoogleFonts.poppins(
+                          color: secondaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () async{
+                      setState(() {
+                        onIconPressed = true;
+                      });
+                      if(_chatController.text.isNotEmpty){
+                        UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
+                            reviewComment: ReviewComment(comment: _chatController.text),
+                            roleId: roleId,
+                            email: userName,
+                            goalId: widget.goalId));
+                        _chatController.clear();
+                        setState(() {
+                          init();
+                          print("Testing what is the last comment ${messages[4].comment}");
+                        });
+                        setState(() {});
+                      }
+                    },
+                    icon: Icon(Icons.send, color: secondaryColor),
                   )
                 ],
-              );
-            },
-          ),
-        ),
-        Container(
-          //alignment: Alignment.bottomCenter,
-          decoration: BoxDecoration(
-            border: Border.all(color: outlineGrey),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Row(
-            children: [
-              Expanded(
-                flex:1,
-                child: TextField(
-                  controller: _chatController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: secondaryColor),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Send a message',
-                    hintStyle: GoogleFonts.poppins(
-                      color: secondaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: () async{
-                  setState(() {
-                    onIconPressed = true;
-                  });
-                  if(_chatController.text.isNotEmpty){
-                     UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
-                         reviewComment: ReviewComment(comment: _chatController.text),
-                         roleId: roleId,
-                         email: userName,
-                         goalId: widget.goalId));
-                     _chatController.clear();
-                     _scrollController.animateTo(
-                       _scrollController.position.maxScrollExtent,
-                       duration: Duration(milliseconds: 300),
-                       curve: Curves.easeOut,
-                     );
-                     setState(() {
-                       init();
-                     });
-                  }
-                },
-                icon: Icon(Icons.send, color: secondaryColor),
               )
-            ],
           )
-        )
-      ],
+        ],
+      ),
     );
   }
 
@@ -720,50 +731,17 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
       });
     }
   }
-
-  Widget showTooTip(String label, Color bgColor, Offset globalPosition){
-    return Tooltip(
-      message: label,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      showDuration: Duration(seconds: 5),
-      preferBelow: false,
-      verticalOffset: 20,
-      decoration: BoxDecoration(
-        color: bgColor
-      ),
-    );
-  }
-
-  getImage(int index) async{
-    imgResponse = await get(Uri.parse(imgUrl![index]));
-    if (imgResponse?.statusCode == 200) {
-      return NetworkImage(
-        Uri.parse(messages[index].profilePic).toString(),
-      );
-    } else {
-      if (imgResponse?.statusCode == 200) {
-        return NetworkImage(
-          Uri.parse(messages[index].profilePic).toString(),
-        );
-      } else {
-        return AssetImage(
-          'lib/resources/images/place_holder.png',
-        );
-      }
-    }
-  }
-
 }
 
 class OverallProgressSlider {
   OverallProgressSlider(
-  {
-    required this.value,
-    required this.label,
-    required this.thumbColor,
-    required this.labelColor
-  }
-  );
+      {
+        required this.value,
+        required this.label,
+        required this.thumbColor,
+        required this.labelColor
+      }
+      );
 
   final int value;
   final String label;

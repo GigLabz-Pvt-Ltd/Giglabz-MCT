@@ -223,8 +223,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ?.goalList[isGoalClicked].milestone?.length,
                             itemBuilder: (context, index) {
                               mileID = dashboard?.goalList[isGoalClicked].milestone?[index];
-                              mileStatus = dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus;
-                              mileAnalysis = dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis;
                               return milestoneTile(isGoalClicked, index);
                             }),
                       ),
