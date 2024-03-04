@@ -414,7 +414,7 @@ class ApiService {
     return activity;
   }
 
-  Future<UpdateMilestone> updateMilestone(UpdateMilestone milestone, int goalId, int mileId) async {
+  Future<int> updateMilestone(UpdateMilestone milestone, int goalId, int mileId) async {
     final response = await post(Uri.parse("$BASE_URL_8082/goals/updatemilestone/$goalId/$mileId"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -423,7 +423,6 @@ class ApiService {
     );
     print("manasa role id : ${milestone.roleId}");
     print("manasa : ${response.statusCode}");
-    final activity = updateMilestoneApiFromJson(response.body);
-    return activity;
+    return response.statusCode;
   }
 }

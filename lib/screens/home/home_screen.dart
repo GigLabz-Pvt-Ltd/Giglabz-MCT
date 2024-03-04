@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var goal_id, name, tcAgreed = false;
   DashboardResponse? dashboard;
   List<int>? goalID;
+  List<DashboardMilestone>? milestone;
   var updateGoalId, userName, milestoneId;
   int? goalCount;
   int tabSelected=0;
@@ -56,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final _descriptionController2 = TextEditingController();
   final _descriptionController3 = TextEditingController();
   var mileID, mileStatus, mileAnalysis;
-  //List<DashboardMilestone>? mileID;
 
   @override
   Widget build(BuildContext context) {
@@ -65,15 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: goalCount != 0
           ? FloatingActionButton(
-              child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
-              onPressed: () {
-                getGoalId();
-              })
+          child: SvgPicture.asset("lib/resources/images/add_goal.svg"),
+          onPressed: () {
+            getGoalId();
+          })
           : null,
       appBar: AppBar(
         backgroundColor: scaffoldGrey,
         elevation: 0,
-          automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         // leading: const Icon(
         //   Icons.menu_rounded,
         //   color: iconBlack,
@@ -116,118 +116,120 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: ScrollPhysics(),
             child: isGoalClicked == -1
                 ? Column(
-                    children: [
-                      statusTile(),
-                      if (goalCount != 0)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20, bottom: 12),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Goals Category",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: iconBlue),
-                            ),
-                          ),
-                        ),
-                      ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: goalCount ?? 0,
-                          itemBuilder: (context, index) {
-                            return goalTile(index);
-                          }),
-                      if (goalCount == 0)
-                        Container(
-                          width: 130,
-                          height: 136,
-                          margin: EdgeInsets.only(top: 100, bottom: 12),
-                          child: SvgPicture.asset(
-                            "lib/resources/images/no_goals.svg",
-                          ),
-                        ),
-                      if (goalCount == 0)
-                        const Text(
-                          "Still you don’t have any goals\n please add a new goal!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: Color(0xff638381)),
-                        ),
-                      if (tcAgreed && goalCount == 0)
-                        GestureDetector(
-                          onTap: () {
-                            getGoalId();
-                          },
-                          child: SvgPicture.asset(
-                            "lib/resources/images/create_goal.svg",
-                          ),
-                        ),
-                    ],
-                  )
+              children: [
+                statusTile(),
+                if (goalCount != 0)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20, bottom: 12),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Goals Category",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: iconBlue),
+                      ),
+                    ),
+                  ),
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: goalCount ?? 0,
+                    itemBuilder: (context, index) {
+                      return goalTile(index);
+                    }),
+                if (goalCount == 0)
+                  Container(
+                    width: 130,
+                    height: 136,
+                    margin: EdgeInsets.only(top: 100, bottom: 12),
+                    child: SvgPicture.asset(
+                      "lib/resources/images/no_goals.svg",
+                    ),
+                  ),
+                if (goalCount == 0)
+                  const Text(
+                    "Still you don’t have any goals\n please add a new goal!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Color(0xff638381)),
+                  ),
+                if (tcAgreed && goalCount == 0)
+                  GestureDetector(
+                    onTap: () {
+                      getGoalId();
+                    },
+                    child: SvgPicture.asset(
+                      "lib/resources/images/create_goal.svg",
+                    ),
+                  ),
+              ],
+            )
                 : Column(
-                    children: [
-                      Container(
-                        height: 20,
-                        child: Row(children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isGoalClicked = -1;
-                              });
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.black,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 14, bottom: 0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Take care of and be kind to your body",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: iconBlue),
-                              ),
-                            ),
-                          ),
-                        ]),
+              children: [
+                Container(
+                  height: 20,
+                  child: Row(children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isGoalClicked = -1;
+                        });
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.black,
+                          size: 18,
+                        ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            top: 18, left: 20, right: 20, bottom: 20),
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 12, bottom: 10),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: dashboard
-                                ?.goalList[isGoalClicked].milestone?.length,
-                            itemBuilder: (context, index) {
-                              mileID = dashboard?.goalList[isGoalClicked].milestone?[index];
-                              return milestoneTile(isGoalClicked, index);
-                            }),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 14, bottom: 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Take care of and be kind to your body",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: iconBlue),
+                        ),
                       ),
-                    ],
-                  )),
+                    ),
+                  ]),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                      top: 18, left: 20, right: 20, bottom: 20),
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 12, bottom: 10),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(15))),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: dashboard
+                          ?.goalList[isGoalClicked].milestone?.length,
+                      itemBuilder: (context, index) {
+                        mileID = dashboard?.goalList[isGoalClicked].milestone?[index];
+                        mileStatus = dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus;
+                        mileAnalysis = dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis;
+                        return milestoneTile(isGoalClicked, index);
+                      }),
+                ),
+              ],
+            )),
       ),
       bottomNavigationBar: Material(child: bottomNavBar()),
     );
@@ -278,10 +280,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Text(
                               dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
+                                  dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].DraftPercentage
-                                          .toString() +
-                                      "%"
+                                  .toString() +
+                                  "%"
                                   : "",
                               style: TextStyle(
                                   color: Colors.white,
@@ -298,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Colors.amber,
                         ),
                         value: dashboard != null &&
-                                dashboard!.dashboardCount.isNotEmpty
+                            dashboard!.dashboardCount.isNotEmpty
                             ? dashboard!.dashboardCount[0].DraftPercentage / 100
                             : 0.0,
                         minHeight: 6,
@@ -312,9 +314,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
+                                  dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Pending
-                                      .toString()
+                                  .toString()
                                   : "",
                               style: TextStyle(
                                   color: Colors.white,
@@ -323,9 +325,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Text(
                               dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
+                                  dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Inprogress
-                                      .toString()
+                                  .toString()
                                   : "",
                               style: TextStyle(
                                   color: Colors.white,
@@ -334,9 +336,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Text(
                               dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
+                                  dashboard!.dashboardCount.isNotEmpty
                                   ? dashboard!.dashboardCount[0].Completed
-                                      .toString()
+                                  .toString()
                                   : "",
                               style: TextStyle(
                                   color: Colors.white,
@@ -419,14 +421,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Center(
               child: Text(
-            dashboard != null && dashboard!.dashboardCount.isNotEmpty
-                ? (dashboard!.dashboardCount[0].DraftCount +
-                        dashboard!.dashboardCount[0].TotalGoals)
+                dashboard != null && dashboard!.dashboardCount.isNotEmpty
+                    ? (dashboard!.dashboardCount[0].DraftCount +
+                    dashboard!.dashboardCount[0].TotalGoals)
                     .toString()
-                : "",
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-          )),
+                    : "",
+                style: TextStyle(
+                    color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              )),
         ],
       ),
     );
@@ -486,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
       iconSize: 40,
       elevation: 5,
       unselectedLabelStyle:
-          const TextStyle(color: Color(0xFFe0f2f1), fontSize: 12),
+      const TextStyle(color: Color(0xFFe0f2f1), fontSize: 12),
       showSelectedLabels: true,
       unselectedItemColor: const Color(0xFF019FFE),
       unselectedFontSize: 12.0,
@@ -499,21 +501,21 @@ class _HomeScreenState extends State<HomeScreen> {
             break;
           case 1:  ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
-            break;
+          break;
           case 2:  ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
-            break;
+          break;
           case 3:
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                    builder: (BuildContext context) => ProfileScreen()))
+                builder: (BuildContext context) => ProfileScreen()))
                 .then((value) async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String userPref = prefs.getString('user')!;
               var userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
               var mDashboard =
-                  await ApiService().getDashBoard(userMap["user_name"]);
+              await ApiService().getDashBoard(userMap["user_name"]);
 
               var mProfile = await ApiService()
                   .getProfile(userMap?["user_name"], userMap?["role_id"]);
@@ -554,10 +556,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void updateMileValues(int index){
     setState(() {
-      mileStatus = dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus;
-      mileAnalysis = dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis;
-      print("updated values test : $mileStatus");
-      print(mileAnalysis);
+      milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
+          DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+      ).toList();
+
+      print("test milestone get: ${milestone![index].sno}");
+      print("test milestone get: ${milestone![index].riskAnalysis}");
     });
   }
 
@@ -573,6 +577,13 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           isGoalClicked = index;
           updateGoalId = goalID![index];
+          milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
+              DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+          ).toList();
+
+          print("test milestone get: ${milestone![0].sno}");
+          print("test milestone get: ${milestone![0].riskAnalysis}");
+          //print("test milestone get: ${milestone![0].sno}");
         });
       },
       child: Container(
@@ -605,11 +616,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: dashboard?.goalList[index].GoalPriority == "High"
                           ? goalCategoryRed
                           : dashboard?.goalList[index].GoalPriority == "Medium"
-                              ? goalCategoryGreen
-                              : dashboard?.goalList[index].GoalPriority ==
-                                      "Medium"
-                                  ? goalCategoryBlue
-                                  : goalCategoryGrey,
+                          ? goalCategoryGreen
+                          : dashboard?.goalList[index].GoalPriority ==
+                          "Medium"
+                          ? goalCategoryBlue
+                          : goalCategoryGrey,
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
                 Container(
@@ -756,10 +767,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       padding:
-                          EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
+                      EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
                       decoration: BoxDecoration(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(3)),
+                        const BorderRadius.all(Radius.circular(3)),
                         border: Border.all(color: outlineGrey),
                       ),
                       child: Row(
@@ -773,7 +784,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 dashboard?.goalList[index].GoalStatus == 1 ? Colors.red :
                                 dashboard?.goalList[index].GoalStatus == 2 ? Colors.yellow : goalCategoryGreen,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
+                                BorderRadius.all(Radius.circular(15))),
                           ),
                           Text(
                             dashboard?.goalList[index].GoalStatus == 0? "Not Started" :
@@ -1206,63 +1217,63 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget milestoneDialog(int index){
     return StatefulBuilder(builder: (context, setState){
       return Dialog(
-          child: Container(
-            // decoration: BoxDecoration(
-            //   borderRadius: BorderRadius.all(Radius.circular(3))
-            // ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 50,
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
+        child: Container(
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.all(Radius.circular(3))
+          // ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 50,
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
                       color: alertDialogTitleBg,
                       borderRadius: BorderRadius.all(Radius.circular(3))
-                    ),
-                    padding: EdgeInsets.only(left: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Milestone Process",
-                          style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
+                  ),
+                  padding: EdgeInsets.only(left: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Milestone Process",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 24),
-                          child: GestureDetector(
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 24),
+                        child: GestureDetector(
                             onTap: (){
                               Navigator.of(context).pop();
                             },
-                              child: SvgPicture.asset('lib/resources/images/dialog_close.svg')),
-                        )
-                      ],
+                            child: SvgPicture.asset('lib/resources/images/dialog_close.svg')),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "Expected Completion Date",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "Expected Completion Date",
-                      style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                    ),
-                  ),
-                  Container(
+                ),
+                Container(
                     height: 50,
                     margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
-                      border: Border.all(color: outlineGrey),
-                      borderRadius: BorderRadius.all(Radius.circular(2))
+                        border: Border.all(color: outlineGrey),
+                        borderRadius: BorderRadius.all(Radius.circular(2))
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1270,171 +1281,171 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           mileID.targetDate ?? "DD/MM/YYYY",
                           style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         SvgPicture.asset('lib/resources/images/calendar.svg')
                       ],
                     )
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "Risk Analysis",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "Risk Analysis",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Container(
-                      height: 50,
-                      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: outlineGrey),
-                          borderRadius: BorderRadius.all(Radius.circular(2))
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<RiskAnalysis>(
-                              icon: const Icon(null),
-                              value: selectedRisk,
-                              onChanged: (RiskAnalysis? newValue) {
-                                setState((){
-                                  selectedRisk = newValue!;
-                                  if(selectedRisk.analysis == "Before or ahead of time"){
-                                    mileAnalysis = 0;
-                                  }
-                                  if(selectedRisk.analysis == "Not on track"){
-                                    mileAnalysis = 1;
-                                  }
-                                  if(selectedRisk.analysis == "Will miss timeline"){
-                                    mileAnalysis = 2;
-                                  }
-                                  if(selectedRisk.analysis == "Right on time"){
-                                    mileAnalysis = 3;
-                                  }
-                                });
-                                print("Test ${selectedRisk.analysis}");
-                              },
-                              items: riskAnalysis.map((risk) {
-                                return DropdownMenuItem<RiskAnalysis>(
-                                  value: risk,
-                                  child: Row(
-                                    children: [
-                                      Image.asset(risk.assetName, width: 24, height: 24),
-                                      SizedBox(width: 3),
-                                      Text(risk.analysis),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 24),
-                            child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
-                          )
-                        ],
-                      )
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "Milestone Status",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                ),
+                Container(
+                    height: 50,
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: outlineGrey),
+                        borderRadius: BorderRadius.all(Radius.circular(2))
                     ),
-                  ),
-                  Container(
-                      height: 50,
-                      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: outlineGrey),
-                          borderRadius: BorderRadius.all(Radius.circular(2))
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<MilestoneStatus>(
-                              icon: const Icon(null),
-                              value: selectedStatus,
-                              onChanged: (MilestoneStatus? newValue) {
-                                setState((){
-                                  selectedStatus = newValue!;
-                                  if(selectedStatus.status == "Not Started"){
-                                    mileStatus = 0;
-                                  }
-                                  if(selectedStatus.status == "Pending"){
-                                    mileStatus = 1;
-                                  }
-                                  if(selectedStatus.status == "In Progress"){
-                                    mileStatus = 2;
-                                  }
-                                  if(selectedStatus.status == "Completed"){
-                                    mileStatus = 3;
-                                  }
-                                });
-                                print("Test ${newValue?.status}");
-                                print("Test ${selectedStatus.status}");
-                              },
-                              items: milestoneStatus.map((status) {
-                                return DropdownMenuItem<MilestoneStatus>(
-                                  value: status,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 8,
-                                        width: 8,
-                                        decoration: BoxDecoration(
-                                            color: status.colour,
-                                            borderRadius: BorderRadius.all(Radius.circular(15))),
-                                      ),
-                                      SizedBox(width: 3),
-                                      Text(status.status),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 24),
-                            child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
-                          )
-                        ],
-                      )
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 8),
-                          child: Text(
-                            "Milestone Contribution",
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<RiskAnalysis>(
+                            icon: const Icon(null),
+                            value: selectedRisk,
+                            onChanged: (RiskAnalysis? newValue) {
+                              setState((){
+                                selectedRisk = newValue!;
+                                if(selectedRisk.analysis == "Before or ahead of time"){
+                                  mileAnalysis = 0;
+                                }
+                                if(selectedRisk.analysis == "Not on track"){
+                                  mileAnalysis = 1;
+                                }
+                                if(selectedRisk.analysis == "Will miss timeline"){
+                                  mileAnalysis = 2;
+                                }
+                                if(selectedRisk.analysis == "Right on time"){
+                                  mileAnalysis = 3;
+                                }
+                              });
+                              print("Test ${selectedRisk.analysis}");
+                            },
+                            items: riskAnalysis.map((risk) {
+                              return DropdownMenuItem<RiskAnalysis>(
+                                value: risk,
+                                child: Row(
+                                  children: [
+                                    Image.asset(risk.assetName, width: 24, height: 24),
+                                    SizedBox(width: 3),
+                                    Text(risk.analysis),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 24),
+                          child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
+                        )
+                      ],
+                    )
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "Milestone Status",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                Container(
+                    height: 50,
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: outlineGrey),
+                        borderRadius: BorderRadius.all(Radius.circular(2))
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<MilestoneStatus>(
+                            icon: const Icon(null),
+                            value: selectedStatus,
+                            onChanged: (MilestoneStatus? newValue) {
+                              setState((){
+                                selectedStatus = newValue!;
+                                if(selectedStatus.status == "Not Started"){
+                                  mileStatus = 0;
+                                }
+                                if(selectedStatus.status == "Pending"){
+                                  mileStatus = 1;
+                                }
+                                if(selectedStatus.status == "In Progress"){
+                                  mileStatus = 2;
+                                }
+                                if(selectedStatus.status == "Completed"){
+                                  mileStatus = 3;
+                                }
+                              });
+                              print("Test ${newValue?.status}");
+                              print("Test ${selectedStatus.status}");
+                            },
+                            items: milestoneStatus.map((status) {
+                              return DropdownMenuItem<MilestoneStatus>(
+                                value: status,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 8,
+                                      width: 8,
+                                      decoration: BoxDecoration(
+                                          color: status.colour,
+                                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text(status.status),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 24),
+                          child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
+                        )
+                      ],
+                    )
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 24, top: 8),
+                            child: Text(
+                              "Milestone Contribution",
+                              style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
                           Container(
                             margin: EdgeInsets.only(left: 24, top: 8),
                             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -1452,8 +1463,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ]
-                      ),
-                      Column(
+                    ),
+                    Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
@@ -1479,175 +1490,178 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ]
-                      )
-                    ],
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "What is working well?",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "What is working well?",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
+                ),
+                Container(
+                  height: 90,
+                  margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _descriptionController1,
+                    minLines: 1,
+                    maxLines: 2,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Enter Description",
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  Container(
-                    height: 90,
-                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      border: Border.all(color: outlineGrey),
-                    ),
-                    child: TextField(
-                      controller: _descriptionController1,
-                      minLines: 1,
-                      maxLines: 2,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter Description",
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "What are the things you are enjoying or progressing with?",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "What are the things you are enjoying or progressing with?",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
+                ),
+                Container(
+                  height: 90,
+                  margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _descriptionController2,
+                    minLines: 1,
+                    maxLines: 2,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Enter Description",
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  Container(
-                    height: 90,
-                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      border: Border.all(color: outlineGrey),
-                    ),
-                    child: TextField(
-                      controller: _descriptionController2,
-                      minLines: 1,
-                      maxLines: 2,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter Description",
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8),
+                  child: Text(
+                    "What has changed?",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 8),
-                    child: Text(
-                      "What has changed?",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
+                ),
+                Container(
+                  height: 90,
+                  margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _descriptionController3,
+                    minLines: 1,
+                    maxLines: 2,
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Enter Description",
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  Container(
-                    height: 90,
+                ),
+                GestureDetector(
+                  onTap: () async{
+                    if(_descriptionController1.text.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter working well comment")));
+                    }
+                    if(_descriptionController2.text.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter enjoying and progressing comment")));
+                    }
+                    if(_descriptionController3.text.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter what has changed comment")));
+                    }
+                    print("Testing mile update");
+                    print(_descriptionController1.text);
+                    print(_descriptionController2.text);
+                    print(_descriptionController3.text);
+                    print(updateGoalId);
+                    print("Status: $mileStatus");
+                    print("Analysis $mileAnalysis");
+                    milestoneId = dashboard?.goalList[isGoalClicked].milestone?[index].sno;
+                    print("mile id: ${milestoneId}");
+                    int response = await ApiService().updateMilestone(
+                        UpdateMilestone(
+                            riskAnalysis: mileAnalysis,
+                            milestoneStatus: mileStatus,
+                            workingWellComment: _descriptionController1.text,
+                            enjoyingAndProgressingComment: _descriptionController2.text,
+                            whatHasChanged: _descriptionController3.text,
+                            email: userName, roleId: roleId),
+                        updateGoalId, milestoneId);
+                    if(response == 200) {
+                      makeApiCall();
+                      updateMileValues(index);
+                    }
+                    Navigator.of(context).pop();
+                    _descriptionController1.clear();
+                    _descriptionController2.clear();
+                    _descriptionController3.clear();
+                  },
+                  child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    width: double.infinity,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      border: Border.all(color: outlineGrey),
-                    ),
-                    child: TextField(
-                      controller: _descriptionController3,
-                      minLines: 1,
-                      maxLines: 2,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14, fontWeight: FontWeight.w400, color: secondaryColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter Description",
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async{
-                      if(_descriptionController1.text.isEmpty){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter working well comment")));
-                      }
-                      if(_descriptionController2.text.isEmpty){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter enjoying and progressing comment")));
-                      }
-                      if(_descriptionController3.text.isEmpty){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter what has changed comment")));
-                      }
-                      print("Testing mile update");
-                      print(_descriptionController1.text);
-                      print(_descriptionController2.text);
-                      print(_descriptionController3.text);
-                      print(updateGoalId);
-                      print("Status: $mileStatus");
-                      print("Analysis $mileAnalysis");
-                      milestoneId = dashboard?.goalList[isGoalClicked].milestone?[index].sno;
-                      print("mile id: ${milestoneId}");
-                      UpdateMilestone response = await ApiService().updateMilestone(
-                          UpdateMilestone(
-                              riskAnalysis: mileAnalysis,
-                              milestoneStatus: mileStatus,
-                              workingWellComment: _descriptionController1.text,
-                              enjoyingAndProgressingComment: _descriptionController2.text,
-                              whatHasChanged: _descriptionController3.text,
-                              email: userName, roleId: roleId),
-                          updateGoalId, milestoneId);
-                      //updateMileValues(index);
-                      Navigator.of(context).pop();
-                      _descriptionController1.clear();
-                      _descriptionController2.clear();
-                      _descriptionController3.clear();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(3)),
                         color: primaryColor
-                      ),
-                      child: Text(
-                        "Update",
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
+                    ),
+                    child: Text(
+                      "Update",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
+        ),
       );
     });
   }
@@ -1674,8 +1688,8 @@ class _HomeScreenState extends State<HomeScreen> {
       print("Tab selected : $tabSelected,  $roleId");
       Navigator.of(context)
           .push(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  CreateGoalScreen(roleId: roleId, goalId: goal_id, tabSelected: tabSelected,)))
+          builder: (BuildContext context) =>
+              CreateGoalScreen(roleId: roleId, goalId: goal_id, tabSelected: tabSelected,)))
           .then((value) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String userPref = prefs.getString('user')!;
