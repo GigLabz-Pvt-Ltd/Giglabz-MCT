@@ -640,48 +640,53 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               decoration: BoxDecoration(
                 border: Border.all(color: outlineGrey),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Row(
                 children: [
                   Expanded(
                     flex:1,
-                    child: TextField(
-                      controller: _chatController,
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Send a message',
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 24, top: 8, bottom: 8),
+                      child: TextField(
+                        controller: _chatController,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: secondaryColor),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Send a message',
+                          hintStyle: GoogleFonts.poppins(
+                            color: secondaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () async{
-                      setState(() {
-                        onIconPressed = true;
-                      });
-                      if(_chatController.text.isNotEmpty){
-                        UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
-                            reviewComment: ReviewComment(comment: _chatController.text),
-                            roleId: roleId,
-                            email: userName,
-                            goalId: widget.goalId));
-                        _chatController.clear();
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24, top: 8, bottom: 8),
+                    child: IconButton(
+                      onPressed: () async{
                         setState(() {
-                          init();
-                          print("Testing what is the last comment ${messages[4].comment}");
+                          onIconPressed = true;
                         });
-                        setState(() {});
-                      }
-                    },
-                    icon: Icon(Icons.send, color: secondaryColor),
+                        if(_chatController.text.isNotEmpty){
+                          UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
+                              reviewComment: ReviewComment(comment: _chatController.text),
+                              roleId: roleId,
+                              email: userName,
+                              goalId: widget.goalId));
+                          _chatController.clear();
+                          setState(() {
+                            init();
+                          });
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(Icons.send, color: secondaryColor),
+                    ),
                   )
                 ],
               )

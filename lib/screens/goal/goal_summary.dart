@@ -1449,8 +1449,8 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
   selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDob, // Refer step 1
-      firstDate: DateTime(1900),
+      initialDate: DateTime.now(), // Refer step 1
+      firstDate: DateTime.now().subtract(Duration(days: 0)),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDob)
