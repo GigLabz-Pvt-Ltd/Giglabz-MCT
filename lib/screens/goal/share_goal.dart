@@ -387,12 +387,12 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                   )),
               GestureDetector(
                 onTap: () {
-                  if(isImplementer == true){
-                    Navigator.pop(context);
-                    setState(() {
-                      widget.updateTab(3, widget.goalStart, widget.goalEnd);
-                    });
-                  }
+                  // if(isImplementer == true){
+                  //   Navigator.pop(context);
+                  //   setState(() {
+                  //     widget.updateTab(3, widget.goalStart, widget.goalEnd);
+                  //   });
+                  // }
                   // Navigator.pop(context);
                   // Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen())).then((value) => setState((){}));

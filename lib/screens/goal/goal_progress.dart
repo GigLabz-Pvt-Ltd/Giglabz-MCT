@@ -613,8 +613,20 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                           Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: CircleAvatar(
-                                backgroundImage: AssetImage(
-                                  'lib/resources/images/place_holder.png',
+                              // backgroundImage: NetworkImage(
+                              //   messages[index].profilePic.toString()
+                              // ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                      messages[index].profilePic.toString(),
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                                        'lib/resources/images/place_holder.png',
+                                        fit: BoxFit.contain,
+                                        height: 50, width: 50,
+                                      )
+                                  ),
                                 )
                             ),
                           )

@@ -1487,27 +1487,28 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
       ),
       Container(
         height: 90,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(3)),
           border: Border.all(color: outlineGrey),
         ),
-        child: TextField(
-          keyboardType: TextInputType.multiline,
-          controller: _descriptionController,
-          minLines: 1,
-          maxLines: 2,
-          style: GoogleFonts.poppins(
-              fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: desc!=null? desc: "",
-            hintStyle: GoogleFonts.poppins(
-              color: secondaryColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: TextField(
+            keyboardType: TextInputType.multiline,
+            controller: _descriptionController,
+            minLines: 1,
+            maxLines: 2,
+            style: GoogleFonts.poppins(
+                fontSize: 16, fontWeight: FontWeight.w400, color: secondaryColor),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: desc!=null? desc: "",
+              hintStyle: GoogleFonts.poppins(
+                color: secondaryColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         )
