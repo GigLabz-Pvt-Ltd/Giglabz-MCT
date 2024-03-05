@@ -12,6 +12,7 @@ import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/share_goal.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:mycareteam/resources/constants/const.dart';
+import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -392,8 +393,9 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       widget.updateTab(3, widget.goalStart, widget.goalEnd);
                     });
                   }
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen())).then((value) => setState((){}));
                 },
                 child: Container(
                     height: 40,

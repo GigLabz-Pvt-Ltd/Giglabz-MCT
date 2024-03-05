@@ -186,7 +186,7 @@ class ApiService {
     return activity;
   }
 
-  Future<DashboardResponse> getDashBoard(String email) async {
+  Future<DashboardResponse?> getDashBoard(String email) async {
     final response = await get(
       // Uri.parse("$BASE_URL_8082/goals/dashboard/gitowe3414@ipniel.com"),
       Uri.parse("$BASE_URL_8082/goals/dashboard/$email"),
@@ -194,8 +194,13 @@ class ApiService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    final activity = getDashboardResponseApiFromJson(response.body);
-    return activity;
+   if(response.statusCode == 200){
+     print("Get Dashboard ${response.body}");
+     print("Get Dashboard ${response.statusCode}");
+     final activity = getDashboardResponseApiFromJson(response.body);
+     return activity;
+   }
+    return null;
   }
 
   Future<CreateGoalResponse> createGoal(int goalId, CreateGoal goal) async {

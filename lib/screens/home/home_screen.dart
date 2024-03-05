@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var updateGoalId, userName, milestoneId;
   int? goalCount;
   int tabSelected=0;
+  bool isProgressClicked = false;
   var imgUrl, roleId;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
@@ -59,8 +60,20 @@ class _HomeScreenState extends State<HomeScreen> {
   var mileID, mileStatus, mileAnalysis;
 
   @override
-  Widget build(BuildContext context) {
+  void initState(){
+    super.initState();
     getDashBoard();
+  }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    makeApiCall();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //getDashBoard();
 
     return Scaffold(
       floatingActionButton: goalCount != 0
@@ -521,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   .getProfile(userMap?["user_name"], userMap?["role_id"]);
               setState(() {
                 dashboard = mDashboard;
-                goalCount = mDashboard.goalList.length;
+                goalCount = mDashboard?.goalList.length;
                 if (userMap["role_id"] == 4) {
                   name = "Hey, ${mProfile.provider!.firstName} 👋";
                   if (mProfile.provider?.ndisTc == 1) {
@@ -581,8 +594,8 @@ class _HomeScreenState extends State<HomeScreen> {
               DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
           ).toList();
 
-          print("test milestone get: ${milestone![0].sno}");
-          print("test milestone get: ${milestone![0].riskAnalysis}");
+          // print("test milestone get: ${milestone![0].sno}");
+          // print("test milestone get: ${milestone![0].riskAnalysis}");
           //print("test milestone get: ${milestone![0].sno}");
         });
       },
@@ -700,13 +713,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Spacer(),
                 TextButton(
                   onPressed: (){
-                    print('Goal id ${goalID![index]}');
                     setState(() {
                       tabSelected=3;
+                      updateGoalId = goalID![index];
                     });
+                    print('Goal id ${updateGoalId}');
                     print("Tab selected : $tabSelected, $roleId");
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => CreateGoalScreen(roleId: roleId, goalId: goalID![index], tabSelected: tabSelected,)));
+                    if(updateGoalId!=null){
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) => CreateGoalScreen(roleId: roleId, goalId: updateGoalId, tabSelected: tabSelected,)));
+                    }
                   },
                   style: ButtonStyle(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1682,6 +1698,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await ApiService().getGoalId(userMap["user_name"]);
     if (response.responseStatus == 200) {
       goal_id = response.goalId;
+      print("Check goal id if same: $goal_id");
       setState(() {
         tabSelected=0;
       });
@@ -1701,7 +1718,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .getProfile(userMap?["user_name"], userMap?["role_id"]);
         setState(() {
           dashboard = mDashboard;
-          goalCount = mDashboard.goalList.length;
+          goalCount = mDashboard?.goalList.length;
           if (userMap["role_id"] == 4) {
             name = "Hey, ${mProfile.provider!.firstName} 👋";
             if (mProfile.provider?.ndisTc == 1) {
@@ -1745,39 +1762,42 @@ class _HomeScreenState extends State<HomeScreen> {
         .getProfile(userMap?["user_name"], userMap?["role_id"]);
     userName = userMap["user_name"];
 
-    setState(() {
-      dashboard = mDashboard;
-      goalCount = mDashboard.goalList.length;
-      if (userMap["role_id"] == 4) {
-        imgUrl = mProfile.provider?.profilePic ?? "";
+    if(mDashboard != null){
+      setState(() {
+        dashboard = mDashboard;
+        goalCount = mDashboard?.goalList.length;
+        if (userMap["role_id"] == 4) {
+          imgUrl = mProfile.provider?.profilePic ?? "";
 
-        name = "Hey, ${mProfile.provider!.firstName} 👋";
-        if (mProfile.provider?.ndisTc == 1) {
-          tcAgreed = true;
-        } else {
-          tcAgreed = false;
-        }
-      } else {
-        imgUrl = mProfile.participant?.profilePic ?? "";
-
-        name = "Hey, ${mProfile.participant!.firstName} 👋";
-        if (userMap["role_id"] == 1) {
-          if (mProfile.participant?.ndisAgreement == 1 &&
-              mProfile.participant?.ndisTc == 1) {
+          name = "Hey, ${mProfile.provider!.firstName} 👋";
+          if (mProfile.provider?.ndisTc == 1) {
             tcAgreed = true;
           } else {
             tcAgreed = false;
           }
         } else {
-          if (mProfile.participant?.ndisTc == 1) {
-            tcAgreed = true;
+          imgUrl = mProfile.participant?.profilePic ?? "";
+
+          name = "Hey, ${mProfile.participant!.firstName} 👋";
+          if (userMap["role_id"] == 1) {
+            if (mProfile.participant?.ndisAgreement == 1 &&
+                mProfile.participant?.ndisTc == 1) {
+              tcAgreed = true;
+            } else {
+              tcAgreed = false;
+            }
           } else {
-            tcAgreed = false;
+            if (mProfile.participant?.ndisTc == 1) {
+              tcAgreed = true;
+            } else {
+              tcAgreed = false;
+            }
           }
         }
-      }
-      goalID = dashboard!.goalList.map((e) => e.GoalId).toList();
-    });
+        goalID = dashboard!.goalList.map((e) => e.GoalId).toList();
+        print("List of goal id $goalID");
+      });
+    }
 
     if (userMap["role_id"] == 4 && imgUrl != "") {
       imgResponse = await get(Uri.parse(imgUrl));
