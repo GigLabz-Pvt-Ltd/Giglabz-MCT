@@ -50,6 +50,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   bool onIconPressed = false;
   Response? imgResponse;
   List<String>? imgUrl;
+  GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   final List<OverallProgressSlider> checkpoints = [
     OverallProgressSlider(value: 0, label: "Not Started", thumbColor: Colors.white, labelColor: Color(0xffc4c4c4)),
@@ -107,6 +108,12 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
     init();
     print(widget.goalId);
   }
+
+  // @override
+  // void didChangeDependencies(){
+  //   super.didChangeDependencies();
+  //   init();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -555,90 +562,94 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Expanded(
             flex: 1,
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: messages.length!=0 ? messages.length : 0,
-              itemBuilder: (context, index){
-                return Column(
-                  crossAxisAlignment: messages[index].role == "participant" ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: messages[index].role == "participant" ? MainAxisAlignment.start : MainAxisAlignment.end,
-                      children: [
-                        if(messages[index].role == "participant")
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Container(
-                              height: 50, width: 50,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                    messages[index].profilePic.toString(),
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                                      'lib/resources/images/place_holder.png',
-                                      fit: BoxFit.contain,
-                                    )
+            child: RefreshIndicator(
+              key: refreshIndicatorKey,
+              onRefresh: handleButtonClick,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: messages.length!=0 ? messages.length : 0,
+                itemBuilder: (context, index){
+                  return Column(
+                    crossAxisAlignment: messages[index].role == "participant" ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: messages[index].role == "participant" ? MainAxisAlignment.start : MainAxisAlignment.end,
+                        children: [
+                          if(messages[index].role == "participant")
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Container(
+                                height: 50, width: 50,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                      messages[index].profilePic.toString(),
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                                        'lib/resources/images/place_holder.png',
+                                        fit: BoxFit.contain,
+                                      )
+                                  ),
+                                ),
+                              ),
+                            ),
+                          Flexible(
+                            child: UnconstrainedBox(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                padding: EdgeInsets.all(12),
+                                constraints: BoxConstraints(minWidth: 50,minHeight: 10, maxWidth : MediaQuery.of(context).size.width * 0.6),
+                                alignment: messages[index].role == "participant" ? Alignment.centerLeft : Alignment.centerRight,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color(0xffC0E2FF),
+                                ),
+                                child: Text(
+                                  messages[index].comment,
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
                                 ),
                               ),
                             ),
                           ),
-                        Flexible(
-                          child: UnconstrainedBox(
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                              padding: EdgeInsets.all(12),
-                              constraints: BoxConstraints(minWidth: 50,minHeight: 10, maxWidth : MediaQuery.of(context).size.width * 0.6),
-                              alignment: messages[index].role == "participant" ? Alignment.centerLeft : Alignment.centerRight,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Color(0xffC0E2FF),
-                              ),
-                              child: Text(
-                                messages[index].comment,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400
-                                ),
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if(messages[index].role != "participant")
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Container(
-                              height: 50, width: 50,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                    messages[index].profilePic.toString(),
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                                      'lib/resources/images/place_holder.png',
-                                      fit: BoxFit.contain,
-                                    )
+                          if(messages[index].role != "participant")
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Container(
+                                height: 50, width: 50,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                      messages[index].profilePic.toString(),
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                                        'lib/resources/images/place_holder.png',
+                                        fit: BoxFit.contain,
+                                      )
+                                  ),
                                 ),
                               ),
                             ),
-                            ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Text(
-                        messages[index].updatedAt ?? "Some text",
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        ],
                       ),
-                    )
-                  ],
-                );
-              },
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: Text(
+                          messages[index].updatedAt ?? "Some text",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ),
             ),
           ),
           Container(
@@ -679,16 +690,33 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                           onIconPressed = true;
                         });
                         if(_chatController.text.isNotEmpty){
-                          UpdateReviewComments response = await ApiService().updateReviewComments(UpdateReviewComments(
+                          int response = await ApiService().updateReviewComments(UpdateReviewComments(
                               reviewComment: ReviewComment(comment: _chatController.text),
                               roleId: roleId,
                               email: userName,
                               goalId: widget.goalId));
                           _chatController.clear();
-                          setState(() {
-                            init();
-                          });
-                          setState(() {});
+                          if(response == 200){
+                            handleButtonClick();
+                            setState(() {
+                              init();
+                            });
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      color: primaryColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  );
+                                }
+                            );
+                            await Future.delayed(Duration(seconds: 2));
+                            Navigator.pop(context);
+                            setState(() {});
+                          }
                         }
                       },
                       icon: Icon(Icons.send, color: secondaryColor),
@@ -700,6 +728,16 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> handleButtonClick() async{
+    await Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        init();
+      });
+    });
+
+    refreshIndicatorKey.currentState?.show(atTop: false);
   }
 
   void init() async {

@@ -393,20 +393,23 @@ class ApiService {
     return activity;
   }
 
-  Future<GetReviewComments> getReviewComments(String userName, int goalId) async {
+  Future<GetReviewComments?> getReviewComments(String userName, int goalId) async {
     final response = await get(
       Uri.parse("$BASE_URL_8082/goals/progress/rcomments/$userName/$goalId"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print("manasa ${response.statusCode}");
-    print("manasa ${response.body}");
-    final activity = getReviewCommentsApiFromJson(response.body);
-    return activity;
+    if(response.statusCode == 200){
+      print("manasa ${response.statusCode}");
+      print("manasa ${response.body}");
+      final activity = getReviewCommentsApiFromJson(response.body);
+      return activity;
+    }
+    return null;
   }
 
-  Future<UpdateReviewComments> updateReviewComments(UpdateReviewComments reviewComments) async {
+  Future<int> updateReviewComments(UpdateReviewComments reviewComments) async {
     final response = await post(Uri.parse("$BASE_URL_8082/goals/progress/rcomments"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -415,8 +418,8 @@ class ApiService {
     );
     print("manasa role id : ${reviewComments.roleId}");
     print("manasa : ${response.statusCode}");
-    final activity = updateReviewCommentsApiFromJson(response.body);
-    return activity;
+    //final activity = updateReviewCommentsApiFromJson(response.body);
+    return response.statusCode;
   }
 
   Future<int> updateMilestone(UpdateMilestone milestone, int goalId, int mileId) async {

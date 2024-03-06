@@ -29,8 +29,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProfileSettingWidget extends StatefulWidget {
   ProfileSettingWidget(
       {Key? key,
-      required GetProfileResponse this.user,
-      required GetNdisQuesResponse this.ndisQues})
+        required GetProfileResponse this.user,
+        required GetNdisQuesResponse this.ndisQues})
       : super(key: key);
 
   GetProfileResponse user;
@@ -81,6 +81,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   File? image;
   var _picker = ImagePicker();
   List<int>? toggleValues = [];
+  var message;
 
   @override
   void initState() {
@@ -94,1022 +95,1030 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
 
     return isLoading
         ? Center(
-            child: CircularProgressIndicator(
-            color: primaryColor,
-          ))
+        child: CircularProgressIndicator(
+          color: primaryColor,
+        ))
         : Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(4, 14, 0, 0),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(children: [
-                            Container(
-                              height: 100,
-                              width: 100,
-                              child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  child: getImage()),
-                            ),
-                            Positioned(
-                              top: 63,
-                              left: 63,
-                              child: GestureDetector(
-                                onTap: () {
-                                  selectImage();
-                                },
-                                child: Container(
-                                  height: 37,
-                                  width: 37,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: cameraBg,
-                                  ),
-                                  child: SvgPicture.asset(
-                                      "lib/resources/images/camera.svg"),
-                                ),
-                              ),
-                            ),
-                          ]),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                userMap?["role_id"] == 4
-                                    ? Container(
-                                        width: 200,
-                                        child: Text(
-                                          widget.user.provider!.firstName!,
-                                          textAlign: TextAlign.left,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: secondaryColor),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 200,
-                                        child: Text(
-                                          widget.user.participant?.firstName !=
-                                                  null
-                                              ? "${widget.user.participant?.firstName!} ${widget.user.participant!.lastName!}"
-                                              : "",
-                                          textAlign: TextAlign.left,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: secondaryColor),
-                                        ),
-                                      ),
-                                Text(
-                                  widget.user.roleDisplayName.toCapitalized(),
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: secondaryColor),
-                                )
-                              ],
-                            ),
-                          )
-                        ]),
-                  ),
-                  // Container(
-                  //   height: 88,
-                  //   width: double.infinity,
-                  //   margin: const EdgeInsets.only(top: 20),
-                  //   padding: EdgeInsets.all(14),
-                  //   decoration: BoxDecoration(
-                  //     border: Border.all(width: 1, color: outlineGrey),
-                  //     borderRadius: const BorderRadius.all(
-                  //       Radius.circular(3),
-                  //     ),
-                  //   ),
-                  //   child: Wrap(
-                  //     children: [
-                  //       GestureDetector(
-                  //         onTap: () {
-                  //           setState(() {
-                  //             selectedInterest = 0;
-                  //           });
-                  //         },
-                  //         child: Container(
-                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
-                  //           padding: EdgeInsets.symmetric(horizontal: 8),
-                  //           decoration: BoxDecoration(
-                  //             color: selectedInterest == 0
-                  //                 ? interestSelected
-                  //                 : interestNotSelected,
-                  //             borderRadius: const BorderRadius.all(
-                  //               Radius.circular(20),
-                  //             ),
-                  //           ),
-                  //           child:
-                  //               Row(mainAxisSize: MainAxisSize.min, children: [
-                  //             Text(
-                  //               "Health",
-                  //               style: GoogleFonts.poppins(
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: selectedInterest == 0
-                  //                       ? Colors.white
-                  //                       : secondaryColor),
-                  //             ),
-                  //             Container(
-                  //               height: 24,
-                  //               width: 12,
-                  //             ),
-                  //             selectedInterest == 0
-                  //                 ? SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove_selected.svg")
-                  //                 : SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove.svg")
-                  //           ]),
-                  //         ),
-                  //       ),
-                  //       GestureDetector(
-                  //         onTap: () {
-                  //           setState(() {
-                  //             selectedInterest = 1;
-                  //           });
-                  //         },
-                  //         child: Container(
-                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
-                  //           padding: EdgeInsets.symmetric(horizontal: 8),
-                  //           decoration: BoxDecoration(
-                  //             color: selectedInterest == 1
-                  //                 ? interestSelected
-                  //                 : interestNotSelected,
-                  //             borderRadius: const BorderRadius.all(
-                  //               Radius.circular(20),
-                  //             ),
-                  //           ),
-                  //           child:
-                  //               Row(mainAxisSize: MainAxisSize.min, children: [
-                  //             Text(
-                  //               "Sports",
-                  //               style: GoogleFonts.poppins(
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: selectedInterest == 1
-                  //                       ? Colors.white
-                  //                       : secondaryColor),
-                  //             ),
-                  //             Container(
-                  //               height: 24,
-                  //               width: 12,
-                  //             ),
-                  //             selectedInterest == 1
-                  //                 ? SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove_selected.svg")
-                  //                 : SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove.svg")
-                  //           ]),
-                  //         ),
-                  //       ),
-                  //       GestureDetector(
-                  //         onTap: () {
-                  //           setState(() {
-                  //             selectedInterest = 2;
-                  //           });
-                  //         },
-                  //         child: Container(
-                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
-                  //           padding: EdgeInsets.symmetric(horizontal: 8),
-                  //           decoration: BoxDecoration(
-                  //             color: selectedInterest == 2
-                  //                 ? interestSelected
-                  //                 : interestNotSelected,
-                  //             borderRadius: const BorderRadius.all(
-                  //               Radius.circular(20),
-                  //             ),
-                  //           ),
-                  //           child:
-                  //               Row(mainAxisSize: MainAxisSize.min, children: [
-                  //             Text(
-                  //               "Education",
-                  //               style: GoogleFonts.poppins(
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: selectedInterest == 2
-                  //                       ? Colors.white
-                  //                       : secondaryColor),
-                  //             ),
-                  //             Container(
-                  //               height: 24,
-                  //               width: 12,
-                  //             ),
-                  //             selectedInterest == 2
-                  //                 ? SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove_selected.svg")
-                  //                 : SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove.svg")
-                  //           ]),
-                  //         ),
-                  //       ),
-                  //       GestureDetector(
-                  //         onTap: () {
-                  //           setState(() {
-                  //             selectedInterest = 3;
-                  //           });
-                  //         },
-                  //         child: Container(
-                  //           margin: EdgeInsets.only(right: 10, bottom: 10),
-                  //           padding: EdgeInsets.symmetric(horizontal: 8),
-                  //           decoration: BoxDecoration(
-                  //             color: selectedInterest == 3
-                  //                 ? interestSelected
-                  //                 : interestNotSelected,
-                  //             borderRadius: const BorderRadius.all(
-                  //               Radius.circular(20),
-                  //             ),
-                  //           ),
-                  //           child:
-                  //               Row(mainAxisSize: MainAxisSize.min, children: [
-                  //             Text(
-                  //               "Engineering",
-                  //               style: GoogleFonts.poppins(
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: selectedInterest == 3
-                  //                       ? Colors.white
-                  //                       : secondaryColor),
-                  //             ),
-                  //             Container(
-                  //               height: 24,
-                  //               width: 12,
-                  //             ),
-                  //             selectedInterest == 3
-                  //                 ? SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove_selected.svg")
-                  //                 : SvgPicture.asset(
-                  //                     "lib/resources/images/interest_remove.svg")
-                  //           ]),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  selectInterestsLayout(),
-                  Row(mainAxisSize: MainAxisSize.max, children: [
-                    Expanded(
-                      child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                        ),
-                        margin: const EdgeInsets.only(top: 24),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          border: Border.all(color: outlineGrey),
-                        ),
-                        child: TextField(
-                          controller: _otherInterestController,
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: secondaryColor),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Enter any other interests',
-                            hintStyle: GoogleFonts.poppins(
-                              color: secondaryColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(4, 14, 0, 0),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        child: ClipRRect(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(50.0)),
+                            child: getImage()),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (_otherInterestController.text != "") {
-                            interests?.add(Interests(
-                                id: 1, name: _otherInterestController.text));
-                            _otherInterestController.text = "";
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 82,
-                        margin: const EdgeInsets.fromLTRB(13, 24, 0, 0),
-                        decoration: const BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                        ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset("lib/resources/images/add.svg"),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6),
-                                child: Text(
-                                  "ADD",
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ]),
-                      ),
-                    )
-                  ]),
-                  BorderedEditText(
-                      label: userMap?["role_id"] != 4
-                          ? "First Name"
-                          : "Care Team Member",
-                      hint: userMap?["role_id"] != 4
-                          ? "Enter First Name *"
-                          : "Enter Care Team Member *",
-                      controller: _firstNameController),
-                  if (userMap?["role_id"] != 4)
-                    BorderedEditText(
-                        label: "Last Name",
-                        hint: "Enter Last Name *",
-                        controller: _lastNameController),
-                  Stack(children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.1, color: outlineGrey),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _phoneNumController,
-                        style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: secondaryColor),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                          hintStyle: GoogleFonts.poppins(
-                            color: secondaryColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          labelStyle: GoogleFonts.poppins(
-                            color: iconBlack,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          // focusedBorder: const OutlineInputBorder(
-                          //   borderSide: BorderSide(
-                          //     color: outlineGrey,
-                          //   ),
-                          // ),
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: outlineGrey,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: outlineGrey,
-                            ),
-                          ),
-                          labelText: "",
-                          border: InputBorder.none,
-                          hintText: 'Enter Phone number *',
-                          prefixIcon: DropdownButtonHideUnderline(
-                            child: DropdownButton<FlagsAndCode>(
-                              alignment: Alignment.center,
-                              icon: const Icon(Icons.arrow_drop_down),
-                              onChanged: (FlagsAndCode? newValue) {
-                                setState(() {
-                                  selectedPhoneCountry = newValue!;
-                                });
-                              },
-                              value: selectedPhoneCountry,
-                              items:
-                                  countries.map((FlagsAndCode dropDownString) {
-                                return DropdownMenuItem<FlagsAndCode>(
-                                  value: dropDownString,
-                                  child: Row(children: [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Image.asset(
-                                        "lib/resources/images/${dropDownString.svg!}.png",
-                                        width: 30,
-                                        height: 20,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 4),
-                                      child: Text(
-                                        "(${dropDownString.code!})",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(color: iconGrey),
-                                      ),
-                                    ),
-                                  ]),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                          margin: const EdgeInsets.only(top: 12, left: 16),
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          color: Colors.white,
-                          child: Text(
-                            "Phone Number",
-                            style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                                color: secondaryColor),
-                          )),
-                    )
-                  ]),
-                  Container(
-                    height: 44,
-                    margin: const EdgeInsets.only(top: 24),
-                    child: TextField(
-                      controller: _emailController,
-                      enabled: false,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryColor),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: InputDecoration(
-                        hintStyle: GoogleFonts.poppins(
-                          color: secondaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          color: iconBlack,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        disabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
-                          ),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: outlineGrey,
-                          ),
-                        ),
-                        labelText: "Email",
-                        border: InputBorder.none,
-                        hintText: 'Enter email *',
-                      ),
-                    ),
-                  ),
-                  if (userMap?["role_id"] != 4)
-                    Row(children: [
-                      Expanded(
+                      Positioned(
+                        top: 63,
+                        left: 63,
                         child: GestureDetector(
                           onTap: () {
-                            selectDobDate(context);
+                            selectImage();
                           },
-                          child: CalendarOrDropDown(
-                              label: "Date of birth *",
-                              hint: selectedDob != null
-                                  ? selectedDob!.day.toString() +
-                                  "/" +
-                                  selectedDob!.month.toString() +
-                                  "/" +
-                                  selectedDob!.year.toString()
-                                  : "",
-                              suffixIcon: "calendar"),
-                        ),
-                      ),
-                      Container(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Stack(children: [
-                          const CalendarOrDropDown(
-                              label: "Gender *",
-                              hint: "",
-                              suffixIcon: "dropdownArrow"),
-                          Container(
-                            height: 70,
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(top: 30, left: 10),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                alignment: Alignment.center,
-                                icon: const Icon(null),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedGender = newValue!;
-                                  });
-                                },
-                                value: selectedGender,
-                                items: genders.map((String dropDownString) {
-                                  return DropdownMenuItem<String>(
-                                    value: dropDownString,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 4),
-                                      child: Text(
-                                        dropDownString,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: secondaryColor),
-                                      ),
-                                    ),
-
-                                  );
-                              }).toList(),
+                          child: Container(
+                            height: 37,
+                            width: 37,
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: cameraBg,
                             ),
-                          ),
-                        ),
-                      ]),
-                    ),
-                  ]),
-                  if (userMap?["role_id"] == 1)
-                    GestureDetector(
-                      onTap: () {
-                        _ndisNumberController.text = ndis ?? "";
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ndisPlanInfoDialog();
-                            });
-                      },
-                      child: CalendarOrDropDown(
-                          label: "NDIS Number *",
-                          hint: ndis ?? "Enter NDIS Number *",
-                          suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
-                          bgColor: ndisFilled ? ndisSelectedBg : null),
-                    ),
-                  if (userMap?["role_id"] == 1)
-                    GestureDetector(
-                      onTap: () {
-                        _ndisNumberController.text = ndis ?? "";
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ndisPlanInfoDialog();
-                            });
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CalendarOrDropDown(
-                                label: "NDIS Plan Start Date *",
-                                hint: ndisStart != null
-                                    ? ndisStart!.day.toString() +
-                                      "/" +
-                                      ndisStart!.month.toString() +
-                                      "/" +
-                                        ndisStart!.year.toString()
-                                    : "00/00/0000",
-                                suffixIcon: "calendar",
-                                bgColor: ndisFilled ? ndisSelectedBg : null),
-                          ),
-                          Container(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: CalendarOrDropDown(
-                                label: "NDIS Plan End Date *",
-                                hint: ndisEnd != null
-                                    ? ndisEnd!.day.toString() +
-                                        "/" +
-                                        ndisEnd!.month.toString() +
-                                        "/" +
-                                        ndisEnd!.year.toString()
-                                    : "00/00/0000",
-                                suffixIcon: "calendar",
-                                bgColor: ndisFilled ? ndisSelectedBg : null),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (userMap?["role_id"] == 1)
-                    GestureDetector(
-                      onTap: () {
-                        _ctmNameController.text = ctmName ?? "";
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ndisPlanInfoDialog();
-                            });
-                      },
-                      child: CalendarOrDropDown(
-                          label: "CTM Name *",
-                          hint: ctmName ?? "Enter NDIS Number *",
-                          suffixIcon: "",
-                          bgColor: ndisFilled ? ndisSelectedBg : null),
-                    ),
-                  if (userMap?["role_id"] == 1)
-                    GestureDetector(
-                      onTap: () {
-                        _ctmEmailController.text = ctmEmail ?? "";
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ndisPlanInfoDialog();
-                            });
-                      },
-                      child: CalendarOrDropDown(
-                          label: "CTM Email *",
-                          hint: ctmEmail ?? "Enter CTM Email *",
-                          suffixIcon: "",
-                          bgColor: ndisFilled ? ndisSelectedBg : null),
-                    ),
-                  Container(
-                    height: 70,
-                    child: Stack(children: [
-                      const CalendarOrDropDown(
-                          label: "Country *",
-                          hint: "",
-                          suffixIcon: "dropdownArrow"),
-                      Container(
-                        height: 70,
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(top: 30, left: 10),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            icon: const Icon(null),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedCountry = newValue!;
-                                states = [];
-                                selectedState = null;
-                                if (selectedCountry != "Select Country") {
-                                  getStates();
-                                }
-                              });
-                            },
-                            value: selectedCountry,
-                            items: countriesStings.map((String dropDownString) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownString,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Text(
-                                    dropDownString,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        const TextStyle(color: secondaryColor),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
+                            child: SvgPicture.asset(
+                                "lib/resources/images/camera.svg"),
                           ),
                         ),
                       ),
                     ]),
-                  ),
-                  if (selectedCountry != "Select Country")
-                    Container(
-                      height: 70,
-                      child: Stack(children: [
-                        CalendarOrDropDown(
-                            label: "State *",
-                            hint: selectedState == null ? "Select State" : "",
-                            suffixIcon: "dropdownArrow"),
-                        Container(
-                          height: 70,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(top: 30, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedState = newValue!;
-                                  areas = [];
-                                  selectedArea = null;
-                                  pincodes = [];
-                                  if (selectedState != null) {
-                                    getAreas();
-                                  }
-                                });
-                              },
-                              value: selectedState,
-                              items: states?.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          userMap?["role_id"] == 4
+                              ? Container(
+                            width: 200,
+                            child: Text(
+                              widget.user.provider!.firstName!,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
+                            ),
+                          )
+                              : Container(
+                            width: 200,
+                            child: Text(
+                              widget.user.participant?.firstName !=
+                                  null
+                                  ? "${widget.user.participant?.firstName!} ${widget.user.participant!.lastName!}"
+                                  : "",
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: secondaryColor),
                             ),
                           ),
-                        ),
-                      ]),
-                    ),
-                  if (selectedCountry != "Select Country" &&
-                      selectedState != null)
-                    Container(
-                      height: 70,
-                      child: Stack(children: [
-                        CalendarOrDropDown(
-                            label: "Area / Sub urban *",
-                            hint: selectedArea == null ? "Select Area" : "",
-                            suffixIcon: "dropdownArrow"),
-                        Container(
-                          height: 70,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(top: 30, left: 10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: const Icon(null),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedArea = newValue!;
-                                  _postalController.text =
-                                      pincodes[areas!.indexOf(selectedArea!)];
-                                });
-                              },
-                              value: selectedArea,
-                              items: areas?.map((String dropDownString) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownString,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Text(
-                                      dropDownString,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: secondaryColor),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ]),
-                    ),
-                  if (selectedCountry != "Select Country" &&
-                      selectedState != null &&
-                      selectedArea != null)
-                    Container(
-                      height: 44,
-                      margin: const EdgeInsets.only(top: 24),
-                      child: TextField(
-                        controller: _postalController,
-                        enabled: false,
-                        style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: secondaryColor),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          Text(
+                            widget.user.roleDisplayName.toCapitalized(),
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryColor),
+                          )
                         ],
-                        decoration: InputDecoration(
-                          hintStyle: GoogleFonts.poppins(
-                            color: secondaryColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          labelStyle: GoogleFonts.poppins(
-                            color: iconBlack,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          disabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: outlineGrey,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: outlineGrey,
-                            ),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: outlineGrey,
-                            ),
-                          ),
-                          labelText: "Postal Code *",
-                          border: InputBorder.none,
-                          hintText: 'Postal Code *',
-                        ),
                       ),
-                    ),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          "About Me",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: blueGrey),
-                        ),
-                      )),
-                  aboutMeWidget(),
-                  GestureDetector(
-                    onTap: () async {
-                      if (_firstNameController.text == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter first name")));
-                        return;
-                      }
-                      if (_lastNameController.text == "" &&
-                          userMap?["role_id"] != 4) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter Last name")));
-                        return;
-                      }
-                      if (_phoneNumController.text == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter phone number")));
-                        return;
-                      }
-                      if (selectedDob == null && userMap?["role_id"] != 4) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter date of birth")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && ndis == null ||
-                          ndis == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter NDIS number")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && ndis == null ||
-                          ndis == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter NDIS number")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && ndisStart == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter NDIS start date")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && ndisEnd == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter NDIS start date")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && _ctmNameController.text == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter CTM Name")));
-                        return;
-                      }
-                      if (userMap?["role_id"] == 1 && _ctmEmailController.text == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Enter CTM Email")));
-                        return;
-                      }
-                      print("start ${ndisStart?.millisecondsSinceEpoch}");
-                      print("end   ${ndisEnd?.millisecondsSinceEpoch}");
-                      if (userMap?["role_id"] == 1 &&
-                          ndisEnd!.millisecondsSinceEpoch <
-                              ndisStart!.millisecondsSinceEpoch) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                "Enter NDIS end date is before start date")));
-                        return;
-                      }
-                      if (selectedCountry == "Select Country") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Select a country")));
-                        return;
-                      }
-                      if (selectedState == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Select a state")));
-                        return;
-                      }
-                      if (selectedArea == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Select a area")));
-                        return;
-                      }
-                      setState(() {
-                        ctmName=_ctmNameController.text;
-                        ctmEmail=_ctmEmailController.text;
-                        if(ctmName!=null && ctmEmail!=null){
-                          providerList!.add(
-                              ProviderList(
-                                  careTeamName: ctmName,
-                                  careTeamEmail: ctmEmail
-                              )
-                          );
-                        }
-                      });
-                      updateNdisValues();
-                      var mParticipant = UpdateParticipant(
-                          firstName: _firstNameController.text,
-                          lastName: _lastNameController.text,
-                          phone: _phoneNumController.text,
-                          email: _emailController.text,
-                          gender: selectedGender,
-                          dateOfBirth: selectedDob != null
-                              ? selectedDob!.day.toString() +
-                                  "/" +
-                                  selectedDob!.month.toString() +
-                                  "/" +
-                                  selectedDob!.year.toString()
-                              : "",
-                          ndisNumber: ndis,
-                          aboutUser: _aboutController.text,
-                          postalCode: _postalController.text,
-                          areaSuburban: selectedArea ?? "",
-                          address: "some address",
-                          state: selectedState,
-                          country: selectedCountry,
-                          ndisStartDate:
-                              "${ndisStart?.day}/${ndisStart?.month}/${ndisStart?.year}",
-                          ndisEndDate:
-                              "${ndisEnd?.day}/${ndisEnd?.month}/${ndisEnd?.year}",
-                          providers: [364],
-                          interests: interests,
-                          providerInviteeList: providerList);
-                      UpdateProfile profile = UpdateProfile(
-                          participant: mParticipant, provider: null);
-                      if (userMap?["role_id"] == 4) {
-                        profile = UpdateProfile(
-                            provider: mParticipant, participant: null);
-                      }
-                      var updated = await updateProfile(profile);
-                      show(updated);
-                      print(ctmEmail);
-                      print(ctmName);
-                      print(_ctmEmailController.text);
-                      print(_ctmNameController.text);
-                      print(providerList!.first);
-                    },
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
-                      decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(3)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Update Profile",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                        ),
+                    )
+                  ]),
+            ),
+            // Container(
+            //   height: 88,
+            //   width: double.infinity,
+            //   margin: const EdgeInsets.only(top: 20),
+            //   padding: EdgeInsets.all(14),
+            //   decoration: BoxDecoration(
+            //     border: Border.all(width: 1, color: outlineGrey),
+            //     borderRadius: const BorderRadius.all(
+            //       Radius.circular(3),
+            //     ),
+            //   ),
+            //   child: Wrap(
+            //     children: [
+            //       GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             selectedInterest = 0;
+            //           });
+            //         },
+            //         child: Container(
+            //           margin: EdgeInsets.only(right: 10, bottom: 10),
+            //           padding: EdgeInsets.symmetric(horizontal: 8),
+            //           decoration: BoxDecoration(
+            //             color: selectedInterest == 0
+            //                 ? interestSelected
+            //                 : interestNotSelected,
+            //             borderRadius: const BorderRadius.all(
+            //               Radius.circular(20),
+            //             ),
+            //           ),
+            //           child:
+            //               Row(mainAxisSize: MainAxisSize.min, children: [
+            //             Text(
+            //               "Health",
+            //               style: GoogleFonts.poppins(
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: selectedInterest == 0
+            //                       ? Colors.white
+            //                       : secondaryColor),
+            //             ),
+            //             Container(
+            //               height: 24,
+            //               width: 12,
+            //             ),
+            //             selectedInterest == 0
+            //                 ? SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove_selected.svg")
+            //                 : SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove.svg")
+            //           ]),
+            //         ),
+            //       ),
+            //       GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             selectedInterest = 1;
+            //           });
+            //         },
+            //         child: Container(
+            //           margin: EdgeInsets.only(right: 10, bottom: 10),
+            //           padding: EdgeInsets.symmetric(horizontal: 8),
+            //           decoration: BoxDecoration(
+            //             color: selectedInterest == 1
+            //                 ? interestSelected
+            //                 : interestNotSelected,
+            //             borderRadius: const BorderRadius.all(
+            //               Radius.circular(20),
+            //             ),
+            //           ),
+            //           child:
+            //               Row(mainAxisSize: MainAxisSize.min, children: [
+            //             Text(
+            //               "Sports",
+            //               style: GoogleFonts.poppins(
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: selectedInterest == 1
+            //                       ? Colors.white
+            //                       : secondaryColor),
+            //             ),
+            //             Container(
+            //               height: 24,
+            //               width: 12,
+            //             ),
+            //             selectedInterest == 1
+            //                 ? SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove_selected.svg")
+            //                 : SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove.svg")
+            //           ]),
+            //         ),
+            //       ),
+            //       GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             selectedInterest = 2;
+            //           });
+            //         },
+            //         child: Container(
+            //           margin: EdgeInsets.only(right: 10, bottom: 10),
+            //           padding: EdgeInsets.symmetric(horizontal: 8),
+            //           decoration: BoxDecoration(
+            //             color: selectedInterest == 2
+            //                 ? interestSelected
+            //                 : interestNotSelected,
+            //             borderRadius: const BorderRadius.all(
+            //               Radius.circular(20),
+            //             ),
+            //           ),
+            //           child:
+            //               Row(mainAxisSize: MainAxisSize.min, children: [
+            //             Text(
+            //               "Education",
+            //               style: GoogleFonts.poppins(
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: selectedInterest == 2
+            //                       ? Colors.white
+            //                       : secondaryColor),
+            //             ),
+            //             Container(
+            //               height: 24,
+            //               width: 12,
+            //             ),
+            //             selectedInterest == 2
+            //                 ? SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove_selected.svg")
+            //                 : SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove.svg")
+            //           ]),
+            //         ),
+            //       ),
+            //       GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             selectedInterest = 3;
+            //           });
+            //         },
+            //         child: Container(
+            //           margin: EdgeInsets.only(right: 10, bottom: 10),
+            //           padding: EdgeInsets.symmetric(horizontal: 8),
+            //           decoration: BoxDecoration(
+            //             color: selectedInterest == 3
+            //                 ? interestSelected
+            //                 : interestNotSelected,
+            //             borderRadius: const BorderRadius.all(
+            //               Radius.circular(20),
+            //             ),
+            //           ),
+            //           child:
+            //               Row(mainAxisSize: MainAxisSize.min, children: [
+            //             Text(
+            //               "Engineering",
+            //               style: GoogleFonts.poppins(
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: selectedInterest == 3
+            //                       ? Colors.white
+            //                       : secondaryColor),
+            //             ),
+            //             Container(
+            //               height: 24,
+            //               width: 12,
+            //             ),
+            //             selectedInterest == 3
+            //                 ? SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove_selected.svg")
+            //                 : SvgPicture.asset(
+            //                     "lib/resources/images/interest_remove.svg")
+            //           ]),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            selectInterestsLayout(),
+            Row(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                  ),
+                  margin: const EdgeInsets.only(top: 24),
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    const BorderRadius.all(Radius.circular(3)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: TextField(
+                    controller: _otherInterestController,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: secondaryColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter any other interests',
+                      hintStyle: GoogleFonts.poppins(
+                        color: secondaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (_otherInterestController.text != "") {
+                      interests?.add(Interests(
+                          id: 1, name: _otherInterestController.text));
+                      _otherInterestController.text = "";
+                    }
+                  });
+                },
+                child: Container(
+                  height: 40,
+                  width: 82,
+                  margin: const EdgeInsets.fromLTRB(13, 24, 0, 0),
+                  decoration: const BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                  ),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("lib/resources/images/add.svg"),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Text(
+                            "ADD",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ]),
+                ),
+              )
+            ]),
+            BorderedEditText(
+                label: userMap?["role_id"] != 4
+                    ? "First Name"
+                    : "Care Team Member",
+                hint: userMap?["role_id"] != 4
+                    ? "Enter First Name *"
+                    : "Enter Care Team Member *",
+                controller: _firstNameController),
+            if (userMap?["role_id"] != 4)
+              BorderedEditText(
+                  label: "Last Name",
+                  hint: "Enter Last Name *",
+                  controller: _lastNameController),
+            Stack(children: [
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.1, color: outlineGrey),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: TextField(
+                  controller: _phoneNumController,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: secondaryColor),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: InputDecoration(
+                    hintStyle: GoogleFonts.poppins(
+                      color: secondaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    labelStyle: GoogleFonts.poppins(
+                      color: iconBlack,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    // focusedBorder: const OutlineInputBorder(
+                    //   borderSide: BorderSide(
+                    //     color: outlineGrey,
+                    //   ),
+                    // ),
+                    contentPadding:
+                    const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: outlineGrey,
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: outlineGrey,
+                      ),
+                    ),
+                    labelText: "",
+                    border: InputBorder.none,
+                    hintText: 'Enter Phone number *',
+                    prefixIcon: DropdownButtonHideUnderline(
+                      child: DropdownButton<FlagsAndCode>(
+                        alignment: Alignment.center,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        onChanged: (FlagsAndCode? newValue) {
+                          setState(() {
+                            selectedPhoneCountry = newValue!;
+                          });
+                        },
+                        value: selectedPhoneCountry,
+                        items:
+                        countries.map((FlagsAndCode dropDownString) {
+                          return DropdownMenuItem<FlagsAndCode>(
+                            value: dropDownString,
+                            child: Row(children: [
+                              Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 8),
+                                child: Image.asset(
+                                  "lib/resources/images/${dropDownString.svg!}.png",
+                                  width: 30,
+                                  height: 20,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Text(
+                                  "(${dropDownString.code!})",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: iconGrey),
+                                ),
+                              ),
+                            ]),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                    margin: const EdgeInsets.only(top: 12, left: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    color: Colors.white,
+                    child: Text(
+                      "Phone Number",
+                      style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor),
+                    )),
+              )
+            ]),
+            Container(
+              height: 44,
+              margin: const EdgeInsets.only(top: 24),
+              child: TextField(
+                controller: _emailController,
+                enabled: false,
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: secondaryColor),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
                 ],
+                decoration: InputDecoration(
+                  hintStyle: GoogleFonts.poppins(
+                    color: secondaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  labelStyle: GoogleFonts.poppins(
+                    color: iconBlack,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  disabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: outlineGrey,
+                    ),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: outlineGrey,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: outlineGrey,
+                    ),
+                  ),
+                  labelText: "Email",
+                  border: InputBorder.none,
+                  hintText: 'Enter email *',
+                ),
               ),
             ),
-          );
+            if (userMap?["role_id"] != 4)
+              Row(children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      selectDobDate(context);
+                    },
+                    child: CalendarOrDropDown(
+                        label: "Date of birth *",
+                        hint: selectedDob != null
+                            ? selectedDob!.day.toString() +
+                            "/" +
+                            selectedDob!.month.toString() +
+                            "/" +
+                            selectedDob!.year.toString()
+                            : "",
+                        suffixIcon: "calendar"),
+                  ),
+                ),
+                Container(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Stack(children: [
+                    const CalendarOrDropDown(
+                        label: "Gender *",
+                        hint: "",
+                        suffixIcon: "dropdownArrow"),
+                    Container(
+                      height: 70,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(top: 30, left: 10),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          alignment: Alignment.center,
+                          icon: const Icon(null),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedGender = newValue!;
+                            });
+                          },
+                          value: selectedGender,
+                          items: genders.map((String dropDownString) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownString,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Text(
+                                  dropDownString,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: secondaryColor),
+                                ),
+                              ),
+
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
+              ]),
+            if (userMap?["role_id"] == 1)
+              GestureDetector(
+                onTap: () {
+                  _ndisNumberController.text = ndis ?? "";
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ndisPlanInfoDialog();
+                      });
+                },
+                child: CalendarOrDropDown(
+                    label: "NDIS Number *",
+                    hint: ndis ?? "Enter NDIS Number *",
+                    suffixIcon: !ndisFilled ? "ndis_right_arrow" : null,
+                    bgColor: ndisFilled ? ndisSelectedBg : null),
+              ),
+            if (userMap?["role_id"] == 1)
+              GestureDetector(
+                onTap: () {
+                  _ndisNumberController.text = ndis ?? "";
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ndisPlanInfoDialog();
+                      });
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CalendarOrDropDown(
+                          label: "NDIS Plan Start Date *",
+                          hint: ndisStart != null
+                              ? ndisStart!.day.toString() +
+                              "/" +
+                              ndisStart!.month.toString() +
+                              "/" +
+                              ndisStart!.year.toString()
+                              : "00/00/0000",
+                          suffixIcon: "calendar",
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: CalendarOrDropDown(
+                          label: "NDIS Plan End Date *",
+                          hint: ndisEnd != null
+                              ? ndisEnd!.day.toString() +
+                              "/" +
+                              ndisEnd!.month.toString() +
+                              "/" +
+                              ndisEnd!.year.toString()
+                              : "00/00/0000",
+                          suffixIcon: "calendar",
+                          bgColor: ndisFilled ? ndisSelectedBg : null),
+                    ),
+                  ],
+                ),
+              ),
+            if (userMap?["role_id"] == 1)
+              GestureDetector(
+                onTap: () {
+                  _ctmNameController.text = ctmName ?? "";
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ndisPlanInfoDialog();
+                      });
+                },
+                child: CalendarOrDropDown(
+                    label: "CTM Name *",
+                    hint: ctmName ?? "Enter NDIS Number *",
+                    suffixIcon: "",
+                    bgColor: ndisFilled ? ndisSelectedBg : null),
+              ),
+            if (userMap?["role_id"] == 1)
+              GestureDetector(
+                onTap: () {
+                  _ctmEmailController.text = ctmEmail ?? "";
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ndisPlanInfoDialog();
+                      });
+                },
+                child: CalendarOrDropDown(
+                    label: "CTM Email *",
+                    hint: ctmEmail ?? "Enter CTM Email *",
+                    suffixIcon: "",
+                    bgColor: ndisFilled ? ndisSelectedBg : null),
+              ),
+            Container(
+              height: 70,
+              child: Stack(children: [
+                const CalendarOrDropDown(
+                    label: "Country *",
+                    hint: "",
+                    suffixIcon: "dropdownArrow"),
+                Container(
+                  height: 70,
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 30, left: 10),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      icon: const Icon(null),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCountry = newValue!;
+                          states = [];
+                          selectedState = null;
+                          if (selectedCountry != "Select Country") {
+                            getStates();
+                          }
+                        });
+                      },
+                      value: selectedCountry,
+                      items: countriesStings.map((String dropDownString) {
+                        return DropdownMenuItem<String>(
+                          value: dropDownString,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: Text(
+                              dropDownString,
+                              textAlign: TextAlign.center,
+                              style:
+                              const TextStyle(color: secondaryColor),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+            if (selectedCountry != "Select Country")
+              Container(
+                height: 70,
+                child: Stack(children: [
+                  CalendarOrDropDown(
+                      label: "State *",
+                      hint: selectedState == null ? "Select State" : "",
+                      suffixIcon: "dropdownArrow"),
+                  Container(
+                    height: 70,
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(top: 30, left: 10),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        icon: const Icon(null),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedState = newValue!;
+                            areas = [];
+                            selectedArea = null;
+                            pincodes = [];
+                            if (selectedState != null) {
+                              getAreas();
+                            }
+                          });
+                        },
+                        value: selectedState,
+                        items: states?.map((String dropDownString) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownString,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: Text(
+                                dropDownString,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: secondaryColor),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            if (selectedCountry != "Select Country" &&
+                selectedState != null)
+              Container(
+                height: 70,
+                child: Stack(children: [
+                  CalendarOrDropDown(
+                      label: "Area / Sub urban *",
+                      hint: selectedArea == null ? "Select Area" : "",
+                      suffixIcon: "dropdownArrow"),
+                  Container(
+                    height: 70,
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(top: 30, left: 10),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        icon: const Icon(null),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedArea = newValue!;
+                            _postalController.text =
+                            pincodes[areas!.indexOf(selectedArea!)];
+                          });
+                        },
+                        value: selectedArea,
+                        items: areas?.map((String dropDownString) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownString,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: Text(
+                                dropDownString,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: secondaryColor),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            if (selectedCountry != "Select Country" &&
+                selectedState != null &&
+                selectedArea != null)
+              Container(
+                height: 44,
+                margin: const EdgeInsets.only(top: 24),
+                child: TextField(
+                  controller: _postalController,
+                  enabled: false,
+                  style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: secondaryColor),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: InputDecoration(
+                    hintStyle: GoogleFonts.poppins(
+                      color: secondaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    labelStyle: GoogleFonts.poppins(
+                      color: iconBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: outlineGrey,
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: outlineGrey,
+                      ),
+                    ),
+                    contentPadding:
+                    const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: outlineGrey,
+                      ),
+                    ),
+                    labelText: "Postal Code *",
+                    border: InputBorder.none,
+                    hintText: 'Postal Code *',
+                  ),
+                ),
+              ),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    "About Me",
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: blueGrey),
+                  ),
+                )),
+            aboutMeWidget(),
+            GestureDetector(
+              onTap: () async {
+                if (_firstNameController.text == "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter first name")));
+                  return;
+                }
+                if (_lastNameController.text == "" &&
+                    userMap?["role_id"] != 4) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter Last name")));
+                  return;
+                }
+                if (_phoneNumController.text == "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter phone number")));
+                  return;
+                }
+                if (selectedDob == null && userMap?["role_id"] != 4) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter date of birth")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && ndis == null ||
+                    ndis == "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter NDIS number")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && ndis == null ||
+                    ndis == "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter NDIS number")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && ndisStart == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter NDIS start date")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && ndisEnd == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter NDIS start date")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && _ctmNameController.text == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter CTM Name")));
+                  return;
+                }
+                if (userMap?["role_id"] == 1 && _ctmEmailController.text == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter CTM Email")));
+                  return;
+                }
+                print("start ${ndisStart?.millisecondsSinceEpoch}");
+                print("end   ${ndisEnd?.millisecondsSinceEpoch}");
+                if (userMap?["role_id"] == 1 &&
+                    ndisEnd!.millisecondsSinceEpoch <
+                        ndisStart!.millisecondsSinceEpoch) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "Enter NDIS end date is before start date")));
+                  return;
+                }
+                if (selectedCountry == "Select Country") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Select a country")));
+                  return;
+                }
+                if (selectedState == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Select a state")));
+                  return;
+                }
+                if (selectedArea == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Select a area")));
+                  return;
+                }
+                setState(() {
+                  ctmName=_ctmNameController.text;
+                  ctmEmail=_ctmEmailController.text;
+                  if(ctmName!=null && ctmEmail!=null){
+                    providerList!.add(
+                        ProviderList(
+                            careTeamName: ctmName,
+                            careTeamEmail: ctmEmail
+                        )
+                    );
+                  }
+                });
+                updateNdisValues();
+                var mParticipant = UpdateParticipant(
+                    firstName: _firstNameController.text,
+                    lastName: _lastNameController.text,
+                    phone: _phoneNumController.text,
+                    email: _emailController.text,
+                    gender: selectedGender,
+                    dateOfBirth: selectedDob != null
+                        ? selectedDob!.day.toString() +
+                        "/" +
+                        selectedDob!.month.toString() +
+                        "/" +
+                        selectedDob!.year.toString()
+                        : "",
+                    ndisNumber: ndis,
+                    aboutUser: _aboutController.text,
+                    postalCode: _postalController.text,
+                    areaSuburban: selectedArea ?? "",
+                    address: "some address",
+                    state: selectedState,
+                    country: selectedCountry,
+                    ndisStartDate:
+                    "${ndisStart?.day}/${ndisStart?.month}/${ndisStart?.year}",
+                    ndisEndDate:
+                    "${ndisEnd?.day}/${ndisEnd?.month}/${ndisEnd?.year}",
+                    providers: [364],
+                    interests: interests,
+                    providerInviteeList: providerList);
+                UpdateProfile profile = UpdateProfile(
+                    participant: mParticipant, provider: null);
+                if (userMap?["role_id"] == 4) {
+                  profile = UpdateProfile(
+                      provider: mParticipant, participant: null);
+                }
+                var updated = await updateProfile(profile);
+                print(ndis);
+                print("manasa $message");
+                if(message != "An account already exists with NDIS! Please contact support!"){
+                  print("manasa $message");
+                  show(updated);
+                  setState(() {
+                    message = "";
+                  });
+                }
+                print(ctmEmail);
+                print(ctmName);
+                print(_ctmEmailController.text);
+                print(_ctmNameController.text);
+                print(providerList!.first);
+              },
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(0, 24, 0, 24),
+                decoration: const BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                ),
+                child: Center(
+                  child: Text(
+                    "Update Profile",
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   selectDobDate(BuildContext context) async {
@@ -1289,10 +1298,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         label: "NDIS Plan Start Date",
                         hint: ndisStart != null
                             ? ndisStart!.day.toString() +
-                                "/" +
-                                ndisStart!.month.toString() +
-                                "/" +
-                                ndisStart!.year.toString()
+                            "/" +
+                            ndisStart!.month.toString() +
+                            "/" +
+                            ndisStart!.year.toString()
                             : "00/00/0000",
                         suffixIcon: "calendar"),
                   ),
@@ -1307,10 +1316,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                         label: "NDIS Plan End Date",
                         hint: ndisEnd != null
                             ? ndisEnd!.day.toString() +
-                                "/" +
-                                ndisEnd!.month.toString() +
-                                "/" +
-                                ndisEnd!.year.toString()
+                            "/" +
+                            ndisEnd!.month.toString() +
+                            "/" +
+                            ndisEnd!.year.toString()
                             : "00/00/0000",
                         suffixIcon: "calendar"),
                   ),
@@ -1422,7 +1431,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                           return CheckboxListTile(
                               contentPadding: EdgeInsets.zero,
                               visualDensity:
-                                  VisualDensity(horizontal: -4, vertical: -4),
+                              VisualDensity(horizontal: -4, vertical: -4),
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Text(
                                 providers!.providerNames[index].providerName,
@@ -1432,14 +1441,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                                     color: Colors.black),
                               ),
                               side: MaterialStateBorderSide.resolveWith(
-                                (states) => BorderSide(
+                                    (states) => BorderSide(
                                     width: 1.0, color: checkBoxColor),
                               ),
                               value: listChecked[index],
                               checkColor: checkColor,
                               activeColor: grey,
                               overlayColor:
-                                  MaterialStateProperty.all<Color>(Colors.red),
+                              MaterialStateProperty.all<Color>(Colors.red),
                               fillColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
                               onChanged: (bool? value) {
@@ -1778,7 +1787,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                             decoration: const BoxDecoration(
                               color: primaryColor,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(3)),
+                              BorderRadius.all(Radius.circular(3)),
                             ),
                             child: Center(
                               child: Text(
@@ -1852,7 +1861,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               inactiveColor: toggleTrack,
               activeColor: toggleTrack,
               inactiveIcon:
-                  SvgPicture.asset("lib/resources/images/toggle_inactive.svg"),
+              SvgPicture.asset("lib/resources/images/toggle_inactive.svg"),
               onToggle: (val) {
                 setState(() {
                   if (val) {
@@ -1981,7 +1990,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               borderRadius: BorderRadius.all(Radius.circular(3.0))),
           padding: const EdgeInsets.only(left: 24),
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
               "Terms and Conditions",
               style: GoogleFonts.poppins(
@@ -2037,6 +2046,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(res.responseMessage)));
+      print(res.responseMessage);
+      message = res.responseMessage;
       return false;
     }
   }
@@ -2128,7 +2139,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       });
       if (widget.user.participant?.profilePic != null) {
         imgResponse =
-            await get(Uri.parse(widget.user.participant!.profilePic!));
+        await get(Uri.parse(widget.user.participant!.profilePic!));
       }
       providerList = widget.user.participant!.providers!.map((element) {
         return ProviderList(
@@ -2291,7 +2302,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 });
               },
               child:
-                  SvgPicture.asset("lib/resources/images/interest_remove.svg"))
+              SvgPicture.asset("lib/resources/images/interest_remove.svg"))
         ]),
       ));
     });
