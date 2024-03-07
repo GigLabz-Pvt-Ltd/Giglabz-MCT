@@ -616,6 +616,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 content: Text("Enter phone number")));
                         return;
                       }
+                      final bool phoneValid = RegExp(
+                          r'^[0-9]{10}$')
+                          .hasMatch(_phoneNumController.text);
+                      if (!phoneValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Phone Number is not valid")));
+                        return;
+                      }
                       if (_passwordController.text.trim() == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Enter password")));

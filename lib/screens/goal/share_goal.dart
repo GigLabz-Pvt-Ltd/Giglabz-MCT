@@ -886,6 +886,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                             content: Text("Phone num can't be empty")));
                         return;
                       }
+                      final bool phoneValid = RegExp(
+                          r'^[0-9]{10}$')
+                          .hasMatch(_phoneNumController.text);
+                      if (!phoneValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Phone Number is not valid")));
+                        return;
+                      }
                       if (_reasonController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Reason can't be empty")));
@@ -1663,6 +1671,14 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       if (_phoneNumRController.text.isEmpty && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Phone number can't be empty")));
+                        return;
+                      }
+                      final bool phoneValid = RegExp(
+                          r'^[0-9]{10}$')
+                          .hasMatch(_phoneNumRController.text);
+                      if (!phoneValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Phone Number is not valid")));
                         return;
                       }
                       // if (_parameterRController.text.isEmpty) {
