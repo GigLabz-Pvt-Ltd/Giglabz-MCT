@@ -678,25 +678,25 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 5, top: 8),
-                  child: SvgPicture.asset(
-                    "lib/resources/images/clock.svg",
-                    height: 12,
-                    width: 12,
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 7, right: 12),
-                  child: Text(
-                    "Updated 2 hour ago",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 10,
-                        color: goalCategoryGrey),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(right: 5, top: 8),
+                //   child: SvgPicture.asset(
+                //     "lib/resources/images/clock.svg",
+                //     height: 12,
+                //     width: 12,
+                //   ),
+                // ),
+                // const Padding(
+                //   padding: EdgeInsets.only(top: 7, right: 12),
+                //   child: Text(
+                //     "Updated 2 hour ago",
+                //     textAlign: TextAlign.left,
+                //     style: TextStyle(
+                //         fontWeight: FontWeight.w400,
+                //         fontSize: 10,
+                //         color: goalCategoryGrey),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: RatingBarIndicator(
@@ -1024,10 +1024,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Padding(
                             padding: EdgeInsets.only(top: 10, left: 4),
-                            child: mileAnalysis == 1 ? Text("Not on track") :
-                            mileAnalysis == 2 ? Text("Will miss timeline") :
-                            mileAnalysis == 3 ? Text("Right on time") :
-                            Text("Before or ahead of time")
+                            child: mileAnalysis == 1 ? Text("Not on track", style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),) :
+                            mileAnalysis == 2 ? Text("Will miss timeline", style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),) :
+                            mileAnalysis == 3 ? Text("Right on time", style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),) :
+                            Text("Before or ahead of time", style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),)
                         ),
                       ],
                     )
@@ -1153,40 +1169,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 12),
-            child: Text(
-              mileID.workingWellComment ?? "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 10,
-                  color: goalCategoryGrey),
-            ),
-          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: SvgPicture.asset(
-                            "lib/resources/images/attach.svg")),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, left: 8),
-                      child: Text(
-                        "Medical Report-1.jpg",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: goalCategoryBlue),
-                      ),
-                    ),
-                  ],
-                ),
+                flex: 1,
+                child: Container(),
               ),
               Expanded(
                 child: GestureDetector(
@@ -1295,7 +1283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          mileID.targetDate ?? "DD/MM/YYYY",
+                          milestone?[index].targetDate ?? "DD/MM/YYYY",
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 12,
@@ -1326,49 +1314,54 @@ class _HomeScreenState extends State<HomeScreen> {
                         border: Border.all(color: outlineGrey),
                         borderRadius: BorderRadius.all(Radius.circular(2))
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Stack(
                       children: [
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton<RiskAnalysis>(
-                            icon: const Icon(null),
-                            value: selectedRisk,
-                            onChanged: (RiskAnalysis? newValue) {
-                              setState((){
-                                selectedRisk = newValue!;
-                                if(selectedRisk.analysis == "Before or ahead of time"){
-                                  mileAnalysis = 0;
-                                }
-                                if(selectedRisk.analysis == "Not on track"){
-                                  mileAnalysis = 1;
-                                }
-                                if(selectedRisk.analysis == "Will miss timeline"){
-                                  mileAnalysis = 2;
-                                }
-                                if(selectedRisk.analysis == "Right on time"){
-                                  mileAnalysis = 3;
-                                }
-                              });
-                              print("Test ${selectedRisk.analysis}");
-                            },
-                            items: riskAnalysis.map((risk) {
-                              return DropdownMenuItem<RiskAnalysis>(
-                                value: risk,
-                                child: Row(
-                                  children: [
-                                    Image.asset(risk.assetName, width: 24, height: 24),
-                                    SizedBox(width: 3),
-                                    Text(risk.analysis),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg')),
+                        Container(
+                          width: double.infinity,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<RiskAnalysis>(
+                              icon: const Icon(null),
+                              value: selectedRisk,
+                              onChanged: (RiskAnalysis? newValue) {
+                                setState((){
+                                  selectedRisk = newValue!;
+                                  if(selectedRisk.analysis == "Before or ahead of time"){
+                                    mileAnalysis = 0;
+                                  }
+                                  if(selectedRisk.analysis == "Not on track"){
+                                    mileAnalysis = 1;
+                                  }
+                                  if(selectedRisk.analysis == "Will miss timeline"){
+                                    mileAnalysis = 2;
+                                  }
+                                  if(selectedRisk.analysis == "Right on time"){
+                                    mileAnalysis = 3;
+                                  }
+                                });
+                                print("Test ${selectedRisk.analysis}");
+                              },
+                              items: riskAnalysis.map((risk) {
+                                return DropdownMenuItem<RiskAnalysis>(
+                                  value: risk,
+                                  child: Row(
+                                    children: [
+                                      Image.asset(risk.assetName, width: 24, height: 24),
+                                      SizedBox(width: 3),
+                                      Text(risk.analysis, style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 24),
-                          child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
-                        )
                       ],
                     )
                 ),
@@ -1392,56 +1385,61 @@ class _HomeScreenState extends State<HomeScreen> {
                         border: Border.all(color: outlineGrey),
                         borderRadius: BorderRadius.all(Radius.circular(2))
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Stack(
                       children: [
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton<MilestoneStatus>(
-                            icon: const Icon(null),
-                            value: selectedStatus,
-                            onChanged: (MilestoneStatus? newValue) {
-                              setState((){
-                                selectedStatus = newValue!;
-                                if(selectedStatus.status == "Not Started"){
-                                  mileStatus = 0;
-                                }
-                                if(selectedStatus.status == "Pending"){
-                                  mileStatus = 1;
-                                }
-                                if(selectedStatus.status == "In Progress"){
-                                  mileStatus = 2;
-                                }
-                                if(selectedStatus.status == "Completed"){
-                                  mileStatus = 3;
-                                }
-                              });
-                              print("Test ${newValue?.status}");
-                              print("Test ${selectedStatus.status}");
-                            },
-                            items: milestoneStatus.map((status) {
-                              return DropdownMenuItem<MilestoneStatus>(
-                                value: status,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 8,
-                                      width: 8,
-                                      decoration: BoxDecoration(
-                                          color: status.colour,
-                                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                                    ),
-                                    SizedBox(width: 3),
-                                    Text(status.status),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg')),
+                        Container(
+                          width: double.infinity,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<MilestoneStatus>(
+                              icon: const Icon(null),
+                              value: selectedStatus,
+                              onChanged: (MilestoneStatus? newValue) {
+                                setState((){
+                                  selectedStatus = newValue!;
+                                  if(selectedStatus.status == "Not Started"){
+                                    mileStatus = 0;
+                                  }
+                                  if(selectedStatus.status == "Pending"){
+                                    mileStatus = 1;
+                                  }
+                                  if(selectedStatus.status == "In Progress"){
+                                    mileStatus = 2;
+                                  }
+                                  if(selectedStatus.status == "Completed"){
+                                    mileStatus = 3;
+                                  }
+                                });
+                                print("Test ${newValue?.status}");
+                                print("Test ${selectedStatus.status}");
+                              },
+                              items: milestoneStatus.map((status) {
+                                return DropdownMenuItem<MilestoneStatus>(
+                                  value: status,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 8,
+                                        width: 8,
+                                        decoration: BoxDecoration(
+                                            color: status.colour,
+                                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                                      ),
+                                      SizedBox(width: 3),
+                                      Text(status.status, style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 24),
-                          child: SvgPicture.asset('lib/resources/images/dropdownArrow.svg'),
-                        )
                       ],
                     )
                 ),
