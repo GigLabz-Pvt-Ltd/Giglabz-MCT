@@ -489,6 +489,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter First Name *',
                         hintStyle: GoogleFonts.poppins(
@@ -526,6 +527,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter Last Name *',
                         hintStyle: GoogleFonts.poppins(
@@ -563,6 +565,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter email *',
                         hintStyle: GoogleFonts.poppins(
@@ -1273,6 +1276,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter First Name *',
                         hintStyle: GoogleFonts.poppins(
@@ -1318,6 +1322,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter Last Name *',
                         hintStyle: GoogleFonts.poppins(
@@ -1363,6 +1368,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                           fontWeight: FontWeight.w400,
                           color: secondaryColor),
                       decoration: InputDecoration(
+                        isDense: true,
                         border: InputBorder.none,
                         hintText: 'Enter email *',
                         hintStyle: GoogleFonts.poppins(
