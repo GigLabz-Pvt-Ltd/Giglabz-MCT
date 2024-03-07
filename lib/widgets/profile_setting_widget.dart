@@ -56,7 +56,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   DateTime? ndisStart = null;
   DateTime? ndisEnd = null;
   var ndis, ndisAgreement, ndisTc;
-  var ctmName, ctmEmail;
+  String? ctmName, ctmEmail;
   Response? imgResponse;
   final _postalController = TextEditingController();
   final _areaController = TextEditingController();
@@ -81,7 +81,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   File? image;
   var _picker = ImagePicker();
   List<int>? toggleValues = [];
-  var message;
+  var resMessage;
 
   @override
   void initState() {
@@ -727,7 +727,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             if (userMap?["role_id"] == 1)
               GestureDetector(
                 onTap: () {
-                  _ctmNameController.text = ctmName ?? "";
+                  setState(() {
+                    _ctmNameController.text = ctmName ?? "";
+                  });
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -736,14 +738,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 },
                 child: CalendarOrDropDown(
                     label: "CTM Name *",
-                    hint: ctmName ?? "Enter NDIS Number *",
+                    hint: ctmName ?? "Enter CTM Name *",
                     suffixIcon: "",
                     bgColor: ndisFilled ? ndisSelectedBg : null),
               ),
             if (userMap?["role_id"] == 1)
               GestureDetector(
                 onTap: () {
-                  _ctmEmailController.text = ctmEmail ?? "";
+                  setState(() {
+                    _ctmEmailController.text = ctmEmail ?? "";
+                  });
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -1034,6 +1038,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       SnackBar(content: Text("Select a area")));
                   return;
                 }
+                final bool emailValid = RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                    .hasMatch(_ctmEmailController.text);
+                if (!emailValid) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("CTM Email is not valid")));
+                  return;
+                }
                 setState(() {
                   ctmName=_ctmNameController.text;
                   ctmEmail=_ctmEmailController.text;
@@ -1082,13 +1094,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 }
                 var updated = await updateProfile(profile);
                 print(ndis);
-                print("manasa $message");
-                if(message != "An account already exists with NDIS! Please contact support!"){
-                  print("manasa $message");
+                print("manasa $resMessage");
+                if(resMessage != "An account already exists with NDIS! Please contact support!"){
+                  print("manasa $resMessage");
                   show(updated);
-                  setState(() {
-                    message = "";
-                  });
                 }
                 print(ctmEmail);
                 print(ctmName);
@@ -1372,7 +1381,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ),
                       labelText: "CTM Name",
                       border: InputBorder.none,
-                      hintText: ctmName ?? 'Add CTM Name',
+                      hintText: 'Enter CTM Name',
                     ),
                   ),
                 ),
@@ -1410,7 +1419,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       ),
                       labelText: "CTM Email",
                       border: InputBorder.none,
-                      hintText: ctmEmail ?? 'Enter CTM Email',
+                      hintText: 'Enter CTM Email',
                     ),
                   ),
                 ),
@@ -1522,6 +1531,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       }
                       if(_ctmEmailController.text != ""){
                         ctmEmail = _ctmEmailController.text;
+                      }
+                      final bool emailValid = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
+                          .hasMatch(_ctmEmailController.text);
+                      if (!emailValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("CTM Email is not valid")));
+                        return;
                       }
                       ndisFilled = true;
                       update();
@@ -2047,7 +2064,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(res.responseMessage)));
       print(res.responseMessage);
-      message = res.responseMessage;
+      if(res.responseMessage == "An account already exists with NDIS! Please contact support!"){
+        setState(() {
+          resMessage = res.responseMessage;
+        });
+      }
+      else{
+        setState(() {
+          resMessage = "";
+        });
+      }
       return false;
     }
   }
