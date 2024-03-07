@@ -101,7 +101,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
                     // updateSelectedTab(3, null, null);
                   },
                   child: Text(
-                    "Create Goal",
+                    (widget.tabSelected!=3) ? "Create Goal" : "Progress Update",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.poppins(
                         fontSize: 16,
@@ -119,6 +119,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
           ];
         },
         body: TabBarView(
+          physics: (widget.tabSelected != 3) ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
           controller: _tabCont,
           children: [
             GoalSummaryWidget(
@@ -159,7 +160,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
     return 3;
   }
 
-  TabBar get _tabBar => TabBar(
+  TabBar get _tabBar => (widget.tabSelected != 3) ?TabBar(
         controller: _tabCont,
         isScrollable: true,
         indicatorColor: tabSelected,
@@ -167,18 +168,43 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
         tabs: [
           ..._tabs.map(
             (label) => Tab(
-              child: Text(
-                label,
-                style: GoogleFonts.poppins(
-                  color: blueGrey,
-                  fontSize: 12,
-                  fontWeight: _tabs[currentTab] == label
-                      ? FontWeight.w500
-                      : FontWeight.w400,
+              child: GestureDetector(
+                onTap: (){},
+                onDoubleTap: (){},
+                child: Text(
+                  label,
+                  style: GoogleFonts.poppins(
+                    color: blueGrey,
+                    fontSize: 12,
+                    fontWeight: _tabs[currentTab] == label
+                        ? FontWeight.w500
+                        : FontWeight.w400,
+                  ),
                 ),
               ),
             ),
           ),
         ],
-      );
+      ) : TabBar(
+    controller: _tabCont,
+    isScrollable: true,
+    indicatorColor: tabSelected,
+    tabAlignment: TabAlignment.start,
+    tabs: [
+      ..._tabs.map(
+            (label) => Tab(
+          child: Text(
+            label,
+            style: GoogleFonts.poppins(
+              color: blueGrey,
+              fontSize: 12,
+              fontWeight: _tabs[currentTab] == label
+                  ? FontWeight.w500
+                  : FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    ],
+  ) ;
 }
