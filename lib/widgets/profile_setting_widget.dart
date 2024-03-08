@@ -668,6 +668,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
+                  _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
+                  _ctmNameController.text = providerList![0].careTeamName ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -684,6 +686,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
+                  _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
+                  _ctmNameController.text = providerList![0].careTeamName ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -727,9 +731,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             if (userMap?["role_id"] == 1)
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _ctmNameController.text = ctmName ?? "";
-                  });
+                  _ndisNumberController.text = ndis ?? "";
+                    _ctmNameController.text = providerList![0].careTeamName ?? "";
+                    _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -745,9 +749,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
             if (userMap?["role_id"] == 1)
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _ctmEmailController.text = ctmEmail ?? "";
-                  });
+                  _ndisNumberController.text = ndis ?? "";
+                    _ctmNameController.text = providerList![0].careTeamName ?? "";
+                    _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
