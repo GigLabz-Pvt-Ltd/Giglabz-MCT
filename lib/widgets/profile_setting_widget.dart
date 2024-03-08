@@ -51,7 +51,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   var selectedCountry, selectedState, selectedPincode;
   String? selectedArea = null;
   final _emailController = TextEditingController();
-  var selectedGender = genders[0];
+  var selectedGender;
   DateTime? selectedDob = null;
   DateTime? ndisStart = null;
   DateTime? ndisEnd = null;
@@ -2083,7 +2083,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
       _phoneNumController.text = widget.user.provider!.phone!;
       _emailController.text = widget.user.provider!.email!;
       interests = widget.user.provider!.interests;
-      selectedGender = "Other";
+      selectedGender = "";
       selectedCountry = widget.user.provider?.location ?? "Select Country";
       if (selectedCountry != "Select Country") {
         getStates();
@@ -2125,7 +2125,9 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         selectedDob = DateFormat("dd/MM/yyyy")
             .parse(widget.user.participant!.dateOfBirth!);
       }
-      selectedGender = widget.user.participant?.gender ?? "Other";
+      if(widget.user.participant?.gender !=null) {
+        selectedGender = widget.user.participant!.gender!.toString();
+      }
       selectedCountry = widget.user.participant?.location ?? "Select Country";
       if (selectedCountry != "Select Country") {
         getStates();

@@ -1495,7 +1495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: goalCategoryRed
                             ),
                             child: Text(
-                              mileID.progress.toString()+"%" ?? "25%",
+                              milestone![index].progress.toString()+"%" ?? "25%",
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 14,

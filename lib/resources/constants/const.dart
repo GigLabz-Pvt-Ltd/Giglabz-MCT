@@ -32,7 +32,7 @@ List<String> peopleRole = [
   "Others"
 ];
 List<String> peoplePermissions = ["View access", "Frequency of Notification"];
-List<String> genders = ["Male", "Female", "Other"];
+List<String> genders = ["Male", "Female"];
 List<String> hours = [
   "00 H",
   "01 H",
