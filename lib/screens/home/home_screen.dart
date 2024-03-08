@@ -572,7 +572,6 @@ class _HomeScreenState extends State<HomeScreen> {
       milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
           DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
       ).toList();
-
       print("test milestone get: ${milestone![index].sno}");
       print("test milestone get: ${milestone![index].riskAnalysis}");
     });
@@ -889,46 +888,63 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: iconBlack),
                       ),
                     ),
-                    Stack(
-                      children: [
-                        if (dashboard!.goalList[index].SharedWith!.length > 0)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/goal_profile.svg",
-                              height: 24,
-                              width: 24,
-                            ),
+                    if (dashboard!.goalList[index].SharedWith!.length > 0)
+                      Container(
+                        height: dashboard!.goalList[index].SharedWith!.length * 20.0,
+                        width: 100,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: dashboard!.goalList[index].SharedWith!.length,
+                          itemBuilder: (context, i) => Text(
+                            dashboard!.goalList[index].SharedWith![i]['firstName'].toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                color: iconBlack),
                           ),
-                        if (dashboard!.goalList[index].SharedWith!.length > 1)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4, left: 16),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/goal_profile.svg",
-                              height: 24,
-                              width: 24,
-                            ),
-                          ),
-                        if (dashboard!.goalList[index].SharedWith!.length > 2)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4, left: 32),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/goal_profile.svg",
-                              height: 24,
-                              width: 24,
-                            ),
-                          ),
-                        if (dashboard!.goalList[index].SharedWith!.length > 3)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4, left: 48),
-                            child: SvgPicture.asset(
-                              "lib/resources/images/goal_profile.svg",
-                              height: 24,
-                              width: 24,
-                            ),
-                          ),
-                      ],
-                    ),
+                        ),
+                      ),
+                    // Stack(
+                    //   children: [
+                    //     if (dashboard!.goalList[index].SharedWith!.length > 0)
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(top: 4),
+                    //         child: SvgPicture.asset(
+                    //           "lib/resources/images/goal_profile.svg",
+                    //           height: 24,
+                    //           width: 24,
+                    //         ),
+                    //       ),
+                    //     if (dashboard!.goalList[index].SharedWith!.length > 1)
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(top: 4, left: 16),
+                    //         child: SvgPicture.asset(
+                    //           "lib/resources/images/goal_profile.svg",
+                    //           height: 24,
+                    //           width: 24,
+                    //         ),
+                    //       ),
+                    //     if (dashboard!.goalList[index].SharedWith!.length > 2)
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(top: 4, left: 32),
+                    //         child: SvgPicture.asset(
+                    //           "lib/resources/images/goal_profile.svg",
+                    //           height: 24,
+                    //           width: 24,
+                    //         ),
+                    //       ),
+                    //     if (dashboard!.goalList[index].SharedWith!.length > 3)
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(top: 4, left: 48),
+                    //         child: SvgPicture.asset(
+                    //           "lib/resources/images/goal_profile.svg",
+                    //           height: 24,
+                    //           width: 24,
+                    //         ),
+                    //       ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 const Spacer(),
@@ -952,6 +968,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 24,
                           width: 24,
                         ),
+                        // child: Text(
+                        //     (dashboard!.goalList[index].reviewedBy!.length>0 && dashboard!.goalList[index].reviewedBy![0].firstName.toString().isNotEmpty) ? dashboard!.goalList[index].reviewedBy![0].firstName.toString() : "",
+                        //   style: TextStyle(
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 10,
+                        //       color: iconBlack),
+                        // ),
                       ),
                     ],
                   ),
