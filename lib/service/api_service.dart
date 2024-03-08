@@ -168,7 +168,7 @@ class ApiService {
     return activity;
   }
 
-  Future<UpdateProfileResponse> updateProfile(UpdateProfile profile) async {
+  Future<UpdateProfileResponse?> updateProfile(UpdateProfile profile) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userPref = prefs.getString('user')!;
     var userMap = jsonDecode(userPref) as Map<String, dynamic>;
@@ -182,8 +182,12 @@ class ApiService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: getUpdateProfileApiToJson(profile));
-    final activity = getUpdateProfileResponseApiFromJson(response.body);
-    return activity;
+    print("Update profile code: ${response.statusCode}");
+    if(response.statusCode == 200){
+      final activity = getUpdateProfileResponseApiFromJson(response.body);
+      return activity;
+    }
+    return null;
   }
 
   Future<DashboardResponse?> getDashBoard(String email) async {

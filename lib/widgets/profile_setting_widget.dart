@@ -81,7 +81,6 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   File? image;
   var _picker = ImagePicker();
   List<int>? toggleValues = [];
-  var resMessage;
 
   @override
   void initState() {
@@ -668,8 +667,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
-                  _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
-                  _ctmNameController.text = providerList![0].careTeamName ?? "";
+                  _ctmEmailController.text = ctmEmail ?? "";
+                  _ctmNameController.text = ctmName ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -686,8 +685,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
-                  _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
-                  _ctmNameController.text = providerList![0].careTeamName ?? "";
+                  _ctmEmailController.text = ctmEmail ?? "";
+                  _ctmNameController.text = ctmName ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -732,8 +731,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
-                    _ctmNameController.text = providerList![0].careTeamName ?? "";
-                    _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
+                    _ctmNameController.text = ctmName ?? "";
+                    _ctmEmailController.text = ctmEmail ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -750,8 +749,8 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
               GestureDetector(
                 onTap: () {
                   _ndisNumberController.text = ndis ?? "";
-                    _ctmNameController.text = providerList![0].careTeamName ?? "";
-                    _ctmEmailController.text = providerList![0].careTeamEmail ?? "";
+                    _ctmNameController.text = ctmName ?? "";
+                    _ctmEmailController.text = ctmEmail ?? "";
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -1098,11 +1097,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 }
                 var updated = await updateProfile(profile);
                 print(ndis);
-                print("manasa $resMessage");
-                if(resMessage != "An account already exists with NDIS! Please contact support!"){
-                  print("manasa $resMessage");
-                  show(updated);
-                }
+                show(updated);
                 print(ctmEmail);
                 print(ctmName);
                 print(_ctmEmailController.text);
@@ -2054,8 +2049,10 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
     String userPref = prefs.getString('user')!;
     userMap = jsonDecode(userPref) as Map<String, dynamic>;
 
-    UpdateProfileResponse res = await ApiService().updateProfile(profile);
-    if (userMap != null && res.responseStatus == 200) {
+    UpdateProfileResponse? res = await ApiService().updateProfile(profile);
+    print("Response ${res!.responseStatus}");
+    print("Response ${res.responseMessage}");
+    if (userMap != null && res!.responseStatus == 200) {
       var mProfile = await ApiService()
           .getProfile(userMap?["user_name"], userMap?["role_id"]);
       var a = mProfile;
@@ -2064,20 +2061,14 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         init();
       });
       return true;
+    } else if(res!.responseStatus == 400){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(res.responseMessage)));
+      return false;
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(res.responseMessage)));
       print(res.responseMessage);
-      if(res.responseMessage == "An account already exists with NDIS! Please contact support!"){
-        setState(() {
-          resMessage = res.responseMessage;
-        });
-      }
-      else{
-        setState(() {
-          resMessage = "";
-        });
-      }
       return false;
     }
   }
@@ -2340,19 +2331,18 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
   }
 
   void show(bool updated) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          if (ndisAgreement != 1 && userMap?["role_id"] == 1) {
-            return okDialog("update_profile");
-          } else if (ndisTc != 1) {
-            return okDialog("ndis_agreement");
-          } else {
-            return okDialog("terms_and_conditions");
-          }
-        });
-    // if(!updated){
-    //     Navigator.pop(context);
-    // }
-  }
+    if(updated == true){
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            if (ndisAgreement != 1 && userMap?["role_id"] == 1) {
+              return okDialog("update_profile");
+            } else if (ndisTc != 1) {
+              return okDialog("ndis_agreement");
+            } else {
+              return okDialog("terms_and_conditions");
+            }
+          });
+    }
+    }
 }
