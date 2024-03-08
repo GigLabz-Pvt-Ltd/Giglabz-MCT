@@ -963,18 +963,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8, top: 8),
-                        child: SvgPicture.asset(
-                          "lib/resources/images/goal_profile.svg",
-                          height: 24,
-                          width: 24,
-                        ),
-                        // child: Text(
-                        //     (dashboard!.goalList[index].reviewedBy!.length>0 && dashboard!.goalList[index].reviewedBy![0].firstName.toString().isNotEmpty) ? dashboard!.goalList[index].reviewedBy![0].firstName.toString() : "",
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.w500,
-                        //       fontSize: 10,
-                        //       color: iconBlack),
+                        // child: SvgPicture.asset(
+                        //   "lib/resources/images/goal_profile.svg",
+                        //   height: 24,
+                        //   width: 24,
                         // ),
+                        child: Text(
+                          (dashboard!.goalList[index].reviewedBy != null &&
+                              dashboard!.goalList[index].reviewedBy!.isNotEmpty &&
+                              dashboard!.goalList[index].reviewedBy![0]["firstName"] != null)
+                              ? dashboard!.goalList[index].reviewedBy![0]["firstName"].toString()
+                              : "",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10,
+                              color: iconBlack),
+                        ),
                       ),
                     ],
                   ),

@@ -109,7 +109,7 @@ class GoalList {
   late final Null GoalReviewer;
   late final double? Rating;
   late final List<dynamic>? SharedWith;
-  late final List<ReviewedBy>? reviewedBy;
+  late final List<dynamic>? reviewedBy;
   late final List<DashBoardParticipants>? participants;
   late final Null reviewed_by;
   late final List<DashboardMilestone>? milestone;
@@ -134,11 +134,9 @@ class GoalList {
     }
     var r = json['reviewedBy'];
     if (r != null) {
-      reviewedBy = List.from(json['reviewedBy'])
-          .map((e) => ReviewedBy.fromJson(e))
-          .toList();
+      reviewedBy = List.castFrom<dynamic, dynamic>(json['reviewedBy']);
     } else {
-      reviewedBy = null;
+      reviewedBy = [];
     }
     var p = json['participants'];
     if (p != null) {
@@ -167,9 +165,9 @@ class GoalList {
     _data['Goal_Reviewer'] = GoalReviewer;
     _data['Rating'] = Rating;
     _data['Shared_with'] = SharedWith;
-    _data['reviewedBy'] = reviewedBy?.map((e) => e.toJson()).toList();
+    _data['reviewedBy'] = reviewedBy;
     _data['participants'] = participants?.map((e) => e.toJson()).toList();
-    _data['Reviewed_By'] = ReviewedBy;
+    _data['Reviewed_By'] = reviewed_by;
     _data['milestone'] = milestone?.map((e) => e.toJson()).toList();
     return _data;
   }
