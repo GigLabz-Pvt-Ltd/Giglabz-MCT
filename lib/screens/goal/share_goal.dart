@@ -1676,7 +1676,7 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                       final bool phoneValid = RegExp(
                           r'^[0-9]{10}$')
                           .hasMatch(_phoneNumRController.text);
-                      if (!phoneValid) {
+                      if (!phoneValid && isImplementer==false) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Phone Number is not valid")));
                         return;
@@ -2046,8 +2046,13 @@ class _ShareGoalWidgetState extends State<ShareGoalWidget>
                               fontWeight: FontWeight.w500,
                               color: blueGrey),
                         ),
-                        SvgPicture.asset(
-                            "lib/resources/images/close_verify_otp.svg"),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
+                          child: SvgPicture.asset(
+                              "lib/resources/images/close_verify_otp.svg"),
+                        ),
                       ]),
                 ),
                 addParamWidget(),

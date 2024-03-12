@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int tabSelected=0;
   bool isProgressClicked = false;
   var imgUrl, roleId;
+  var mProfile;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -586,6 +587,7 @@ class _HomeScreenState extends State<HomeScreen> {
   goalTile(int index) {
     return GestureDetector(
       onTap: () {
+        if(dashboard?.goalList[index].milestone?.length !=0){
         setState(() {
           isGoalClicked = index;
           updateGoalId = goalID![index];
@@ -596,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // print("test milestone get: ${milestone![0].sno}");
           // print("test milestone get: ${milestone![0].riskAnalysis}");
           //print("test milestone get: ${milestone![0].sno}");
-        });
+        });}
       },
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -969,7 +971,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   width: 24,
                         // ),
                         child: Text(
-                          (dashboard!.goalList[index].reviewedBy != null &&
+                            (roleId == 3) ? mProfile.participant.firstName : (dashboard!.goalList[index].reviewedBy != null &&
                               dashboard!.goalList[index].reviewedBy!.isNotEmpty &&
                               dashboard!.goalList[index].reviewedBy![0]["firstName"] != null)
                               ? dashboard!.goalList[index].reviewedBy![0]["firstName"].toString()
@@ -1739,7 +1741,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
 
-        var mProfile = await ApiService()
+        mProfile = await ApiService()
             .getProfile(userMap?["user_name"], userMap?["role_id"]);
         setState(() {
           dashboard = mDashboard;
@@ -1783,7 +1785,7 @@ class _HomeScreenState extends State<HomeScreen> {
     roleId = userMap['role_id'];
     var mDashboard = await ApiService().getDashBoard(userMap["user_name"]);
 
-    var mProfile = await ApiService()
+    mProfile = await ApiService()
         .getProfile(userMap?["user_name"], userMap?["role_id"]);
     userName = userMap["user_name"];
 

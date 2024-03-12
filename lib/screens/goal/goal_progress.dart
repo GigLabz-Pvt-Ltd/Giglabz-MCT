@@ -328,6 +328,10 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 scrollDirection: Axis.vertical,
                 itemCount: getParameters!=null ? getParameters!.length : 0,
                 itemBuilder: (context, index) {
+                  if(getRating?[index] !=0){
+                    reviewRating[index].rating = getRating?[index];
+                  }
+                  print("Print rating : ${reviewRating[index].rating}");
                   return parametersTile(index);
                 }),
           ),
@@ -479,6 +483,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               width: 10,
             ),
             RatingBar.builder(
+              ignoreGestures: overallRating !=0.0 ? true : false,
               initialRating: getRating![index],
               minRating: 0,
               direction: Axis.horizontal,

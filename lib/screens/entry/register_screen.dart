@@ -340,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 counterText: "",
-                                hintText: 'First name *',
+                                hintText: (selectedRole == 3) ? 'Care Team Member Name' : 'First name *',
                                 hintStyle: GoogleFonts.poppins(
                                   color: iconGrey,
                                   fontSize: 14,
@@ -350,6 +350,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
+                        if(selectedRole != 3)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
@@ -605,7 +606,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const SnackBar(content: Text("Enter first name")));
                         return;
                       }
-                      if (_lastNameController.text.trim() == "") {
+                      if (selectedRole!=3 && _lastNameController.text.trim() == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Enter last name")));
                         return;

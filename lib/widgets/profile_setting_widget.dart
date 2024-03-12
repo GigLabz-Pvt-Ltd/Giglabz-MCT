@@ -1044,7 +1044,7 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                 final bool emailValid = RegExp(
                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
                     .hasMatch(_ctmEmailController.text);
-                if (!emailValid) {
+                if (userMap?["role_id"] == 1 && !emailValid) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("CTM Email is not valid")));
                   return;
@@ -1530,14 +1530,6 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
                       }
                       if(_ctmEmailController.text != ""){
                         ctmEmail = _ctmEmailController.text;
-                      }
-                      final bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+")
-                          .hasMatch(_ctmEmailController.text);
-                      if (!emailValid) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("CTM Email is not valid")));
-                        return;
                       }
                       ndisFilled = true;
                       update();
@@ -2164,14 +2156,16 @@ class _ProfileSettingWidgetState extends State<ProfileSettingWidget> {
         imgResponse =
         await get(Uri.parse(widget.user.participant!.profilePic!));
       }
-      providerList = widget.user.participant!.providers!.map((element) {
-        return ProviderList(
-            careTeamName: element.providerName,
-            careTeamEmail: element.providerEmail
-        );
-      }).toList();
-      ctmName = providerList![0].careTeamName;
-      ctmEmail = providerList![0].careTeamEmail;
+      if(userMap?["role_id"] == 1) {
+        providerList = widget.user.participant!.providers!.map((element) {
+          return ProviderList(
+              careTeamName: element.providerName,
+              careTeamEmail: element.providerEmail
+          );
+        }).toList();
+        ctmName = providerList![0].careTeamName;
+        ctmEmail = providerList![0].careTeamEmail;
+      }
       update();
       providers?.providerNames.forEach((element) {
         listChecked.add(false);

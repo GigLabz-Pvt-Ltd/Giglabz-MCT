@@ -113,7 +113,9 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
               centerTitle: false,
               bottom: PreferredSize(
                 preferredSize: _tabBar.preferredSize,
-                child: ColoredBox(color: Colors.white, child: _tabBar),
+                child: IgnorePointer(
+                    ignoring: (widget.tabSelected !=3) ? true : false,
+                    child: ColoredBox(color: Colors.white, child: _tabBar)),
               ),
             ),
           ];
@@ -160,32 +162,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen>
     return 3;
   }
 
-  TabBar get _tabBar => (widget.tabSelected != 3) ?TabBar(
-        controller: _tabCont,
-        isScrollable: true,
-        indicatorColor: tabSelected,
-        tabAlignment: TabAlignment.start,
-        tabs: [
-          ..._tabs.map(
-            (label) => Tab(
-              child: GestureDetector(
-                onTap: (){},
-                onDoubleTap: (){},
-                child: Text(
-                  label,
-                  style: GoogleFonts.poppins(
-                    color: blueGrey,
-                    fontSize: 12,
-                    fontWeight: _tabs[currentTab] == label
-                        ? FontWeight.w500
-                        : FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ) : TabBar(
+  TabBar get _tabBar => TabBar(
     controller: _tabCont,
     isScrollable: true,
     indicatorColor: tabSelected,

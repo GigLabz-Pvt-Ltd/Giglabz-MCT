@@ -471,6 +471,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _userNameController.text,
                           _passwordController.text,
                           selectedRole + 1);
+                      print("response code: ${response.statusCode}");
                       if (response.statusCode != null) {
                         if (response.statusCode == 200) {
                           SharedPreferences prefs =
@@ -484,6 +485,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               await prefs.setString('user', jsonEncode(user));
                           // var s = await prefs.setString("isFirstTime", "true");
                           String? isFirstTime = prefs.getString('isFirstTime');
+                          if (isFirstTime==null || isFirstTime=="true") {
+                            // If it's the first login, set isFirstTime to false
+                            await prefs.setString('isFirstTime', "false");
+                          }
+                          print("Printing value of first time: $isFirstTime");
 
                           if (isFirstTime == "true") {
                             Navigator.of(context).pushAndRemoveUntil(
