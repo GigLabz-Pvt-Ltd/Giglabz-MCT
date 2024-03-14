@@ -38,6 +38,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   var userName, roleId;
   List<String>? getParameters;
   List<double>? getRating;
+  List<bool>? getCurrent;
   double? overallProgress,progress, overallRating;
   double overallProgress_changed=0;
   double progress_changed = 0;
@@ -328,9 +329,11 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 scrollDirection: Axis.vertical,
                 itemCount: getParameters!=null ? getParameters!.length : 0,
                 itemBuilder: (context, index) {
-                  if(getRating?[index] !=0){
-                    reviewRating[index].rating = getRating?[index];
-                  }
+                  // if(getRating?[index] !=0){
+                  //   reviewRating[index].rating = getRating?[index];
+                  // }
+                  // reviewRating[index].current = getCurrent?[index];
+                  print("Print current : ${reviewRating[index].current}");
                   print("Print rating : ${reviewRating[index].rating}");
                   return parametersTile(index);
                 }),
@@ -483,7 +486,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
               width: 10,
             ),
             RatingBar.builder(
-              ignoreGestures: overallRating !=0.0 ? true : false,
+              ignoreGestures: (reviewRating[index].current) == false ? true : false,
               initialRating: getRating![index],
               minRating: 0,
               direction: Axis.horizontal,
@@ -769,6 +772,13 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
       getParameters = progressResponse!.currentReviewCycleRating!.map((e) => e.parametersToReview!).toList();
       getRating = progressResponse!.currentReviewCycleRating!.map((e) => e.rating!).toList();
       getId = progressResponse!.currentReviewCycleRating!.map((e) => e.id!).toList();
+      getCurrent = progressResponse!.currentReviewCycleRating!.map((e) => e.current!).toList();
+      reviewRating = progressResponse!.currentReviewCycleRating!.map((e) => ReviewRating(
+          id: e.id,
+          parametersToReview: e.parametersToReview,
+          proofOfProgressUrl: e.proofOfProgressUrl,
+          rating: e.rating,
+          current: e.current)).toList();
     });
 
     if(onIconPressed == true || widget.tabSelected == 3){
