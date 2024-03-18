@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +11,7 @@ import 'package:mycareteam/screens/entry/forgot_password_screen.dart';
 import 'package:mycareteam/screens/entry/register_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/screens/home/profile_screen.dart';
+import 'package:mycareteam/service/notification_service.dart';
 import 'package:mycareteam/widgets/user_type_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +38,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  NotificationService service=NotificationService();
+  String? deviceToken;
+  String? deviceType;
+  String? deviceID;
+  @override
+  void initState() {
+    super.initState();
+    service.requestNotificationPermission();
+    service.firebaseInit(context);
+    service.isTokenChanged();
+    service.getToken().then((value){
+      deviceToken = value;
+      print("Device token: $deviceToken");
+    });
+    if(Platform.isAndroid){
+      setState(() {
+        deviceType = "ANDROID";
+      });
+    }
+    if(Platform.isIOS){
+      setState(() {
+        deviceType = "IOS";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -467,10 +496,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             SnackBar(content: Text("Enter Password")));
                         return;
                       }
+                      deviceID = await _getId();
+                      print("Device id: $deviceID");
                       LoginResponse response = await ApiService().login(
                           _userNameController.text,
                           _passwordController.text,
-                          selectedRole + 1);
+                          selectedRole + 1,
+                          deviceType!,
+                          deviceToken!,
+                          deviceID!);
                       print("response code: ${response.statusCode}");
                       if (response.statusCode != null) {
                         if (response.statusCode == 200) {
@@ -633,6 +667,17 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         roles = response.roles;
       });
+    }
+  }
+
+  Future<String?> _getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if(Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id; // unique ID on Android
     }
   }
 }

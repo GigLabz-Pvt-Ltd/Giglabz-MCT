@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "74353795008",
+    "project_id": "mycareteam-44a5e",
+    "storage_bucket": "mycareteam-44a5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74353795008:android:c0998b4f9b292cee8d3225",
+        "android_client_info": {
+          "package_name": "com.example.mycareteam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4dk-8ALdo7bN8ztYd0vyHk04QGPm59_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

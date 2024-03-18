@@ -5,9 +5,14 @@ import 'package:mycareteam/screens/goal/create_goal_screen.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/screens/home/profile_screen.dart';
 import 'package:mycareteam/screens/splash_screen.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);

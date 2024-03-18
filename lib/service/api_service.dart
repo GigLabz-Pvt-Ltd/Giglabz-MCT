@@ -75,7 +75,7 @@ class ApiService {
   }
 
   Future<LoginResponse> login(
-      String userName, String password, int roleId) async {
+      String userName, String password, int roleId, String deviceType, String deviceToken, String deviceDetails) async {
     final response = await post(Uri.parse("$BASE_URL/api/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -84,6 +84,9 @@ class ApiService {
           "username": userName,
           "password": password,
           "roleId": roleId,
+          "deviceType": deviceType,
+          "deviceToken": deviceToken,
+          "deviceDetails": deviceDetails
         }));
     final activity = getLoginResponseApiFromJson(response.body);
     return activity;
