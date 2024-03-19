@@ -39,6 +39,7 @@ class UpdateMilestone{
     _data['milestoneStatus'] = milestoneStatus;
     _data['workingWellComment'] = workingWellComment;
     _data['enjoyingAndProgressingComment'] = enjoyingAndProgressingComment;
+    _data['whatHasChanged'] = whatHasChanged;
     _data['email'] = email;
     _data['roleId'] = roleId;
     return _data;

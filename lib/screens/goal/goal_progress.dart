@@ -251,7 +251,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        overallRating!=null ? overallRating!.toString() : "4.5",
+                        overallRating!=null ? overallRating!.toString() : "",
                         style: GoogleFonts.poppins(
                           color: iconBlue,
                           fontSize: 28,

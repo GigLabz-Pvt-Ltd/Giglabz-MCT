@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _descriptionController1 = TextEditingController();
   final _descriptionController2 = TextEditingController();
   final _descriptionController3 = TextEditingController();
-  var mileID, mileStatus, mileAnalysis;
+  var mileID, mileStatus, mileAnalysis, mileWorkingComment, mileEnjoyComment, mileChangedComment;
 
   @override
   void initState(){
@@ -239,6 +239,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         mileID = dashboard?.goalList[isGoalClicked].milestone?[index];
                         mileStatus = dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus;
                         mileAnalysis = dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis;
+                        mileWorkingComment = dashboard!.goalList[isGoalClicked].milestone![index].workingWellComment;
+                        mileEnjoyComment = dashboard!.goalList[isGoalClicked].milestone![index].enjoyingAndProgressingComment;
+                        mileChangedComment = dashboard!.goalList[isGoalClicked].milestone![index].whatHasChanged;
+                        print("Comment: $mileWorkingComment");
+                        if(mileAnalysis!=-1){
+                        selectedRisk = riskAnalysis[mileAnalysis];}
+                        if(mileStatus!=-1){
+                        selectedStatus = milestoneStatus[mileStatus];}
                         return milestoneTile(isGoalClicked, index);
                       }),
                 ),
@@ -571,10 +579,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void updateMileValues(int index){
     setState(() {
       milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
-          DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+          DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus,enjoyingAndProgressingComment: e.enjoyingAndProgressingComment, whatHasChanged: e.whatHasChanged, workingWellComment: e.workingWellComment, sno: e.sno)
       ).toList();
       print("test milestone get: ${milestone![index].sno}");
-      print("test milestone get: ${milestone![index].riskAnalysis}");
+      print("test milestone get: ${mileWorkingComment}");
+      print("test milestone get: ${mileEnjoyComment}");
+      print("test milestone get: ${mileChangedComment}");
     });
   }
 
@@ -592,7 +602,7 @@ class _HomeScreenState extends State<HomeScreen> {
           isGoalClicked = index;
           updateGoalId = goalID![index];
           milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
-              DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+              DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, workingWellComment: e.workingWellComment, whatHasChanged: e.whatHasChanged, enjoyingAndProgressingComment: e.enjoyingAndProgressingComment, sno: e.sno)
           ).toList();
 
           // print("test milestone get: ${milestone![0].sno}");
@@ -1208,6 +1218,11 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      _descriptionController1.text = mileWorkingComment;
+                      _descriptionController2.text = mileEnjoyComment;
+                      _descriptionController3.text = mileChangedComment;
+                    });
                     showDialog(context: context, builder: (BuildContext context)=> milestoneDialog(index));
                   },
                   child: Container(

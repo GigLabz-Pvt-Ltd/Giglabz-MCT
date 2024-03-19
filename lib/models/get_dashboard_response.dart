@@ -249,9 +249,9 @@ class DashboardMilestone {
     this.reviewerComment,
     required this.celebrations,
     required this.milestoneStatus,
-    this.workingWellComment,
-    this.enjoyingAndProgressingComment,
-    this.whatHasChanged,
+    required this.workingWellComment,
+    required this.enjoyingAndProgressingComment,
+    required this.whatHasChanged,
     required this.sno,
   });
   late final String name;
@@ -276,9 +276,9 @@ class DashboardMilestone {
     reviewerComment = null;
     celebrations = json['celebrations'];
     milestoneStatus = json['milestoneStatus'];
-    workingWellComment = null;
-    enjoyingAndProgressingComment = null;
-    whatHasChanged = null;
+    workingWellComment = json['workingWellComment'];
+    enjoyingAndProgressingComment = json['enjoyingAndProgressingComment'];
+    whatHasChanged = json['whatHasChanged'];
     sno = json['sno'];
   }
 
