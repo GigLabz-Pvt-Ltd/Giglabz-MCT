@@ -33,9 +33,9 @@ import '../models/register_response.dart';
 import '../models/login_response.dart';
 import 'package:path/path.dart';
 
-var BASE_URL = "http://dev.trackability.net.au:8081";
-var BASE_URL_8080 = "http://dev.trackability.net.au:8080";
-var BASE_URL_8082 = "http://dev.trackability.net.au:8082";
+var BASE_URL = "http://uat.trackability.net.au:8081";
+var BASE_URL_8080 = "http://uat.trackability.net.au:8080";
+var BASE_URL_8082 = "http://uat.trackability.net.au:8082";
 
 class ApiService {
   Future<GetRolesResponse> getRoles() async {
