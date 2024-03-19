@@ -37,6 +37,18 @@ dependencies:
   google_fonts: ^6.1.0
   carousel_slider: ^4.2.1
   http: ^1.1.0
+  flutter_switch: ^0.3.2
+  shared_preferences: ^2.2.2
+  intl: ^0.18.1
+  flutter_rating_bar: ^4.0.1
+  easy_pie_chart: ^1.0.0
+  custom_pop_up_menu: ^1.2.4
+  image_picker: ^1.0.4
+  syncfusion_flutter_sliders: ^24.2.6
+  firebase_core: ^2.27.0
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^16.3.2
+  device_info_plus: ^9.1.2
 
 dev_dependencies:
   flutter_test:

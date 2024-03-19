@@ -13,3 +13,26 @@ const borderGrey = Color(0xFFECECEC);
 const dividerGrey = Color(0xFFE1E1E1);
 const appBlack = Color(0xFF2A2F32);
 const iconBlack = Color(0xFF222222);
+const tabSelected = Color(0xFFFFBF13);
+const cameraBg = Color(0xFF00B278);
+const alertDialogTitleBg = Color(0xFF10AFB9);
+const alertDialogTitleBgLite = Color(0xFFDCF1EF);
+const toggleTrack = Color(0xFFEFF8F2);
+const activeToggle = Color(0xFF44D788);
+const ndisSelectedBg = Color(0xFFF8F8F8);
+const interestNotSelected = Color(0xFFE4E9EB);
+const interestSelected = Color(0xFF019FFE);
+const checkColor = Color(0xFF6A6A6A);
+const checkBoxColor = Color(0xFFD0D2D2);
+const goalCategoryProgress = Color(0xFFF0B764);
+const goalCategoryRed = Color(0xFFF35958);
+const goalCategoryGreen = Color(0xFF00B278);
+const goalCategoryImportance = Color(0xFF777777);
+const goalCategoryBlue = Color(0xFF029BF7);
+const goalCategoryGrey = Color(0xFF86888C);
+const starFilled = Color(0xFFFFBF06);
+const starEmpty = Color(0xFFF1F6FC);
+
+
+
+
