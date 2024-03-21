@@ -58,7 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final _descriptionController1 = TextEditingController();
   final _descriptionController2 = TextEditingController();
   final _descriptionController3 = TextEditingController();
-  var mileID, mileStatus, mileAnalysis, mileWorkingComment, mileEnjoyComment, mileChangedComment;
+  var mileID;
+  int? mileStatus, mileAnalysis;
+  String? mileWorkingComment, mileEnjoyComment, mileChangedComment;
 
   @override
   void initState(){
@@ -239,14 +241,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         mileID = dashboard?.goalList[isGoalClicked].milestone?[index];
                         mileStatus = dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus;
                         mileAnalysis = dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis;
-                        mileWorkingComment = dashboard!.goalList[isGoalClicked].milestone![index].workingWellComment;
-                        mileEnjoyComment = dashboard!.goalList[isGoalClicked].milestone![index].enjoyingAndProgressingComment;
-                        mileChangedComment = dashboard!.goalList[isGoalClicked].milestone![index].whatHasChanged;
-                        print("Comment: $mileWorkingComment");
-                        if(mileAnalysis!=-1){
-                        selectedRisk = riskAnalysis[mileAnalysis];}
-                        if(mileStatus!=-1){
-                        selectedStatus = milestoneStatus[mileStatus];}
                         return milestoneTile(isGoalClicked, index);
                       }),
                 ),
@@ -1218,11 +1212,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: (){
-                    setState(() {
-                      _descriptionController1.text = mileWorkingComment;
-                      _descriptionController2.text = mileEnjoyComment;
-                      _descriptionController3.text = mileChangedComment;
-                    });
+                    getComments(index);
                     showDialog(context: context, builder: (BuildContext context)=> milestoneDialog(index));
                   },
                   child: Container(
@@ -1864,5 +1854,22 @@ class _HomeScreenState extends State<HomeScreen> {
         return Image.asset("lib/resources/images/place_holder.png");
       }
     }
+  }
+
+  getComments(int index){
+    if(dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis!=-1){
+      selectedRisk = riskAnalysis[dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis];
+    }
+    if(dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus!=-1){
+      selectedStatus = milestoneStatus[dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus];
+    }
+
+    mileWorkingComment = dashboard!.goalList[isGoalClicked].milestone![index].workingWellComment;
+    mileEnjoyComment = dashboard!.goalList[isGoalClicked].milestone![index].enjoyingAndProgressingComment;
+    mileChangedComment = dashboard!.goalList[isGoalClicked].milestone![index].whatHasChanged;
+
+    _descriptionController1.text = mileWorkingComment ?? "";
+    _descriptionController2.text = mileEnjoyComment ?? "";
+    _descriptionController3.text = mileChangedComment ?? "";
   }
 }

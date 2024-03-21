@@ -141,8 +141,8 @@ class GoalList {
     var p = json['participants'];
     if (p != null) {
       participants = List?.from(json['participants'])
-          ?.map((e) => DashBoardParticipants?.fromJson(e))
-          ?.toList();
+          .map((e) => DashBoardParticipants?.fromJson(e))
+          .toList();
     } else {
       participants = null;
     }
@@ -218,7 +218,7 @@ class DashBoardParticipants {
   late final String firstName;
   late final String lastName;
   late final String fullName;
-  late final String profilePic;
+  late final String? profilePic;
 
   DashBoardParticipants.fromJson(Map<String, dynamic> json) {
     email = json['email'];
