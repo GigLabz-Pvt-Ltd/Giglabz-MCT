@@ -13,8 +13,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:http/http.dart';
 
 class GoalProgressWidget extends StatefulWidget {
@@ -157,33 +155,31 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-            child: SfSliderTheme(
-              data: SfSliderThemeData(
-                  tooltipBackgroundColor: checkpoints[overallProgress_changed.toInt()].labelColor,
-                  activeTrackColor: primaryColor,
-                  inactiveTrackColor: Color(0xffC0E2FF),
-                  thumbColor: checkpoints[overallProgress_changed.toInt()].thumbColor,
-                  thumbStrokeColor: checkpoints[overallProgress_changed.toInt()].labelColor,
-                  thumbStrokeWidth: 4,
-                  thumbRadius: 12
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: primaryColor,
+                inactiveTrackColor: Color(0xffC0E2FF),
+                thumbShape: RoundSliderThumbShape(
+                  enabledThumbRadius: 12,
+                ),
+                thumbColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                showValueIndicator: ShowValueIndicator.always,
+                valueIndicatorColor: checkpoints[overallProgress_changed.toInt()].labelColor,
+                valueIndicatorTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
               ),
-              child: SfSlider(
+              child: Slider(
                 min: 0,
                 max: 3,
+                divisions: 3,
                 value: overallProgress_changed,
-                stepSize: 1,
-                enableTooltip: true,
-                //activeColor: Colors.blue,
-                //inactiveColor: Color(0xffC0E2FF),
-                interval: 20,
-                tooltipTextFormatterCallback: (dynamic value, String actual){
-                  return checkpoints[overallProgress_changed.toInt()].label;
-                },
-                onChanged: (dynamic newValue) {
+                onChanged: (double value) {
                   setState(() {
-                    overallProgress_changed = newValue;
+                    overallProgress_changed = value;
                   });
                 },
+                label: '${checkpoints[overallProgress_changed.toInt()].label}',
               ),
             ),
           ),
@@ -203,29 +199,34 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 14, left: 20, right: 20),
-            child: SfSliderTheme(
-              data: SfSliderThemeData(
-                  tooltipBackgroundColor: primaryColor,
-                  activeTrackColor: primaryColor,
-                  inactiveTrackColor: Color(0xffC0E2FF),
-                  thumbColor: primaryColor,
-                  thumbRadius: 12
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: primaryColor,
+                inactiveTrackColor: Color(0xffC0E2FF),
+                thumbShape: RoundSliderThumbShape(
+                  enabledThumbRadius: 12,
+                ),
+                thumbColor: primaryColor,
+                showValueIndicator: ShowValueIndicator.always,
+                valueIndicatorColor: primaryColor,
+                valueIndicatorTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
               ),
-              child: SfSlider(
+              child: Slider(
+                value: progress_changed,
                 min: 0,
                 max: 100,
-                value: progress_changed,
-                enableTooltip: true,
-                stepSize: 1,
-                interval: 20,
-                onChanged: (dynamic newValue) {
+                divisions: 100,
+                onChanged: (double value) {
                   setState(() {
-                    progress_changed = newValue;
+                    progress_changed = value;
                     print(progress_changed);
                   });
                 },
+                label: '${progress_changed.toInt()}'
               ),
-            ),
+            )
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
