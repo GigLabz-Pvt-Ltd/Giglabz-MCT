@@ -44,7 +44,6 @@ dependencies:
   easy_pie_chart: ^1.0.0
   custom_pop_up_menu: ^1.2.4
   image_picker: ^1.0.4
-  syncfusion_flutter_sliders: ^24.2.6
   firebase_core: ^2.27.0
   firebase_messaging: ^14.7.10
   flutter_local_notifications: ^16.3.2
