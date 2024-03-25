@@ -141,8 +141,8 @@ class GoalList {
     var p = json['participants'];
     if (p != null) {
       participants = List?.from(json['participants'])
-          ?.map((e) => DashBoardParticipants?.fromJson(e))
-          ?.toList();
+          .map((e) => DashBoardParticipants?.fromJson(e))
+          .toList();
     } else {
       participants = null;
     }
@@ -218,7 +218,7 @@ class DashBoardParticipants {
   late final String firstName;
   late final String lastName;
   late final String fullName;
-  late final String profilePic;
+  late final String? profilePic;
 
   DashBoardParticipants.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -249,9 +249,9 @@ class DashboardMilestone {
     this.reviewerComment,
     required this.celebrations,
     required this.milestoneStatus,
-    this.workingWellComment,
-    this.enjoyingAndProgressingComment,
-    this.whatHasChanged,
+    required this.workingWellComment,
+    required this.enjoyingAndProgressingComment,
+    required this.whatHasChanged,
     required this.sno,
   });
   late final String name;
@@ -276,9 +276,9 @@ class DashboardMilestone {
     reviewerComment = null;
     celebrations = json['celebrations'];
     milestoneStatus = json['milestoneStatus'];
-    workingWellComment = null;
-    enjoyingAndProgressingComment = null;
-    whatHasChanged = null;
+    workingWellComment = json['workingWellComment'];
+    enjoyingAndProgressingComment = json['enjoyingAndProgressingComment'];
+    whatHasChanged = json['whatHasChanged'];
     sno = json['sno'];
   }
 

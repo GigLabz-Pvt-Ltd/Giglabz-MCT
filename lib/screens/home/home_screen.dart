@@ -58,7 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final _descriptionController1 = TextEditingController();
   final _descriptionController2 = TextEditingController();
   final _descriptionController3 = TextEditingController();
-  var mileID, mileStatus, mileAnalysis;
+  var mileID;
+  int? mileStatus, mileAnalysis;
+  String? mileWorkingComment, mileEnjoyComment, mileChangedComment;
 
   @override
   void initState(){
@@ -571,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void updateMileValues(int index){
     setState(() {
       milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
-          DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+          DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, enjoyingAndProgressingComment: e.enjoyingAndProgressingComment, whatHasChanged: e.whatHasChanged, workingWellComment: e.workingWellComment,sno: e.sno)
       ).toList();
       print("test milestone get: ${milestone![index].sno}");
       print("test milestone get: ${milestone![index].riskAnalysis}");
@@ -592,7 +594,7 @@ class _HomeScreenState extends State<HomeScreen> {
           isGoalClicked = index;
           updateGoalId = goalID![index];
           milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
-              DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, sno: e.sno)
+              DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, enjoyingAndProgressingComment: e.enjoyingAndProgressingComment, whatHasChanged: e.whatHasChanged, workingWellComment: e.workingWellComment, sno: e.sno)
           ).toList();
 
           // print("test milestone get: ${milestone![0].sno}");
@@ -1208,6 +1210,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: (){
+                    getComments(index);
                     showDialog(context: context, builder: (BuildContext context)=> milestoneDialog(index));
                   },
                   child: Container(
@@ -1849,5 +1852,22 @@ class _HomeScreenState extends State<HomeScreen> {
         return Image.asset("lib/resources/images/place_holder.png");
       }
     }
+  }
+
+  getComments(int index){
+    if(dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis!=-1){
+      selectedRisk = riskAnalysis[dashboard!.goalList[isGoalClicked].milestone![index].riskAnalysis];
+    }
+    if(dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus!=-1){
+      selectedStatus = milestoneStatus[dashboard!.goalList[isGoalClicked].milestone![index].milestoneStatus];
+    }
+
+    mileWorkingComment = dashboard!.goalList[isGoalClicked].milestone![index].workingWellComment;
+    mileEnjoyComment = dashboard!.goalList[isGoalClicked].milestone![index].enjoyingAndProgressingComment;
+    mileChangedComment = dashboard!.goalList[isGoalClicked].milestone![index].whatHasChanged;
+
+    _descriptionController1.text = mileWorkingComment ?? "";
+    _descriptionController2.text = mileEnjoyComment ?? "";
+    _descriptionController3.text = mileChangedComment ?? "";
   }
 }

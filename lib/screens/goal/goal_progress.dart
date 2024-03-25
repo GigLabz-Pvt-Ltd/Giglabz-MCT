@@ -261,7 +261,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        overallRating!=null ? overallRating!.toString() : "4.5",
+                        overallRating!=null ? overallRating!.toString() : "",
                         style: GoogleFonts.poppins(
                           color: iconBlue,
                           fontSize: 28,
@@ -271,7 +271,7 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                     ),
                   ),
                   RatingBarIndicator(
-                    rating: overallRating!=null ? overallRating! : 4.5,
+                    rating: overallRating!=null ? overallRating! : 0.0,
                     itemBuilder: (context, index) => Icon(
                       Icons.star,
                       color: Colors.amber,

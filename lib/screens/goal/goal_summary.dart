@@ -1349,6 +1349,12 @@ class _GoalSummaryWidgetState extends State<GoalSummaryWidget>
                     .showSnackBar(SnackBar(content: Text("Select goal type")));
                 return;
               }
+              if(goalFor == "Someone Else" && someoneElse.length == 0){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "Please add one person in goal for someone else option")));
+                return;
+              }
               if (goalFor == "Someone Else" && someoneElse.length > 1) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
