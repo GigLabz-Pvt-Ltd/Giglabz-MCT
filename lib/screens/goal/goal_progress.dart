@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mycareteam/models/get_chart_response.dart';
 import 'package:mycareteam/models/get_goal_progress.dart';
 import 'package:mycareteam/models/get_profile_response.dart';
 import 'package:mycareteam/models/get_review_comments.dart';
@@ -10,10 +11,12 @@ import 'package:mycareteam/models/update_progress.dart';
 import 'package:mycareteam/models/update_review_comments.dart';
 import 'package:mycareteam/resources/constants/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mycareteam/screens/goal/goal_chart.dart';
 import 'package:mycareteam/screens/home/home_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart';
+import 'package:mycareteam/widgets/radar_chart.dart';
 
 class GoalProgressWidget extends StatefulWidget {
   GoalProgressWidget({
@@ -46,6 +49,12 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
   final _scrollController = ScrollController();
   List<ReviewChat> messages=[];
   GetReviewComments? reviewComments;
+  GetChartResponse? chartSummary;
+  List<double> currentChartRating = [];
+  List<double> overallChartRating = [];
+  List<String> monthLabels = [];
+  List<Bar> barRatings = [];
+  List<num> lineRatings = [];
   bool onIconPressed = false;
   Response? imgResponse;
   List<String>? imgUrl;
@@ -274,31 +283,48 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 14),
-                    child: Icon(
-                      Icons.auto_graph_outlined,
-                      color: primaryColor,
-                      size: 35,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Qualitative Analysis",
-                        style: GoogleFonts.poppins(
+              GestureDetector(
+                onTap: (){
+                  showDialog(
+                      context: context,
+                      builder: (context) => ChartDialog(
+                        currentRatingData: currentChartRating,
+                        overallRatingData: overallChartRating,
+                        parameters: reviewRating.map((e) => e.parametersToReview.toString()).toList(),
+                        monthLabels: monthLabels,
+                        barRatings: barRatings,
+                        lineRatings: lineRatings,
+                      )
+                  );
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14),
+                        child: Icon(
+                          Icons.auto_graph_outlined,
                           color: primaryColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
+                          size: 35,
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Qualitative Analysis",
+                            style: GoogleFonts.poppins(
+                              color: primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               )
             ],
           ),
@@ -795,6 +821,15 @@ class _GoalProgressWidgetState extends State<GoalProgressWidget> {
                 profilePic: e.profilePic)).toList();
       });
     }
+
+    chartSummary = await ApiService().getChartSummary(userName, widget.goalId);
+    currentChartRating = chartSummary!.currentRatingChart.data.map((e) => e.rating!.toDouble()).toList();
+    overallChartRating = chartSummary!.overallRatingChart.data.map((e) => e.rating!.toDouble()).toList();
+    monthLabels = chartSummary!.ratingChartTrends.monthsLabel.toList();
+    barRatings = chartSummary!.ratingChartTrends.bar.map((e) => e).toList();
+    lineRatings = chartSummary!.ratingChartTrends.line.map((e) => e).toList();
+    print("current rating chart ${monthLabels}");
+    print("overall rating chart ${barRatings}");
   }
 }
 

@@ -32,6 +32,8 @@ const goalCategoryBlue = Color(0xFF029BF7);
 const goalCategoryGrey = Color(0xFF86888C);
 const starFilled = Color(0xFFFFBF06);
 const starEmpty = Color(0xFFF1F6FC);
+final fillRadarGraphCurrent = Color(0xFFF35958).withOpacity(0.3);
+final fillRadarGraphOverall = Color(0xFF03A1FA).withOpacity(0.3);
 
 
 

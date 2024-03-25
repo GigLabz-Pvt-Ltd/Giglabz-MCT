@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:mycareteam/models/flags_and_code.dart';
 
 import 'colors.dart';
@@ -180,3 +181,5 @@ class MilestoneStatus{
   String status;
   Color colour;
 }
+
+List<Color> ratingChartColours = [Colors.yellow, Color(0xFF013050), Colors.purple, Colors.redAccent, Colors.green];

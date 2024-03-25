@@ -8,6 +8,7 @@ import 'package:mycareteam/models/email_verify_response.dart';
 import 'package:mycareteam/models/forgot_password_response.dart';
 import 'package:mycareteam/models/getProvidersResponse.dart';
 import 'package:mycareteam/models/get_areas.dart';
+import 'package:mycareteam/models/get_chart_response.dart';
 import 'package:mycareteam/models/get_dashboard_response.dart';
 import 'package:mycareteam/models/get_achiever_goal_area_response.dart';
 import 'package:mycareteam/models/get_goal_id_response.dart';
@@ -439,5 +440,18 @@ class ApiService {
     print("manasa role id : ${milestone.roleId}");
     print("manasa : ${response.statusCode}");
     return response.statusCode;
+  }
+
+  Future<GetChartResponse> getChartSummary(String userName, int goalId) async {
+    final response = await get(
+      Uri.parse("$BASE_URL_8082/goals/progress/qa/chart/$userName/$goalId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print("manasa ${response.statusCode}");
+    print("manasa ${response.body}");
+    final activity = getChartResponseApiFromJson(response.body);
+    return activity;
   }
 }
