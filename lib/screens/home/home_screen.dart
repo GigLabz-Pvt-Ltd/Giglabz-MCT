@@ -90,11 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: scaffoldGrey,
         elevation: 0,
         automaticallyImplyLeading: false,
-        // leading: const Icon(
-        //   Icons.menu_rounded,
-        //   color: iconBlack,
-        //   size: 24,
-        // ),
         title: Padding(
           padding: const EdgeInsets.only(left: 15.0),
           child: SvgPicture.asset(
@@ -103,26 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 26,
           ),
         ),
-        titleSpacing: 0,
+        titleSpacing: 5,
         actions: [
-          IconButton(
-            onPressed: (){
+          GestureDetector(
+            onTap: (){
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Mycareteam.online is developing this feature for you")));
             },
-            icon: Icon(Icons.notifications_none_rounded),
-            color: iconBlack,
-            iconSize: 24,
-          ),
-          Container(
-            height: 30,
-            width: 30,
-            margin: EdgeInsets.all(14),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                child: getImage()),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: SvgPicture.asset(
+                'lib/resources/images/notification_button.svg'
+              ),
+            ),
           ),
         ],
       ),
@@ -706,10 +694,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     rating: dashboard?.goalList[index].Rating ?? 0.0,
                     itemCount: 5,
                     itemSize: 14.0,
-                    unratedColor: starEmpty,
+                    unratedColor: ratingDisbled,
                     itemBuilder: (context, index) => const Icon(
                       Icons.star,
-                      color: starFilled,
+                      color: ratingEnabled,
                     ),
                   ),
                 ),

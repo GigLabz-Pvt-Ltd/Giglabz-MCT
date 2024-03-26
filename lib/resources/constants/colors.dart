@@ -30,11 +30,19 @@ const goalCategoryGreen = Color(0xFF00B278);
 const goalCategoryImportance = Color(0xFF777777);
 const goalCategoryBlue = Color(0xFF029BF7);
 const goalCategoryGrey = Color(0xFF86888C);
-const starFilled = Color(0xFFFFBF06);
-const starEmpty = Color(0xFFF1F6FC);
 final fillRadarGraphCurrent = Color(0xFFF35958).withOpacity(0.3);
 final fillRadarGraphOverall = Color(0xFF03A1FA).withOpacity(0.3);
-
-
-
-
+const dashboardGradientLight = Color(0xff1BA1EF);
+const dashboardGradientDark = Color(0xff5A67C4);
+const progressGrey = Color(0xff777777);
+const dashboardGrey = Color(0xff6A6A6A);
+const progressRed = Color(0xffF88781);
+const progressBlue = Color(0xff24ACEC);
+const progressGreen = Color(0xff64CC81);
+const progressYellow = Color(0xffE39B4A);
+const subTitle = Color(0xffB0CAFF);
+const goalListColor = Color(0xff0D2B68);
+const goalListBlack = Color(0xff53596F);
+const goalListGrey = Color(0xffA099A5);
+const ratingEnabled = Color(0xffFFBF06);
+const ratingDisbled = Color(0xffD0D1D2);
