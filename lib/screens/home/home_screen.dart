@@ -36,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isProgressClicked = false;
   var imgUrl, roleId;
   var mProfile;
+  List<String> goalStatusButtonText = ["Total", "Pending", "In Progress", "Completed"];
+  int onGoalStatusButtonClicked = 0;
+  bool onTotalClicked = true;
+  bool onPendingClicked= false;
+  bool onProgressClicked = false;
+  bool onCompletedClicked = false;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -123,18 +129,61 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 statusTile(),
                 if (goalCount != 0)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20, bottom: 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Goals Category",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: iconBlue),
-                      ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, bottom: 12, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Goals",
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                color: goalListColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: 35,
+                          child: ListView.builder(
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, i) {
+                              return TextButton(
+                                onPressed: (){
+                                  setState(() {
+                                    onGoalStatusButtonClicked = i;
+                                  });
+                                },
+                                child: Text(
+                                    goalStatusButtonText[i],
+                                    style: GoogleFonts.poppins(
+                                        color: dashboardGrey,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400
+                                    )
+                                ),
+                                style: TextButton.styleFrom(
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: (i==0) ? BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))
+                                        : (i==3) ? BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))
+                                        : BorderRadius.all(Radius.zero),
+                                    ),
+                                    side: BorderSide(color: (onGoalStatusButtonClicked != i) ? outlineGrey : primaryColor),
+                                    backgroundColor: (onGoalStatusButtonClicked != i) ? scaffoldGrey : buttonBg,
+                                    padding: EdgeInsets.all(8)
+                                )
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ListView.builder(
@@ -300,10 +349,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ]),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: LinearProgressIndicator(
-                        valueColor: const AlwaysStoppedAnimation<Color>(
+                        valueColor: AlwaysStoppedAnimation<Color>(
                           progressGreen,
                         ),
                         value: 1,
@@ -386,74 +435,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]
                       )
                     ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(top: 4),
-                    //   child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //       children: [
-                    //         Text(
-                    //           dashboard != null &&
-                    //               dashboard!.dashboardCount.isNotEmpty
-                    //               ? dashboard!.dashboardCount[0].Pending
-                    //               .toString()
-                    //               : "",
-                    //           style: GoogleFonts.poppins(
-                    //               color: Colors.white,
-                    //               fontSize: 16,
-                    //               fontWeight: FontWeight.w600
-                    //           )),
-                    //         Text(
-                    //           dashboard != null &&
-                    //               dashboard!.dashboardCount.isNotEmpty
-                    //               ? dashboard!.dashboardCount[0].Inprogress
-                    //               .toString()
-                    //               : "",
-                    //           style: GoogleFonts.poppins(
-                    //             color: Colors.white,
-                    //             fontSize: 16,
-                    //             fontWeight: FontWeight.w600
-                    //           )),
-                    //         Text(
-                    //           dashboard != null &&
-                    //               dashboard!.dashboardCount.isNotEmpty
-                    //               ? dashboard!.dashboardCount[0].Completed
-                    //               .toString()
-                    //               : "",
-                    //           style: GoogleFonts.poppins(
-                    //               color: Colors.white,
-                    //               fontSize: 16,
-                    //               fontWeight: FontWeight.w600
-                    //           ),
-                    //         ),
-                    //       ]),
-                    // ),
-                    // Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: [
-                    //       Text(
-                    //         "Pending",
-                    //         style: GoogleFonts.poppins(
-                    //             color: Colors.white,
-                    //             fontSize: 10,
-                    //             fontWeight: FontWeight.w400
-                    //         )),
-                    //       Text(
-                    //         "In Progress",
-                    //         style: GoogleFonts.poppins(
-                    //             color: Colors.white,
-                    //             fontSize: 10,
-                    //             fontWeight: FontWeight.w400
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         "Completed",
-                    //         style: GoogleFonts.poppins(
-                    //             color: Colors.white,
-                    //             fontSize: 10,
-                    //             fontWeight: FontWeight.w400
-                    //         )
-                    //       ),
-                    //     ]),
                   ],
                 ),
               ),
@@ -491,7 +472,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 61,
               height: 61,
               child: CircularProgressIndicator(
-                color: progressYellow,
+                color: Colors.amber,
                 strokeWidth: 6,
                 value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
                     ? dashboard!.dashboardCount[0].InprogressPercentage / 100

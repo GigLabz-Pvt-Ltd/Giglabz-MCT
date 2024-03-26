@@ -46,3 +46,4 @@ const goalListBlack = Color(0xff53596F);
 const goalListGrey = Color(0xffA099A5);
 const ratingEnabled = Color(0xffFFBF06);
 const ratingDisbled = Color(0xffD0D1D2);
+const buttonBg = Color(0xffa8d7f5);
