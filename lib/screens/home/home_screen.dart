@@ -243,7 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       margin: EdgeInsets.all(20),
       decoration: const BoxDecoration(
-          color: Color(0xff1182EA),
+          //color: Color(0xff1182EA),
+        gradient: LinearGradient(
+          colors: [dashboardGradientDark, dashboardGradientLight],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight
+        ),
           borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(
@@ -257,18 +262,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       name ?? "",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600
+                      )
                     ),
-                    const Text(
-                      "Your Goals",
+                    Text(
+                      (roleId == 3) ? "Your Participant Goals" : "Your Goals",
                       textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: Color(0xff64B4F5),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                      style: GoogleFonts.poppins(
+                        color: subTitle,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 4),
@@ -276,106 +283,177 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Progress",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w400),
+                              "Profile Progress",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w500
+                              ),
                             ),
                             Text(
-                              dashboard != null &&
-                                  dashboard!.dashboardCount.isNotEmpty
-                                  ? dashboard!.dashboardCount[0].DraftPercentage
-                                  .toString() +
-                                  "%"
-                                  : "",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                              "100%",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w600
+                              ),
                             ),
                           ]),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: LinearProgressIndicator(
-                        backgroundColor: Colors.white,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.amber,
+                          progressGreen,
                         ),
-                        value: dashboard != null &&
-                            dashboard!.dashboardCount.isNotEmpty
-                            ? dashboard!.dashboardCount[0].DraftPercentage / 100
-                            : 0.0,
+                        value: 1,
                         minHeight: 6,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
+                    Container(
+                      margin: EdgeInsets.only(top: 4),
                       child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              dashboard != null &&
-                                  dashboard!.dashboardCount.isNotEmpty
-                                  ? dashboard!.dashboardCount[0].Pending
-                                  .toString()
-                                  : "",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              dashboard != null &&
-                                  dashboard!.dashboardCount.isNotEmpty
-                                  ? dashboard!.dashboardCount[0].Inprogress
-                                  .toString()
-                                  : "",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              dashboard != null &&
-                                  dashboard!.dashboardCount.isNotEmpty
-                                  ? dashboard!.dashboardCount[0].Completed
-                                  .toString()
-                                  : "",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ]),
-                    ),
-                    const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(
-                            "To do",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600),
+                          Column(
+                            children: [
+                              Text(
+                                  dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
+                                      ? dashboard!.dashboardCount[0].Pending
+                                      .toString()
+                                      : "",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600
+                                  )),
+                              Text(
+                                  "Pending",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400
+                                  )),
+                            ]
                           ),
-                          Text(
-                            "In Progress",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600),
+                          Column(
+                              children: [
+                                Text(
+                                    dashboard != null &&
+                                        dashboard!.dashboardCount.isNotEmpty
+                                        ? dashboard!.dashboardCount[0].Inprogress
+                                        .toString()
+                                        : "",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                    )),
+                                Text(
+                                    "In Progress",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400
+                                    )),
+                              ]
                           ),
-                          Text(
-                            "Completed",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600),
+                          Column(
+                              children: [
+                                Text(
+                                  dashboard != null &&
+                                      dashboard!.dashboardCount.isNotEmpty
+                                      ? dashboard!.dashboardCount[0].Completed
+                                      .toString()
+                                      : "",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                                Text(
+                                    "Completed",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400
+                                    )),
+                              ]
                           ),
-                        ]),
+                        ]
+                      )
+                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(top: 4),
+                    //   child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //       children: [
+                    //         Text(
+                    //           dashboard != null &&
+                    //               dashboard!.dashboardCount.isNotEmpty
+                    //               ? dashboard!.dashboardCount[0].Pending
+                    //               .toString()
+                    //               : "",
+                    //           style: GoogleFonts.poppins(
+                    //               color: Colors.white,
+                    //               fontSize: 16,
+                    //               fontWeight: FontWeight.w600
+                    //           )),
+                    //         Text(
+                    //           dashboard != null &&
+                    //               dashboard!.dashboardCount.isNotEmpty
+                    //               ? dashboard!.dashboardCount[0].Inprogress
+                    //               .toString()
+                    //               : "",
+                    //           style: GoogleFonts.poppins(
+                    //             color: Colors.white,
+                    //             fontSize: 16,
+                    //             fontWeight: FontWeight.w600
+                    //           )),
+                    //         Text(
+                    //           dashboard != null &&
+                    //               dashboard!.dashboardCount.isNotEmpty
+                    //               ? dashboard!.dashboardCount[0].Completed
+                    //               .toString()
+                    //               : "",
+                    //           style: GoogleFonts.poppins(
+                    //               color: Colors.white,
+                    //               fontSize: 16,
+                    //               fontWeight: FontWeight.w600
+                    //           ),
+                    //         ),
+                    //       ]),
+                    // ),
+                    // Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //     children: [
+                    //       Text(
+                    //         "Pending",
+                    //         style: GoogleFonts.poppins(
+                    //             color: Colors.white,
+                    //             fontSize: 10,
+                    //             fontWeight: FontWeight.w400
+                    //         )),
+                    //       Text(
+                    //         "In Progress",
+                    //         style: GoogleFonts.poppins(
+                    //             color: Colors.white,
+                    //             fontSize: 10,
+                    //             fontWeight: FontWeight.w400
+                    //         ),
+                    //       ),
+                    //       Text(
+                    //         "Completed",
+                    //         style: GoogleFonts.poppins(
+                    //             color: Colors.white,
+                    //             fontSize: 10,
+                    //             fontWeight: FontWeight.w400
+                    //         )
+                    //       ),
+                    //     ]),
                   ],
                 ),
               ),
@@ -390,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       height: 87,
       width: 87,
-      margin: const EdgeInsets.fromLTRB(18, 25, 0, 18),
+      margin: const EdgeInsets.fromLTRB(18, 25, 0, 25),
       child: Stack(
         children: <Widget>[
           Center(
@@ -398,27 +476,27 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 87,
               height: 87,
               child: CircularProgressIndicator(
-                color: Color(0xff00C3A5),
+                color: progressRed,
                 strokeWidth: 6,
                 value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
-                    ? dashboard!.dashboardCount[0].CompletedPercentage / 100
+                    ? dashboard!.dashboardCount[0].PendingPercentage / 100
                     : 0.0,
-                backgroundColor: Colors.white, //<-- SEE HERE
+                backgroundColor: progressGrey,
                 strokeCap: StrokeCap.round,
               ),
             ),
           ),
           Center(
             child: Container(
-              width: 65,
-              height: 65,
+              width: 61,
+              height: 61,
               child: CircularProgressIndicator(
-                color: Colors.amber,
+                color: progressYellow,
                 strokeWidth: 6,
                 value: dashboard != null && dashboard!.dashboardCount.isNotEmpty
                     ? dashboard!.dashboardCount[0].InprogressPercentage / 100
                     : 0.0,
-                backgroundColor: Colors.white, //<-- SEE HERE
+                backgroundColor: progressGrey,
                 strokeCap: StrokeCap.round,
               ),
             ),
@@ -426,9 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Center(
               child: Text(
                 dashboard != null && dashboard!.dashboardCount.isNotEmpty
-                    ? (dashboard!.dashboardCount[0].DraftCount +
-                    dashboard!.dashboardCount[0].TotalGoals)
-                    .toString()
+                    ? dashboard!.dashboardCount[0].TotalGoals.toString()
                     : "",
                 style: TextStyle(
                     color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
@@ -527,14 +603,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 dashboard = mDashboard;
                 goalCount = mDashboard?.goalList.length;
                 if (userMap["role_id"] == 4) {
-                  name = "Hey, ${mProfile.provider!.firstName} 👋";
+                  name = "Hey, ${mProfile.provider!.firstName}!";
                   if (mProfile.provider?.ndisTc == 1) {
                     tcAgreed = true;
                   } else {
                     tcAgreed = false;
                   }
                 } else {
-                  name = "Hey, ${mProfile.participant!.firstName} 👋";
+                  name = "Hey, ${mProfile.participant!.firstName}!";
                   if (userMap["role_id"] == 1) {
                     if (mProfile.participant?.ndisAgreement == 1 &&
                         mProfile.participant?.ndisTc == 1) {
@@ -1738,14 +1814,14 @@ class _HomeScreenState extends State<HomeScreen> {
           dashboard = mDashboard;
           goalCount = mDashboard?.goalList.length;
           if (userMap["role_id"] == 4) {
-            name = "Hey, ${mProfile.provider!.firstName} 👋";
+            name = "Hey, ${mProfile.provider!.firstName}!";
             if (mProfile.provider?.ndisTc == 1) {
               tcAgreed = true;
             } else {
               tcAgreed = false;
             }
           } else {
-            name = "Hey, ${mProfile.participant!.firstName} 👋";
+            name = "Hey, ${mProfile.participant!.firstName}!";
             if (userMap["role_id"] == 1) {
               if (mProfile.participant?.ndisAgreement == 1 &&
                   mProfile.participant?.ndisTc == 1) {
@@ -1787,7 +1863,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (userMap["role_id"] == 4) {
           imgUrl = mProfile.provider?.profilePic ?? "";
 
-          name = "Hey, ${mProfile.provider!.firstName} 👋";
+          name = "Hey, ${mProfile.provider!.firstName}!";
           if (mProfile.provider?.ndisTc == 1) {
             tcAgreed = true;
           } else {
@@ -1796,7 +1872,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           imgUrl = mProfile.participant?.profilePic ?? "";
 
-          name = "Hey, ${mProfile.participant!.firstName} 👋";
+          name = "Hey, ${mProfile.participant!.firstName}!";
           if (userMap["role_id"] == 1) {
             if (mProfile.participant?.ndisAgreement == 1 &&
                 mProfile.participant?.ndisTc == 1) {
