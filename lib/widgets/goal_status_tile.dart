@@ -24,7 +24,7 @@ class GoalStatusTile extends StatelessWidget {
       margin: EdgeInsets.only(left: 20, bottom: 12, right: 20),
       decoration: BoxDecoration(
           border: Border.all(color: outlineGrey),
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           color: Colors.white
       ),
       child: Stack(

@@ -395,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight
         ),
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(
           children: [
@@ -675,10 +675,11 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        padding: const EdgeInsets.only(left: 20, right: 12, bottom: 10),
-        decoration: const BoxDecoration(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+            border: Border.all(color: outlineGrey),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,97 +687,98 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 4,
-                  width: 44,
-                  margin: EdgeInsets.only(top: 16),
-                  decoration: const BoxDecoration(
-                      color: goalCategoryProgress,
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text(
+                    "NDIS Goal:",
+                    style: GoogleFonts.poppins(
+                      color: goalListBlack,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500
+                    ),
+                  )
                 ),
                 const Spacer(),
                 Container(
-                  height: 8,
-                  width: 8,
-                  margin: EdgeInsets.only(top: 16),
+                  margin: EdgeInsets.only(top:16),
+                  padding: EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
                   decoration: BoxDecoration(
-                      color: dashboard?.goalList[index].GoalPriority == "High"
-                          ? goalCategoryRed
-                          : dashboard?.goalList[index].GoalPriority == "Medium"
-                          ? goalCategoryGreen
-                          : dashboard?.goalList[index].GoalPriority ==
-                          "Medium"
-                          ? goalCategoryBlue
-                          : goalCategoryGrey,
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 12, left: 5, right: 10),
-                  child: Text(
-                    dashboard?.goalList[index].GoalPriority ?? "",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: goalCategoryImportance),
+                    borderRadius:
+                    const BorderRadius.all(Radius.circular(15)),
+                    border: Border.all(color: outlineGrey),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 8,
+                        width: 8,
+                        margin: const EdgeInsets.only(right: 4),
+                        decoration: BoxDecoration(
+                            color: dashboard?.goalList[index].GoalStatus == 0 ? Colors.grey :
+                            dashboard?.goalList[index].GoalStatus == 1 ? Colors.red :
+                            dashboard?.goalList[index].GoalStatus == 2 ? Colors.yellow : goalCategoryGreen,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(15))),
+                      ),
+                      Text(
+                        dashboard?.goalList[index].GoalStatus == 0? "Not Started" :
+                        dashboard?.goalList[index].GoalStatus == 1 ? "Pending" :
+                        dashboard?.goalList[index].GoalStatus == 2 ? "In Progress" :"Completed",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                          color: goalListBlack,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                PopupMenuButton<dynamic>(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: SvgPicture.asset(
-                      "lib/resources/images/menu_button.svg",
-                    ),
-                  ),
-                  itemBuilder: (BuildContext context) {
-                    return menuItems;
-                  },
-                  onSelected: (dynamic value) {
-                    // Handle the selected option
-                    print('Selected: $value');
-                  },
-                )
+                // PopupMenuButton<dynamic>(
+                //   child: Padding(
+                //     padding: const EdgeInsets.only(top: 12),
+                //     child: SvgPicture.asset(
+                //       "lib/resources/images/menu_button.svg",
+                //     ),
+                //   ),
+                //   itemBuilder: (BuildContext context) {
+                //     return menuItems;
+                //   },
+                //   onSelected: (dynamic value) {
+                //     // Handle the selected option
+                //     print('Selected: $value');
+                //   },
+                // )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Text(
-                dashboard?.goalList[index].GoalName ?? "",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: goalCategoryBlue),
-              ),
-            ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Padding(
-                //   padding: EdgeInsets.only(right: 5, top: 8),
-                //   child: SvgPicture.asset(
-                //     "lib/resources/images/clock.svg",
-                //     height: 12,
-                //     width: 12,
-                //   ),
-                // ),
-                // const Padding(
-                //   padding: EdgeInsets.only(top: 7, right: 12),
-                //   child: Text(
-                //     "Updated 2 hour ago",
-                //     textAlign: TextAlign.left,
-                //     style: TextStyle(
-                //         fontWeight: FontWeight.w400,
-                //         fontSize: 10,
-                //         color: goalCategoryGrey),
-                //   ),
-                // ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: UnconstrainedBox(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                      child: Text(
+                        dashboard?.goalList[index].GoalName ?? "",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                          color: primaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: RatingBarIndicator(
                     rating: dashboard?.goalList[index].Rating ?? 0.0,
                     itemCount: 5,
-                    itemSize: 14.0,
+                    itemSize: 15.0,
                     unratedColor: ratingDisbled,
                     itemBuilder: (context, index) => const Icon(
                       Icons.star,
@@ -784,9 +786,68 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 12),
+                      child: Text(
+                        "Start Date",
+                        style: GoogleFonts.poppins(
+                          color: dashboardGrey,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500
+                        )
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        dashboard?.goalList[index].StartDate ?? "00-00-0000",
+                        style: GoogleFonts.poppins(
+                          color: goalListGrey,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, top: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "End Date",
+                        style: GoogleFonts.poppins(
+                            color: dashboardGrey,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text(
+                          dashboard?.goalList[index].TargetDate ?? "00-00-0000",
+                          style: GoogleFonts.poppins(
+                              color: goalListGrey,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Spacer(),
-                TextButton(
-                  onPressed: (){
+                GestureDetector(
+                  onTap: (){
                     setState(() {
                       tabSelected=3;
                       updateGoalId = goalID![index];
@@ -798,151 +859,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (BuildContext context) => CreateGoalScreen(roleId: roleId, goalId: updateGoalId, tabSelected: tabSelected,)));
                     }
                   },
-                  style: ButtonStyle(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    "Progress Update",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 10,
-                        color: primaryColor),
-                  ),
-                ),
-                Container(
-                  height: 22,
-                  width: 22,
-                  margin: EdgeInsets.only(top: 6),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: goalCategoryBlue,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: EasyPieChart(
-                      shouldAnimate: true,
-                      animateDuration: Duration(milliseconds: 1500),
-                      pieType: PieType.fill,
-                      style: TextStyle(fontSize: 0),
-                      children: [
-                        PieData(value: 75, color: goalCategoryBlue),
-                        PieData(value: 25, color: Colors.white),
-                      ]),
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 1),
-                //   child: SvgPicture.asset(
-                //     "lib/resources/images/pie_progress.svg",
-                //     height: 24,
-                //     width: 24,
-                //   ),
-                // ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8, bottom: 6),
-                      child: Text(
-                        "Current Status",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: iconBlack),
-                      ),
-                    ),
-                    Container(
-                      padding:
-                      EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                        const BorderRadius.all(Radius.circular(3)),
-                        border: Border.all(color: outlineGrey),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 8,
-                            width: 8,
-                            margin: const EdgeInsets.only(right: 4),
-                            decoration: BoxDecoration(
-                                color: dashboard?.goalList[index].GoalStatus == 0 ? Colors.grey :
-                                dashboard?.goalList[index].GoalStatus == 1 ? Colors.red :
-                                dashboard?.goalList[index].GoalStatus == 2 ? Colors.yellow : goalCategoryGreen,
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                          ),
-                          Text(
-                            dashboard?.goalList[index].GoalStatus == 0? "Not Started" :
-                            dashboard?.goalList[index].GoalStatus == 1 ? "Pending" :
-                            dashboard?.goalList[index].GoalStatus == 2 ? "In Progress" :"Completed",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                                color: goalCategoryImportance),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: Text(
-                        "Start Date",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: goalCategoryBlue),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        dashboard?.goalList[index].StartDate ?? "00-00-0000",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 10,
-                            color: goalCategoryGrey),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10, top: 12),
-                  child: Column(
-                    children: [
-                      Text(
-                        "End Date",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: goalCategoryBlue),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 4),
-                        child: Text(
-                          dashboard?.goalList[index].TargetDate ?? "00-00-0000",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                              color: goalCategoryGrey),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: SvgPicture.asset('lib/resources/images/progress_update_button.svg', height: 30, width: 50,),
                 ),
               ],
             ),
@@ -952,15 +869,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 8, bottom: 4),
                       child: Text(
                         "Shared With",
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: iconBlack),
+                        style: GoogleFonts.poppins(
+                          color: goalListBlack,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500
+                        ),
                       ),
                     ),
                     if (dashboard!.goalList[index].SharedWith!.length > 0)
@@ -1031,10 +949,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "Reviewed By",
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                        style: GoogleFonts.poppins(
+                            color: goalListBlack,
                             fontSize: 10,
-                            color: iconBlack),
+                            fontWeight: FontWeight.w500
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8, top: 8),
