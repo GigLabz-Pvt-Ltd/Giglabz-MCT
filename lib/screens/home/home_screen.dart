@@ -43,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool highPriorityButton =false;
   bool mediumPriorityButton =false;
   bool lowPriorityButton =false;
+  List<GoalList> filteredDashboardHigh = [];
+  List<GoalList> filteredDashboardMedium = [];
+  List<GoalList> filteredDashboardLow = [];
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -160,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   setState(() {
                                     onGoalStatusButtonClicked = i;
                                   });
+                                  print('Print button val : $onGoalStatusButtonClicked');
                                 },
                                 child: Text(
                                     goalStatusButtonText[i],
@@ -191,15 +195,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   progressColour: progressRed,
                   iconAsset: 'lib/resources/images/high_priority.svg',
                   priority: 'HIGH PRIORITY',
-                  numberedProgress: const Expanded(
+                  numberedProgress: Expanded(
                     flex: 1,
-                    child: NumberedProgress(isProgressBlueTile: false,),
+                    child: NumberedProgress(
+                      isProgressBlueTile: false,
+                      pendingGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 1) && (goal.GoalPriority == 'High')).length : 0,
+                      inProgressGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 2) && (goal.GoalPriority == 'High')).length : 0,
+                      completedGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 3) && (goal.GoalPriority == 'High')).length : 0,
+                    ),
                   ),
                   child: GestureDetector(
                     onTap: (){
                       setState(() {
                         highPriorityButton = !highPriorityButton;
                       });
+                      handleClick();
                     },
                     child: Row(
                         children: [
@@ -219,19 +229,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                   ),
                 ),
+                if(highPriorityButton)
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: filteredDashboardHigh.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return goalTile(index, filteredDashboardHigh);
+                      }),
                 GoalStatusTile(
                   progressColour: progressYellow,
                   iconAsset: 'lib/resources/images/medium_priority.svg',
                   priority: 'MEDIUM PRIORITY',
-                  numberedProgress: const Expanded(
+                  numberedProgress: Expanded(
                     flex: 1,
-                    child: NumberedProgress(isProgressBlueTile: false,),
+                    child: NumberedProgress(
+                      isProgressBlueTile: false,
+                      pendingGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 1) && (goal.GoalPriority == 'Medium')).length : 0,
+                      inProgressGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 2) && (goal.GoalPriority == 'Medium')).length : 0,
+                      completedGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 3) && (goal.GoalPriority == 'Medium')).length : 0,
+                    ),
                   ),
                   child: GestureDetector(
                     onTap: (){
                       setState(() {
                         mediumPriorityButton = !mediumPriorityButton;
                       });
+                      handleClick();
+                      print("Medium button: $mediumPriorityButton");
                     },
                     child: Row(
                       children: [
@@ -251,19 +277,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                if(mediumPriorityButton)
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: filteredDashboardMedium.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return goalTile(index, filteredDashboardMedium);
+                      }),
                 GoalStatusTile(
                   progressColour: progressBlue,
                   iconAsset: 'lib/resources/images/low_priority.svg',
                   priority: 'LOW PRIORITY',
-                  numberedProgress: const Expanded(
+                  numberedProgress: Expanded(
                     flex: 1,
-                    child: NumberedProgress(isProgressBlueTile: false,),
+                    child: NumberedProgress(
+                      isProgressBlueTile: false,
+                      pendingGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 1) && (goal.GoalPriority == 'Low')).length : 0,
+                      inProgressGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 2) && (goal.GoalPriority == 'Low')).length : 0,
+                      completedGoals: dashboard!=null ? dashboard!.goalList.where((goal) => (goal.GoalStatus == 3) && (goal.GoalPriority == 'Low')).length : 0
+                    ),
                   ),
                   child: GestureDetector(
                     onTap: (){
                       setState(() {
                         lowPriorityButton = !lowPriorityButton;
                       });
+                      handleClick();
+                      print("Low button: $lowPriorityButton");
                     },
                     child: Row(
                       children: [
@@ -283,14 +325,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: goalCount ?? 0,
-                    itemBuilder: (context, index) {
-                      return goalTile(index);
-                    }),
+                if(lowPriorityButton)
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: filteredDashboardLow.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return goalTile(index, filteredDashboardLow);
+                      }),
+                // ListView.builder(
+                //     physics: NeverScrollableScrollPhysics(),
+                //     shrinkWrap: true,
+                //     scrollDirection: Axis.vertical,
+                //     itemCount: goalCount ?? 0,
+                //     itemBuilder: (context, index) {
+                //       return goalTile(index);
+                //     }),
                 if (goalCount == 0)
                   Container(
                     width: 130,
@@ -459,7 +510,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 4),
-                        child: NumberedProgress(isProgressBlueTile: true)
+                        child: NumberedProgress(
+                            isProgressBlueTile: true,
+                            pendingGoals: dashboard!=null ? dashboard!.dashboardCount[0].Pending : 0,
+                            inProgressGoals: dashboard!=null ? dashboard!.dashboardCount[0].Inprogress : 0,
+                            completedGoals: dashboard!=null ? dashboard!.dashboardCount[0].Completed : 0,
+                        )
                     )
                   ],
                 ),
@@ -657,14 +713,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  goalTile(int index) {
+  goalTile(int index, List<GoalList> filteredDashboard) {
     return GestureDetector(
       onTap: () {
-        if(dashboard?.goalList[index].milestone?.length !=0){
+        if(filteredDashboard[index].milestone?.length !=0){
         setState(() {
           isGoalClicked = index;
           updateGoalId = goalID![index];
-          milestone = dashboard?.goalList[isGoalClicked].milestone?.map((e) =>
+          milestone = filteredDashboard[isGoalClicked].milestone?.map((e) =>
               DashboardMilestone(name: e.name, riskAnalysis: e.riskAnalysis, targetDate: e.targetDate, lastReviewDate: e.lastReviewDate, progress: e.progress, celebrations: e.celebrations, milestoneStatus: e.milestoneStatus, enjoyingAndProgressingComment: e.enjoyingAndProgressingComment, whatHasChanged: e.whatHasChanged, workingWellComment: e.workingWellComment, sno: e.sno)
           ).toList();
 
@@ -714,16 +770,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 8,
                         margin: const EdgeInsets.only(right: 4),
                         decoration: BoxDecoration(
-                            color: dashboard?.goalList[index].GoalStatus == 0 ? Colors.grey :
-                            dashboard?.goalList[index].GoalStatus == 1 ? Colors.red :
-                            dashboard?.goalList[index].GoalStatus == 2 ? Colors.yellow : goalCategoryGreen,
+                            color: filteredDashboard[index].GoalStatus == 0 ? progressBlue :
+                            filteredDashboard[index].GoalStatus == 1 ? progressRed :
+                            filteredDashboard[index].GoalStatus == 2 ? progressYellow : progressGreen,
                             borderRadius:
                             BorderRadius.all(Radius.circular(15))),
                       ),
                       Text(
-                        dashboard?.goalList[index].GoalStatus == 0? "Not Started" :
-                        dashboard?.goalList[index].GoalStatus == 1 ? "Pending" :
-                        dashboard?.goalList[index].GoalStatus == 2 ? "In Progress" :"Completed",
+                        filteredDashboard[index].GoalStatus == 0? "Not Started" :
+                        filteredDashboard[index].GoalStatus == 1 ? "Pending" :
+                        filteredDashboard[index].GoalStatus == 2 ? "In Progress" :"Completed",
                         textAlign: TextAlign.left,
                         style: GoogleFonts.poppins(
                           color: goalListBlack,
@@ -759,7 +815,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
                       child: Text(
-                        dashboard?.goalList[index].GoalName ?? "",
+                        filteredDashboard[index].GoalName ?? "",
                         textAlign: TextAlign.left,
                         style: GoogleFonts.poppins(
                           color: primaryColor,
@@ -776,7 +832,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: RatingBarIndicator(
-                    rating: dashboard?.goalList[index].Rating ?? 0.0,
+                    rating: filteredDashboard[index].Rating ?? 0.0,
                     itemCount: 5,
                     itemSize: 15.0,
                     unratedColor: ratingDisbled,
@@ -808,7 +864,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: Text(
-                        dashboard?.goalList[index].StartDate ?? "00-00-0000",
+                        filteredDashboard[index].StartDate ?? "00-00-0000",
                         style: GoogleFonts.poppins(
                           color: goalListGrey,
                           fontSize: 10,
@@ -834,7 +890,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Text(
-                          dashboard?.goalList[index].TargetDate ?? "00-00-0000",
+                          filteredDashboard[index].TargetDate ?? "00-00-0000",
                           style: GoogleFonts.poppins(
                               color: goalListGrey,
                               fontSize: 10,
@@ -881,16 +937,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    if (dashboard!.goalList[index].SharedWith!.length > 0)
+                    if (filteredDashboard[index].SharedWith!.length > 0)
                       Container(
-                        height: dashboard!.goalList[index].SharedWith!.length * 20.0,
+                        height: filteredDashboard[index].SharedWith!.length * 20.0,
                         width: 100,
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: dashboard!.goalList[index].SharedWith!.length,
+                          itemCount: filteredDashboard[index].SharedWith!.length,
                           itemBuilder: (context, i) => Text(
-                            dashboard!.goalList[index].SharedWith![i]['firstName'].toString(),
+                            filteredDashboard[index].SharedWith![i]['firstName'].toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 10,
@@ -963,10 +1019,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   width: 24,
                         // ),
                         child: Text(
-                            (roleId == 3) ? mProfile.participant.firstName : (dashboard!.goalList[index].reviewedBy != null &&
-                              dashboard!.goalList[index].reviewedBy!.isNotEmpty &&
-                              dashboard!.goalList[index].reviewedBy![0]["firstName"] != null)
-                              ? dashboard!.goalList[index].reviewedBy![0]["firstName"].toString()
+                            (roleId == 3) ? mProfile.participant.firstName : (filteredDashboard[index].reviewedBy != null &&
+                              filteredDashboard[index].reviewedBy!.isNotEmpty &&
+                              filteredDashboard[index].reviewedBy![0]["firstName"] != null)
+                              ? filteredDashboard[index].reviewedBy![0]["firstName"].toString()
                               : "",
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -1859,5 +1915,41 @@ class _HomeScreenState extends State<HomeScreen> {
     _descriptionController1.text = mileWorkingComment ?? "";
     _descriptionController2.text = mileEnjoyComment ?? "";
     _descriptionController3.text = mileChangedComment ?? "";
+  }
+
+  void handleClick(){
+    if(highPriorityButton){
+      filterList("High");
+    }
+    if(mediumPriorityButton){
+      filterList("Medium");
+    }
+    if(lowPriorityButton){
+      filterList("Low");
+    }
+  }
+
+  void filterList(String priority){
+    List<GoalList> filteredDashboard;
+    if(onGoalStatusButtonClicked == 0){
+        filteredDashboard = dashboard!.goalList.where((goal) => (goal.GoalPriority == priority) && (goal.GoalStatus!=0)).toList();
+        print("Check filtered list : ${filteredDashboard}");
+    }
+    else{
+        filteredDashboard = dashboard!.goalList.where((goal) => (goal.GoalPriority == priority) && (goal.GoalStatus == onGoalStatusButtonClicked)).toList();
+        print("Check filtered list : ${filteredDashboard}");
+    }
+
+    setState(() {
+      if(priority == 'High'){
+        filteredDashboardHigh = filteredDashboard;
+      }
+      else if(priority == "Medium"){
+        filteredDashboardMedium = filteredDashboard;
+      }
+      else if(priority == "Low"){
+        filteredDashboardLow = filteredDashboard;
+      }
+    });
   }
 }

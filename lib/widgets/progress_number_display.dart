@@ -4,9 +4,15 @@ import 'package:mycareteam/resources/constants/colors.dart';
 
 class NumberedProgress extends StatelessWidget {
   final bool isProgressBlueTile;
+  final int pendingGoals;
+  final int inProgressGoals;
+  final int completedGoals;
 
   const NumberedProgress({
     required this.isProgressBlueTile,
+    required this.pendingGoals,
+    required this.inProgressGoals,
+    required this.completedGoals,
     Key? key}) : super(key: key);
 
   @override
@@ -17,12 +23,7 @@ class NumberedProgress extends StatelessWidget {
         Column(
             children: [
               Text(
-                "7",
-                  // dashboard != null &&
-                  //     dashboard!.dashboardCount.isNotEmpty
-                  //     ? dashboard!.dashboardCount[0].Inprogress
-                  //     .toString()
-                  //     : "",
+                pendingGoals.toString(),
                   style: GoogleFonts.poppins(
                       color: isProgressBlueTile ? Colors.white : progressRed,
                       fontSize: 16,
@@ -40,7 +41,7 @@ class NumberedProgress extends StatelessWidget {
         Column(
             children: [
               Text(
-                  "7",
+                  inProgressGoals.toString(),
                   style: GoogleFonts.poppins(
                       color: isProgressBlueTile ? Colors.white : progressYellow,
                       fontSize: 16,
@@ -58,7 +59,7 @@ class NumberedProgress extends StatelessWidget {
         Column(
             children: [
               Text(
-                "7",
+                completedGoals.toString(),
                 style: GoogleFonts.poppins(
                     color: isProgressBlueTile ? Colors.white : progressGreen,
                     fontSize: 16,
