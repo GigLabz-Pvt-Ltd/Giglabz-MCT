@@ -13,6 +13,8 @@ import 'package:mycareteam/resources/constants/const.dart';
 import 'package:mycareteam/screens/goal/create_goal_screen.dart';
 import 'package:mycareteam/screens/home/profile_screen.dart';
 import 'package:mycareteam/service/api_service.dart';
+import 'package:mycareteam/widgets/goal_status_tile.dart';
+import 'package:mycareteam/widgets/progress_number_display.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,10 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   var mProfile;
   List<String> goalStatusButtonText = ["Total", "Pending", "In Progress", "Completed"];
   int onGoalStatusButtonClicked = 0;
-  bool onTotalClicked = true;
-  bool onPendingClicked= false;
-  bool onProgressClicked = false;
-  bool onCompletedClicked = false;
+  bool highPriorityButton =false;
+  bool mediumPriorityButton =false;
+  bool lowPriorityButton =false;
   List<PopupMenuEntry<dynamic>> menuItems = [
     PopupMenuItem(
       child: Row(children: [
@@ -186,6 +187,102 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                GoalStatusTile(
+                  progressColour: progressRed,
+                  iconAsset: 'lib/resources/images/high_priority.svg',
+                  priority: 'HIGH PRIORITY',
+                  numberedProgress: const Expanded(
+                    flex: 1,
+                    child: NumberedProgress(isProgressBlueTile: false,),
+                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        highPriorityButton = !highPriorityButton;
+                      });
+                    },
+                    child: Row(
+                        children: [
+                          Text(
+                            highPriorityButton ? "Collapse" : "Expand",
+                            style: GoogleFonts.poppins(
+                                color: progressGrey,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: SvgPicture.asset(highPriorityButton ? 'lib/resources/images/arrow_up.svg' : 'lib/resources/images/arrow_down.svg', height: 8, width: 8,),
+                          )
+                        ],
+                      ),
+                  ),
+                ),
+                GoalStatusTile(
+                  progressColour: progressYellow,
+                  iconAsset: 'lib/resources/images/medium_priority.svg',
+                  priority: 'MEDIUM PRIORITY',
+                  numberedProgress: const Expanded(
+                    flex: 1,
+                    child: NumberedProgress(isProgressBlueTile: false,),
+                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        mediumPriorityButton = !mediumPriorityButton;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          mediumPriorityButton ? "Collapse" : "Expand",
+                          style: GoogleFonts.poppins(
+                              color: progressGrey,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: SvgPicture.asset(mediumPriorityButton ? 'lib/resources/images/arrow_up.svg' : 'lib/resources/images/arrow_down.svg', height: 8, width: 8,),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                GoalStatusTile(
+                  progressColour: progressBlue,
+                  iconAsset: 'lib/resources/images/low_priority.svg',
+                  priority: 'LOW PRIORITY',
+                  numberedProgress: const Expanded(
+                    flex: 1,
+                    child: NumberedProgress(isProgressBlueTile: false,),
+                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        lowPriorityButton = !lowPriorityButton;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          lowPriorityButton ? "Collapse" : "Expand",
+                          style: GoogleFonts.poppins(
+                              color: progressGrey,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: SvgPicture.asset(lowPriorityButton ? 'lib/resources/images/arrow_up.svg' : 'lib/resources/images/arrow_down.svg', height: 8, width: 8,),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -362,79 +459,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                  dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
-                                      ? dashboard!.dashboardCount[0].Pending
-                                      .toString()
-                                      : "",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600
-                                  )),
-                              Text(
-                                  "Pending",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400
-                                  )),
-                            ]
-                          ),
-                          Column(
-                              children: [
-                                Text(
-                                    dashboard != null &&
-                                        dashboard!.dashboardCount.isNotEmpty
-                                        ? dashboard!.dashboardCount[0].Inprogress
-                                        .toString()
-                                        : "",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600
-                                    )),
-                                Text(
-                                    "In Progress",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400
-                                    )),
-                              ]
-                          ),
-                          Column(
-                              children: [
-                                Text(
-                                  dashboard != null &&
-                                      dashboard!.dashboardCount.isNotEmpty
-                                      ? dashboard!.dashboardCount[0].Completed
-                                      .toString()
-                                      : "",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600
-                                  ),
-                                ),
-                                Text(
-                                    "Completed",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400
-                                    )),
-                              ]
-                          ),
-                        ]
-                      )
-                    ),
+                        child: NumberedProgress(isProgressBlueTile: true)
+                    )
                   ],
                 ),
               ),
@@ -521,23 +547,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            "lib/resources/images/refer.svg",
+            "lib/resources/images/bottomNav_tutorial.svg",
             width: 24,
             height: 24,
           ),
-          activeIcon: SvgPicture.asset(
-            "lib/resources/images/refer_active.svg",
-            width: 24,
-            height: 24,
-          ),
-          label: 'Refer',
+          label: 'Tutorial',
         ),
         BottomNavigationBarItem(
           icon: Container(
             width: 24,
             height: 24,
             decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Color(0xFFe0f2f1)),
+                shape: BoxShape.circle, color: Color(0xFFe0f2f1)
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              child: getImage(),
+            )
           ),
           label: 'Profile',
         ),
